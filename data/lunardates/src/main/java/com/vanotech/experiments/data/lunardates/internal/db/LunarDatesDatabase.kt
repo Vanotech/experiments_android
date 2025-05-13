@@ -17,7 +17,7 @@ abstract internal class LunarDatesDatabase : RoomDatabase() {
     companion object {
         fun getInstance(context: Context): LunarDatesDatabase {
             return Room.inMemoryDatabaseBuilder(context.applicationContext, LunarDatesDatabase::class.java)
-                .fallbackToDestructiveMigration()
+                .fallbackToDestructiveMigration(false)
                 .build()
         }
     }

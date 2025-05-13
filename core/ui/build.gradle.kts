@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose.compiler)
 }
 
 android {
@@ -30,9 +31,6 @@ android {
     compileOptions {
         sourceCompatibility = rootProject.extra["sourceCompatibility"] as JavaVersion
         targetCompatibility = rootProject.extra["targetCompatibility"] as JavaVersion
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = rootProject.extra["kotlinCompilerExtensionVersion"] as String
     }
     kotlinOptions {
         jvmTarget = rootProject.extra["jvmTarget"] as String

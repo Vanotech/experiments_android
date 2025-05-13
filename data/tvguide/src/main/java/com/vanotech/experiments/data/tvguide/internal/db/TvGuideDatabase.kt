@@ -20,7 +20,7 @@ abstract internal class TvGuideDatabase : RoomDatabase() {
     companion object {
         fun getInstance(context: Context): TvGuideDatabase {
             return Room.inMemoryDatabaseBuilder(context.applicationContext, TvGuideDatabase::class.java)
-                .fallbackToDestructiveMigration()
+                .fallbackToDestructiveMigration(false)
                 .build()
         }
     }
