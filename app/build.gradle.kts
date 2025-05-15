@@ -46,6 +46,7 @@ android {
 dependencies {
     implementation(project(":core:ui"))
     implementation(project(":feature:lunardates"))
+    implementation(project(":feature:osinfo"))
     implementation(project(":feature:tvguide"))
 
     implementation(libs.androidx.core.ktx)

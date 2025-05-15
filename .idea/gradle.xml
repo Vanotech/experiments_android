@@ -19,10 +19,10 @@
             <option value="$PROJECT_DIR$/data/tvguide" />
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/lunardates" />
+            <option value="$PROJECT_DIR$/feature/osinfo" />
             <option value="$PROJECT_DIR$/feature/tvguide" />
           </set>
         </option>
-        <option name="resolveExternalAnnotations" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

@@ -26,8 +26,8 @@ include(":core:ui")
 include(":core:utils")
 
 include(":data:lunardates")
-include(":feature:lunardates")
-
 include(":data:tvguide")
-include(":feature:tvguide")
 
+include(":feature:lunardates")
+include(":feature:osinfo")
+include(":feature:tvguide")
