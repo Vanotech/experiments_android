@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="route_listing">TV Guide</string>
-    <string name="route_settings">Settings</string>
+    <string name="route_tv_guide_home">TV Guide</string>
+    <string name="route_tv_guide_settings">Settings</string>
 
     <string name="hint_show_episodes">Episodes</string>
     <string name="hint_show_movies">Movies</string>

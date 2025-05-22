@@ -11,8 +11,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class ListingRepo @Inject constructor(
+@Singleton
+class ListingRepo @Inject internal constructor(
     @ApplicationContext context: Context,
     private val listingDaoService: ListingDaoService,
     private val tvGuideApiService: TvGuideApiService,
@@ -31,7 +33,11 @@ class ListingRepo @Inject constructor(
         ListingsWorker.enqueue(context)
     }
 
-    suspend fun getListings(hours: Int): Result<Unit> {
+    suspend fun getListings(
+        hours: Int,
+        platform: String = Platform.VIRGIN,
+        region: String = Region.NORTH_WEST,
+    ): Result<Unit> {
         return try {
             listingDaoService.deleteAll()
             val startDateTime = LocalDateTime.now()
@@ -39,8 +45,8 @@ class ListingRepo @Inject constructor(
             range.forEach { hour ->
                 val dateTime = startDateTime.plusHours(hour.toLong())
                 val listings = tvGuideApiService.getListings(
-                    platform = Platform.VIRGIN,
-                    region = Region.NORTH_WEST,
+                    platform = platform,
+                    region = region,
                     date = dateTime.toLocalDate(),
                     hour = dateTime.hour
                 )

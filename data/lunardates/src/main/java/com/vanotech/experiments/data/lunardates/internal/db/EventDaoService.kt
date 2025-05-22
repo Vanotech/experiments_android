@@ -4,7 +4,7 @@ import com.vanotech.experiments.data.lunardates.Event
 import javax.inject.Inject
 
 
-class EventDaoService @Inject constructor(
+internal class EventDaoService @Inject constructor(
     private val dao: EventDao
 ) {
     suspend fun delete(item: Event) = dao.delete(item)

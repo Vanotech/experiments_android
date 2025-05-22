@@ -1,4 +1,4 @@
-package com.vanotech.experiments.feature.tvguide.listings
+package com.vanotech.experiments.feature.tvguide.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,7 +17,7 @@ import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
-class ListingsViewModel @Inject constructor(
+internal class HomeViewModel @Inject constructor(
     private val listingRepo: ListingRepo
 ) : ViewModel() {
     val showEpisodes = listingRepo.showEpisodes

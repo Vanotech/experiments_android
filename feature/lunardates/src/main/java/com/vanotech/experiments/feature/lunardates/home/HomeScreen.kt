@@ -1,4 +1,4 @@
-package com.vanotech.experiments.feature.lunardates.events
+package com.vanotech.experiments.feature.lunardates.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,14 +27,14 @@ import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.vanotech.experiments.feature.lunardates.R
-import com.vanotech.experiments.feature.lunardates.add.EventAddRoute
+import com.vanotech.experiments.feature.lunardates.add.AddRoute
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventsScreen(
+internal fun HomeScreen(
     navController: NavController,
-    viewModel: EventsViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val events = viewModel.items.collectAsLazyPagingItems()
@@ -44,7 +44,7 @@ fun EventsScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = stringResource(R.string.route_event))
+                    Text(text = stringResource(R.string.route_lunar_dates_home))
                 },
                 scrollBehavior = scrollBehavior
             )
@@ -52,19 +52,19 @@ fun EventsScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(route = EventAddRoute)
+                    navController.navigate(route = AddRoute)
                 },
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.action_add_event)
+                    contentDescription = stringResource(R.string.action_add_date)
                 )
             }
         }
     ) { padding ->
         if (events.itemCount == 0) {
             Text(
-                text = stringResource(R.string.hint_empty_events),
+                text = stringResource(R.string.hint_empty_dates),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
@@ -89,7 +89,7 @@ fun EventsScreen(
                 ) { index ->
                     val event = events[index]
                     event?.also {
-                        EventsItem(
+                        HomeItem(
                             event = it,
                             navController = navController
                         )

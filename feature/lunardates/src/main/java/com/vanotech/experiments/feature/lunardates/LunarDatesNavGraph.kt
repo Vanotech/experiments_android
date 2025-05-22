@@ -7,27 +7,27 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.vanotech.experiments.feature.lunardates.add.EventAddRoute
-import com.vanotech.experiments.feature.lunardates.add.EventAddScreen
-import com.vanotech.experiments.feature.lunardates.edit.EventEditRoute
-import com.vanotech.experiments.feature.lunardates.edit.EventEditScreen
-import com.vanotech.experiments.feature.lunardates.events.EventsRoute
-import com.vanotech.experiments.feature.lunardates.events.EventsScreen
+import com.vanotech.experiments.feature.lunardates.add.AddRoute
+import com.vanotech.experiments.feature.lunardates.add.AddScreen
+import com.vanotech.experiments.feature.lunardates.edit.EditRoute
+import com.vanotech.experiments.feature.lunardates.edit.EditScreen
+import com.vanotech.experiments.feature.lunardates.home.HomeRoute
+import com.vanotech.experiments.feature.lunardates.home.HomeScreen
 
 object LunarDatesNavGraph {
 
     fun icon(): ImageVector = Icons.Default.Event
 
     @StringRes
-    fun label(): Int = R.string.route_event
+    fun label(): Int = R.string.route_lunar_dates_home
 
-    fun startDestination(): Any = EventsRoute
+    fun startDestination(): Any = HomeRoute
 
     fun register(navGraphBuilder: NavGraphBuilder, navController: NavController) {
         navGraphBuilder.apply {
-            composable<EventsRoute> { EventsScreen(navController) }
-            composable<EventAddRoute> { EventAddScreen(navController) }
-            composable<EventEditRoute> { EventEditScreen(navController) }
+            composable<HomeRoute> { HomeScreen(navController) }
+            composable<AddRoute> { AddScreen(navController) }
+            composable<EditRoute> { EditScreen(navController) }
         }
     }
 }

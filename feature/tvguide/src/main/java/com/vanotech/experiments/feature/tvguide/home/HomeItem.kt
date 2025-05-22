@@ -1,4 +1,4 @@
-package com.vanotech.experiments.feature.tvguide.listings
+package com.vanotech.experiments.feature.tvguide.home
 
 import android.text.format.DateUtils
 import androidx.compose.foundation.background
@@ -27,16 +27,16 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.vanotech.experiments.data.tvguide.schema.Listing
 import com.vanotech.experiments.data.tvguide.schema.ListingType
-import com.vanotech.experiments.feature.tvguide.program.ProgramRoute
+import com.vanotech.experiments.feature.tvguide.detail.DetailRoute
 
 @Composable
-fun ListingsItem(
+internal fun HomeItem(
     listing: Listing,
     navController: NavController
 ) {
     Card(
         onClick = {
-            navController.navigate(ProgramRoute(listing.id))
+            navController.navigate(DetailRoute(listing.id))
         },
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp)
@@ -98,5 +98,5 @@ fun ListingsItem(
 fun ListingItemPreview() {
     val listing = Listing.mockData(0)
     val navController = rememberNavController()
-    ListingsItem(listing = listing, navController = navController)
+    HomeItem(listing = listing, navController = navController)
 }

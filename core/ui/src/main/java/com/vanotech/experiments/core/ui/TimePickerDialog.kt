@@ -25,9 +25,9 @@ import androidx.compose.ui.window.DialogProperties
 @Composable
 fun TimePickerDialog(
     onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
     confirmButton: @Composable () -> Unit,
     dismissButton: @Composable (() -> Unit) = {},
-    modifier: Modifier = Modifier,
     shape: Shape = DatePickerDefaults.shape,
     tonalElevation: Dp = DatePickerDefaults.TonalElevation,
     colors: TimePickerColors = TimePickerDefaults.colors(),

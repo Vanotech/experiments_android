@@ -8,7 +8,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface TvGuideApi {
+internal interface TvGuideApi {
 
     @GET("listings")
     suspend fun getListings(

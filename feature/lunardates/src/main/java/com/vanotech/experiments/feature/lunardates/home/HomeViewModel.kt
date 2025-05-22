@@ -1,4 +1,4 @@
-package com.vanotech.experiments.feature.lunardates.events
+package com.vanotech.experiments.feature.lunardates.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class EventsViewModel @Inject constructor(
+internal class HomeViewModel @Inject constructor(
     eventRepo: EventRepo
 ) : ViewModel() {
     private val pager = Pager(

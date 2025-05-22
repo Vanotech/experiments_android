@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="route_event">Lunar Dates</string>
-    <string name="route_add_event">Add event</string>
-    <string name="route_edit_event">Edit event</string>
+    <string name="route_lunar_dates_home">Lunar Dates</string>
+    <string name="route_lunar_dates_add">Add date</string>
+    <string name="route_lunar_dates_edit">Edit date</string>
 
-    <string name="action_add_event">Add event</string>
-    <string name="action_delete_event">Delete event</string>
-    <string name="action_edit_event">Edit event</string>
-    <string name="action_save_event">Save event</string>
+    <string name="action_add_date">Add date</string>
+    <string name="action_delete_date">Delete date</string>
+    <string name="action_edit_date">Edit date</string>
+    <string name="action_save_date">Save date</string>
 
     <string name="hint_title">Title</string>
     <string name="hint_day">Day</string>
     <string name="hint_month">Month</string>
 
-    <string name="hint_empty_events">No events</string>
+    <string name="hint_empty_dates">No dates</string>
 </resources>

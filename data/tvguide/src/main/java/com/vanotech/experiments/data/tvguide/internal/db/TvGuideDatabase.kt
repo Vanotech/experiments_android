@@ -14,7 +14,7 @@ import com.vanotech.experiments.data.tvguide.schema.Listing
     version = 1
 )
 @TypeConverters(TimeConverters::class)
-abstract internal class TvGuideDatabase : RoomDatabase() {
+internal abstract class TvGuideDatabase : RoomDatabase() {
     abstract fun listingDao(): ListingDao
 
     companion object {

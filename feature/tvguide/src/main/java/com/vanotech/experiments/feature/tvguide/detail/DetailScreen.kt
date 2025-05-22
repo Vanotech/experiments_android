@@ -1,4 +1,4 @@
-package com.vanotech.experiments.feature.tvguide.program
+package com.vanotech.experiments.feature.tvguide.detail
 
 import android.text.format.DateUtils
 import androidx.compose.foundation.layout.Arrangement
@@ -7,12 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Tv
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,21 +22,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
+import com.vanotech.experiments.core.ui.NavigateBackButton
 import com.vanotech.experiments.data.tvguide.schema.ListingType
-import com.vanotech.experiments.feature.tvguide.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProgramScreen(
+internal fun DetailScreen(
     navController: NavController,
-    viewModel: ProgramViewModel = hiltViewModel()
+    viewModel: DetailViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -57,16 +54,7 @@ fun ProgramScreen(
                     }
                 },
                 navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            navController.popBackStack()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.route_settings)
-                        )
-                    }
+                    NavigateBackButton(navController = navController)
                 },
                 scrollBehavior = scrollBehavior
             )

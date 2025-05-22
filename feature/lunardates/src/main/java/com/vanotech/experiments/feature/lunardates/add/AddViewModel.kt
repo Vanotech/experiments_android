@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EventAddViewModel @Inject constructor(
+internal class AddViewModel @Inject constructor(
     private val eventRepo: EventRepo
 ) : ViewModel() {
     val title = MutableStateFlow("")

@@ -1,4 +1,4 @@
-package com.vanotech.experiments.feature.tvguide.program
+package com.vanotech.experiments.feature.tvguide.detail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -10,11 +10,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProgramViewModel @Inject constructor(
+internal class DetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val listingRepo: ListingRepo
 ) : ViewModel() {
-    private val args = savedStateHandle.toRoute<ProgramRoute>()
+    private val args = savedStateHandle.toRoute<DetailRoute>()
     val program = listingRepo.getAsFlow(args.paId)
 
     init {

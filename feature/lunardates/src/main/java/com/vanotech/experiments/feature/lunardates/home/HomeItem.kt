@@ -1,4 +1,4 @@
-package com.vanotech.experiments.feature.lunardates.events
+package com.vanotech.experiments.feature.lunardates.home
 
 import android.icu.util.Calendar
 import android.icu.util.ChineseCalendar
@@ -19,10 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.vanotech.experiments.data.lunardates.Event
-import com.vanotech.experiments.feature.lunardates.edit.EventEditRoute
+import com.vanotech.experiments.feature.lunardates.edit.EditRoute
 
 @Composable
-fun EventsItem(
+internal fun HomeItem(
     event: Event,
     navController: NavController
 ) {
@@ -30,7 +30,7 @@ fun EventsItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                navController.navigate(route = EventEditRoute(event.id))
+                navController.navigate(route = EditRoute(event.id))
             },
         shape = RoundedCornerShape(8.dp)
     ) {
@@ -73,7 +73,7 @@ fun EventsItem(
 @Composable
 fun EventItemPreview() {
     val event = Event.mockData(0)
-    EventsItem(
+    HomeItem(
         event = event,
         navController = rememberNavController()
     )

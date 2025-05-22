@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.map
 import java.time.LocalTime
 import javax.inject.Inject
 
-class TvGuideDataStore @Inject constructor(
+internal class TvGuideDataStore @Inject constructor(
     @ApplicationContext context: Context
 ) : com.vanotech.experiments.core.utils.datastore.SimpleDataStore(context, DATA_STORE_NAME) {
 

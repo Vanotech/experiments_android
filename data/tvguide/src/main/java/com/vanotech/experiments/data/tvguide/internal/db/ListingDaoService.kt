@@ -4,7 +4,7 @@ import com.vanotech.experiments.data.tvguide.schema.Listing
 import javax.inject.Inject
 
 
-class ListingDaoService @Inject constructor(
+internal class ListingDaoService @Inject constructor(
     private val dao: ListingDao
 ) {
     suspend fun deleteAll() = dao.deleteAll()

@@ -6,7 +6,7 @@ import com.vanotech.experiments.data.tvguide.schema.ListingType
 import java.time.LocalDate
 import javax.inject.Inject
 
-class TvGuideApiService @Inject constructor(
+internal class TvGuideApiService @Inject constructor(
     private val api: TvGuideApi
 ) {
     suspend fun getListings(

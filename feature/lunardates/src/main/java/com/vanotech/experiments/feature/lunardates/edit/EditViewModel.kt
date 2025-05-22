@@ -14,11 +14,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class EventEditViewModel @Inject constructor(
+internal class EditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val eventRepo: EventRepo
 ) : ViewModel() {
-    private val args = savedStateHandle.toRoute<EventEditRoute>()
+    private val args = savedStateHandle.toRoute<EditRoute>()
     private val eventId = args.eventId
 
     val title = MutableStateFlow("")

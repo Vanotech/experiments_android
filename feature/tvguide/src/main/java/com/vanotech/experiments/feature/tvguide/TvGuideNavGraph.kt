@@ -7,24 +7,24 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.vanotech.experiments.feature.tvguide.listings.ListingsRoute
-import com.vanotech.experiments.feature.tvguide.listings.ListingsScreen
-import com.vanotech.experiments.feature.tvguide.program.ProgramRoute
-import com.vanotech.experiments.feature.tvguide.program.ProgramScreen
+import com.vanotech.experiments.feature.tvguide.detail.DetailRoute
+import com.vanotech.experiments.feature.tvguide.detail.DetailScreen
+import com.vanotech.experiments.feature.tvguide.home.HomeRoute
+import com.vanotech.experiments.feature.tvguide.home.HomeScreen
 
 object TvGuideNavGraph {
 
     fun icon(): ImageVector = Icons.Default.Tv
 
     @StringRes
-    fun label(): Int = R.string.route_listing
+    fun label(): Int = R.string.route_tv_guide_home
 
-    fun startDestination(): Any = ListingsRoute
+    fun startDestination(): Any = HomeRoute
 
     fun register(navGraphBuilder: NavGraphBuilder, navController: NavController) {
         navGraphBuilder.apply {
-            composable<ListingsRoute> { ListingsScreen(navController) }
-            composable<ProgramRoute> { ProgramScreen(navController) }
+            composable<HomeRoute> { HomeScreen(navController) }
+            composable<DetailRoute> { DetailScreen(navController) }
         }
     }
 }

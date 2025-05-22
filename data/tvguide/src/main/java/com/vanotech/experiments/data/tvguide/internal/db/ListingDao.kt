@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 
 @Dao
-interface ListingDao {
+internal interface ListingDao {
 
     @Delete
     suspend fun delete(item: Listing)
@@ -22,7 +22,7 @@ interface ListingDao {
     fun getAllAsPagingSource(): PagingSource<Int, Listing>
 
     @Query("SELECT * FROM $TABLE_NAME WHERE id = :id")
-    fun getAsFlow(id: String): Flow<Listing>
+    fun getAsFlow(id: String): Flow<Listing?>
 
     @Upsert
     suspend fun upsert(item: Listing)

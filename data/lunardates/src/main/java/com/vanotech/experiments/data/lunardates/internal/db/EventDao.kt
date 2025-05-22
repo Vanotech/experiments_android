@@ -9,7 +9,7 @@ import com.vanotech.experiments.data.lunardates.Event
 
 
 @Dao
-interface EventDao {
+internal interface EventDao {
 
     @Delete
     suspend fun delete(item: Event)

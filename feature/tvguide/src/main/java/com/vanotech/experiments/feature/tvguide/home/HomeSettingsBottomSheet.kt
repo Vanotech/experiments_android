@@ -1,4 +1,4 @@
-package com.vanotech.experiments.feature.tvguide.listings
+package com.vanotech.experiments.feature.tvguide.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,8 +27,8 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun ListingsSettingsBottomSheet(
-    viewModel: ListingsViewModel,
+internal fun HomeSettingsBottomSheet(
+    viewModel: HomeViewModel,
     onDismissRequest: () -> Unit
 ) {
     val showEpisodes = viewModel.showEpisodes.collectAsState(initial = false)
@@ -36,7 +36,7 @@ fun ListingsSettingsBottomSheet(
     val startTime = viewModel.startTime.collectAsState(initial = LocalTime.MIN)
     val endTime = viewModel.endTime.collectAsState(initial = LocalTime.MAX)
 
-    ListingsSettingsBottomSheet(
+    HomeSettingsBottomSheet(
         onDismissRequest = onDismissRequest,
         showEpisodes = showEpisodes.value,
         onShowEpisodesChanged = {
@@ -59,7 +59,7 @@ fun ListingsSettingsBottomSheet(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListingsSettingsBottomSheet(
+fun HomeSettingsBottomSheet(
     onDismissRequest: () -> Unit,
     showEpisodes: Boolean,
     onShowEpisodesChanged: (Boolean) -> Unit,
@@ -161,7 +161,7 @@ fun ListingsSettingsBottomSheet(
 
     when {
         showStartTimePicker -> {
-            ListingsTimePickerDialog(
+            HomeTimePickerDialog(
                 onDismissRequest = {
                     showStartTimePicker = false
                 },
@@ -178,7 +178,7 @@ fun ListingsSettingsBottomSheet(
         }
 
         showEndTimePicker -> {
-            ListingsTimePickerDialog(
+            HomeTimePickerDialog(
                 onDismissRequest = {
                     showEndTimePicker = false
                 },
@@ -199,7 +199,7 @@ fun ListingsSettingsBottomSheet(
 @Preview
 @Composable
 fun ListingSettingsBottomSheetPreview() {
-    ListingsSettingsBottomSheet(
+    HomeSettingsBottomSheet(
         onDismissRequest = { },
         showEpisodes = true,
         onShowEpisodesChanged = {},

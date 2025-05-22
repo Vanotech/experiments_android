@@ -11,7 +11,7 @@ import com.vanotech.experiments.data.lunardates.Event
     exportSchema = false,
     version = 1
 )
-abstract internal class LunarDatesDatabase : RoomDatabase() {
+internal abstract class LunarDatesDatabase : RoomDatabase() {
     abstract fun eventDao(): EventDao
 
     companion object {

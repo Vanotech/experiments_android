@@ -9,12 +9,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 
 @Composable
-fun NavigationIconButton(navController: NavController) {
+fun NavigateUpButton(navController: NavController) {
     if (navController.previousBackStackEntry != null) {
         IconButton(onClick = { navController.navigateUp() }) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = stringResource(R.string.action_navigate_back)
+                contentDescription = stringResource(R.string.action_navigate_up)
             )
         }
     }

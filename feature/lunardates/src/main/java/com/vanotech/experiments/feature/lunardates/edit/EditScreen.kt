@@ -1,4 +1,4 @@
-package com.vanotech.experiments.feature.lunardates.add
+package com.vanotech.experiments.feature.lunardates.edit
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,15 +25,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.vanotech.experiments.core.ui.NavigationIconButton
+import com.vanotech.experiments.core.ui.NavigateBackButton
 import com.vanotech.experiments.core.ui.SimpleExposedDropdownMenuBox
 import com.vanotech.experiments.feature.lunardates.R
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventAddScreen(
+internal fun EditScreen(
     navController: NavController,
-    viewModel: EventAddViewModel = hiltViewModel()
+    viewModel: EditViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -41,22 +43,34 @@ fun EventAddScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = stringResource(R.string.route_add_event))
+                    Text(text = stringResource(R.string.route_lunar_dates_home))
                 },
                 navigationIcon = {
-                    NavigationIconButton(navController = navController)
+                    NavigateBackButton(navController = navController)
                 },
                 actions = {
                     IconButton(
                         onClick = {
-                            viewModel.addEvent()
+                            viewModel.updateEvent()
                             navController.popBackStack()
                         },
-                        enabled = viewModel.canAddEvent.collectAsState(initial = false).value
+                        enabled = viewModel.canUpdateEvent.collectAsState(initial = false).value
                     ) {
                         Icon(
                             imageVector = Icons.Default.Check,
-                            contentDescription = stringResource(R.string.action_add_event)
+                            contentDescription = stringResource(R.string.action_save_date)
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            viewModel.deleteEvent()
+                            navController.popBackStack()
+                        },
+                        enabled = viewModel.canDeleteEvent.collectAsState().value
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = stringResource(R.string.action_delete_date)
                         )
                     }
                 },

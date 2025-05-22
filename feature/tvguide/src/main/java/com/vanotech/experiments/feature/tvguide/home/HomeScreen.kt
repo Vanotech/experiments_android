@@ -1,4 +1,4 @@
-package com.vanotech.experiments.feature.tvguide.listings
+package com.vanotech.experiments.feature.tvguide.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,9 +31,9 @@ import com.vanotech.experiments.feature.tvguide.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListingsScreen(
+internal fun HomeScreen(
     navController: NavController,
-    viewModel: ListingsViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var showSettings by remember { mutableStateOf(false) }
@@ -43,7 +43,7 @@ fun ListingsScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = stringResource(R.string.route_listing))
+                    Text(text = stringResource(R.string.route_tv_guide_home))
                 },
                 actions = {
                     IconButton(
@@ -53,7 +53,7 @@ fun ListingsScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.FilterAlt,
-                            contentDescription = stringResource(R.string.route_settings)
+                            contentDescription = stringResource(R.string.route_tv_guide_settings)
                         )
                     }
                 },
@@ -77,12 +77,12 @@ fun ListingsScreen(
             ) { index ->
                 val listing = listings[index]
                 listing?.also {
-                    ListingsItem(it, navController)
+                    HomeItem(it, navController)
                 }
             }
         }
         if (showSettings) {
-            ListingsSettingsBottomSheet(
+            HomeSettingsBottomSheet(
                 viewModel = viewModel,
                 onDismissRequest = {
                     showSettings = false
