@@ -1,9 +1,10 @@
-package com.vanotech.experiments.ui.events
+package com.vanotech.experiments.ui.home
 
 import android.content.Context
-import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
+import com.vanotech.experiments.core.ui.NavGraph
+import com.vanotech.experiments.feature.camera.CameraNavGraph
 import com.vanotech.experiments.feature.lunardates.LunarDatesNavGraph
 import com.vanotech.experiments.feature.tvguide.TvGuideNavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,18 +15,15 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
-    val items = listOf(
-        destinationOf(
-            LunarDatesNavGraph.icon(),
-            LunarDatesNavGraph.label(),
-            LunarDatesNavGraph.startDestination()
-        ),
-        destinationOf(
-            TvGuideNavGraph.icon(),
-            TvGuideNavGraph.label(),
-            TvGuideNavGraph.startDestination()
-        )
+    private val navGraphs = listOf(
+        CameraNavGraph,
+        LunarDatesNavGraph,
+        TvGuideNavGraph
     )
+
+    val items = navGraphs.map { navGraph ->
+        navGraph.toDestination()
+    }
 
     data class Destination(
         val icon: ImageVector,
@@ -33,13 +31,9 @@ class HomeViewModel @Inject constructor(
         val route: Any
     )
 
-    private fun destinationOf(
-        icon: ImageVector,
-        @StringRes label: Int,
-        route: Any
-    ) = Destination(
-        icon = icon,
-        label = context.getString(label),
-        route = route
+    private fun NavGraph.toDestination() = Destination(
+        icon = icon(),
+        label = context.getString(label()),
+        route = startDestination()
     )
 }

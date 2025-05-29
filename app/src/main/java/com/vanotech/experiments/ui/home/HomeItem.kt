@@ -1,4 +1,4 @@
-package com.vanotech.experiments.ui.events
+package com.vanotech.experiments.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

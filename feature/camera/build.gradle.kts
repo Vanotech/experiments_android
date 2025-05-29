@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.vanotech.experiments.feature.tvguide"
+    namespace = "com.vanotech.experiments.feature.camera"
     compileSdk = rootProject.extra["compileSdk"] as Int
 
     defaultConfig {
@@ -43,11 +43,11 @@ android {
 dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
-    implementation(project(":data:tvguide"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    testImplementation(libs.junit)
 
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
@@ -60,19 +60,22 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
 
-    implementation(libs.androidx.paging.runtime.ktx)
-    implementation(libs.androidx.paging.compose)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.compose)
+    implementation(libs.androidx.camera.lifecycle)
 
     val coilBom = platform(libs.coil.bom)
     implementation(coilBom)
     implementation(libs.coil.compose)
+
+    implementation(libs.accompanist.permissions)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
 
     implementation(libs.kotlinx.serialization.json)
 
-    testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

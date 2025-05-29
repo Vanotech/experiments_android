@@ -62,10 +62,10 @@ dependencies {
     implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.paging.compose)
 
-    implementation(libs.kotlinx.serialization.json)
-
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

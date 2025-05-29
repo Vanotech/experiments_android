@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,9 +21,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -43,49 +49,49 @@ internal fun EditScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = stringResource(R.string.route_lunar_dates_home))
+                    val title = when (viewModel.createOnly) {
+                        true -> R.string.route_lunar_dates_add
+                        else -> R.string.route_lunar_dates_edit
+                    }
+                    Text(text = stringResource(title))
                 },
                 navigationIcon = {
                     NavigateBackButton(navController = navController)
                 },
                 actions = {
-                    IconButton(
-                        onClick = {
-                            viewModel.updateEvent()
-                            navController.popBackStack()
-                        },
-                        enabled = viewModel.canUpdateEvent.collectAsState(initial = false).value
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Check,
-                            contentDescription = stringResource(R.string.action_save_date)
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            viewModel.deleteEvent()
-                            navController.popBackStack()
-                        },
-                        enabled = viewModel.canDeleteEvent.collectAsState().value
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = stringResource(R.string.action_delete_date)
-                        )
+                    if (!viewModel.createOnly) {
+                        IconButton(
+                            onClick = {
+                                viewModel.deleteEvent()
+                                navController.popBackStack()
+                            },
+                            enabled = viewModel.canDeleteEvent.collectAsState().value
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = stringResource(R.string.action_delete_date)
+                            )
+                        }
                     }
                 },
                 scrollBehavior = scrollBehavior
             )
         }
-    ) { padding ->
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(paddingValues)
                 .padding(16.dp)
                 .imePadding(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            val titleKeyboardOptions = KeyboardOptions.Default.copy(
+                capitalization = KeyboardCapitalization.Sentences,
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            )
+
             TextField(
                 value = viewModel.title.collectAsState().value,
                 onValueChange = {
@@ -94,7 +100,8 @@ internal fun EditScreen(
                 modifier = Modifier.fillMaxWidth(),
                 label = {
                     Text(text = stringResource(id = R.string.hint_title))
-                }
+                },
+                keyboardOptions = titleKeyboardOptions
             )
 
             SimpleExposedDropdownMenuBox(
@@ -120,6 +127,20 @@ internal fun EditScreen(
                     Text(text = stringResource(id = R.string.hint_month))
                 }
             )
+
+            Button(
+                onClick = {
+                    viewModel.updateEvent()
+                    navController.popBackStack()
+                },
+                modifier = Modifier.align(Alignment.End),
+                enabled = viewModel.canUpdateEvent.collectAsState(initial = false).value,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = stringResource(R.string.action_save_date)
+                )
+            }
         }
     }
 }

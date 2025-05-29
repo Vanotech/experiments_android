@@ -18,6 +18,7 @@
             <option value="$PROJECT_DIR$/data/lunardates" />
             <option value="$PROJECT_DIR$/data/tvguide" />
             <option value="$PROJECT_DIR$/feature" />
+            <option value="$PROJECT_DIR$/feature/camera" />
             <option value="$PROJECT_DIR$/feature/lunardates" />
             <option value="$PROJECT_DIR$/feature/osinfo" />
             <option value="$PROJECT_DIR$/feature/tvguide" />

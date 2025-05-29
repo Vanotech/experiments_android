@@ -1,6 +1,7 @@
-package com.vanotech.experiments.ui.events
+package com.vanotech.experiments.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -39,13 +40,13 @@ fun HomeScreen(
                 scrollBehavior = scrollBehavior
             )
         }
-    ) { padding ->
+    ) { paddingValues ->
         LazyVerticalGrid(
             columns = GridCells.Adaptive(160.dp),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp),
+                .padding(paddingValues),
+            contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {

@@ -28,6 +28,7 @@ include(":core:utils")
 include(":data:lunardates")
 include(":data:tvguide")
 
+include(":feature:camera")
 include(":feature:lunardates")
 include(":feature:osinfo")
 include(":feature:tvguide")

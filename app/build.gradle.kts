@@ -45,6 +45,7 @@ android {
 
 dependencies {
     implementation(project(":core:ui"))
+    implementation(project(":feature:camera"))
     implementation(project(":feature:lunardates"))
     implementation(project(":feature:osinfo"))
     implementation(project(":feature:tvguide"))
@@ -64,14 +65,15 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
 
-    implementation(libs.kotlinx.serialization.json)
+    val coilBom = platform(libs.coil.bom)
+    implementation(coilBom)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
 
-    implementation(platform(libs.coil.bom))
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.timber)
 

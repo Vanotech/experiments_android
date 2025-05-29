@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.vanotech.experiments.feature.camera.CameraNavGraph
 import com.vanotech.experiments.feature.lunardates.LunarDatesNavGraph
 import com.vanotech.experiments.feature.tvguide.TvGuideNavGraph
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,9 +25,15 @@ class MainActivity : AppCompatActivity() {
                 navController = navController,
                 startDestination = MainNavGraph.startDestination()
             ) {
-                MainNavGraph.register(this, navController)
-                LunarDatesNavGraph.register(this, navController)
-                TvGuideNavGraph.register(this, navController)
+                val navGraphs = listOf(
+                    CameraNavGraph,
+                    MainNavGraph,
+                    LunarDatesNavGraph,
+                    TvGuideNavGraph
+                )
+                navGraphs.forEach{ navGraph->
+                    navGraph.register(this, navController)
+                }
             }
         }
     }

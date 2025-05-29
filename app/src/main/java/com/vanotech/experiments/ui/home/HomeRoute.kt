@@ -1,4 +1,4 @@
-package com.vanotech.experiments.ui.events
+package com.vanotech.experiments.ui.home
 
 import kotlinx.serialization.Serializable
 

@@ -42,11 +42,11 @@ internal fun HomeItem(
         shape = RoundedCornerShape(8.dp)
     ) {
         AsyncImage(
-            modifier = Modifier.fillMaxWidth(),
             model = ImageRequest.Builder(LocalContext.current)
                 .data(listing.imageUrl)
                 .build(),
             contentDescription = null,
+            modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.FillWidth,
         )
         Column(

@@ -1,7 +1,9 @@
 [versions]
-android-gradle-plugin = "8.10.0"
+accompanist = "0.37.3"
+android-gradle-plugin = "8.10.1"
 androidx-activity-compose = "1.10.1"
 androidx-appcompat = "1.7.0"
+androidx-camera = "1.5.0-beta01"
 androidx-compose-bom = "2025.05.00"
 androidx-core = "1.16.0"
 androidx-datastore = "1.1.6"
@@ -27,8 +29,14 @@ retrofit = "2.11.0"
 timber = "5.0.1"
 
 [libraries]
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "androidx-camera" }
+androidx-camera-compose = { module = "androidx.camera:camera-compose", version.ref = "androidx-camera" }
+androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "androidx-camera" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "androidx-camera" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "androidx-camera" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidx-compose-bom" }
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended"}
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }

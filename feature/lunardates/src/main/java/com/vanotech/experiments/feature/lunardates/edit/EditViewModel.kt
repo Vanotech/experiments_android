@@ -9,6 +9,7 @@ import com.vanotech.experiments.data.lunardates.Event
 import com.vanotech.experiments.data.lunardates.EventRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,6 +21,7 @@ internal class EditViewModel @Inject constructor(
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<EditRoute>()
     private val eventId = args.eventId
+    val createOnly = args.createOnly
 
     val title = MutableStateFlow("")
 
@@ -31,10 +33,10 @@ internal class EditViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            eventRepo.get(eventId)?.also {event->
+            eventRepo.get(eventId)?.also { event ->
                 title.value = event.title
-                dayOfMonth.value = daysOfMonths.first { it.value == event.dayOfMonth  }
-                month.value = months.first { it.value == event.month  }
+                dayOfMonth.value = daysOfMonths.first { it.value == event.dayOfMonth }
+                month.value = months.first { it.value == event.month }
             }
         }
     }
@@ -54,13 +56,14 @@ internal class EditViewModel @Inject constructor(
         }
     }
 
-    val canDeleteEvent = MutableStateFlow(true)
+    private val _canDeleteEvent = MutableStateFlow(true)
+    val canDeleteEvent: StateFlow<Boolean> = _canDeleteEvent
 
     fun deleteEvent() {
         viewModelScope.launch {
             eventRepo.delete(
                 Event(
-                    id = eventId,
+                    id = this@EditViewModel.eventId ?: 0,
                     title = title.value,
                     dayOfMonth = dayOfMonth.value.value,
                     month = month.value.value

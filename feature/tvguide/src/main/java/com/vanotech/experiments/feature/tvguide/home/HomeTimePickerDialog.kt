@@ -6,6 +6,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import com.vanotech.experiments.core.ui.TimePickerDialog
 
 @ExperimentalMaterial3Api
@@ -24,7 +25,7 @@ internal fun HomeTimePickerDialog(
                     onDismissRequest()
                 }
             ) {
-                Text(text = "OK")
+                Text(text = stringResource(android.R.string.ok))
             }
         },
         dismissButton = {
@@ -33,7 +34,7 @@ internal fun HomeTimePickerDialog(
                     onDismissRequest()
                 }
             ) {
-                Text(text = "Cancel")
+                Text(text = stringResource(android.R.string.cancel))
             }
         }
     ) {
