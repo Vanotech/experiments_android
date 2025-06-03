@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Experiments</string>
+
+    <string name="route_home">Experiments</string>
+</resources>

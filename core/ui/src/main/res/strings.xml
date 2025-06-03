@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lunar Calendar</string>
+    <string name="route_event">Lunar Calendar</string>
+    <string name="route_add_event">Add event</string>
+    <string name="route_edit_event">Edit event</string>
+
+    <string name="action_navigate_back">Back</string>
+
+    <string name="action_add_event">Add event</string>
+    <string name="action_delete_event">Delete event</string>
+    <string name="action_edit_event">Edit event</string>
+    <string name="action_save_event">Save event</string>
+
+    <string name="hint_title">Title</string>
+    <string name="hint_day">Day</string>
+    <string name="hint_month">Month</string>
+
+    <string name="hint_empty_events">No events</string>
+</resources>
