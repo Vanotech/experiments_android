@@ -17,7 +17,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -26,8 +28,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import androidx.window.core.layout.WindowWidthSizeClass
+import com.vanotech.experiments.data.lunardates.Event
 import com.vanotech.experiments.feature.lunardates.R
 import com.vanotech.experiments.feature.lunardates.edit.EditRoute
 
@@ -64,43 +69,72 @@ internal fun HomeScreen(
             }
         }
     ) { paddingValues ->
-        if (events.itemCount == 0) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.hint_empty_dates),
-                    style = MaterialTheme.typography.titleMedium,
-                    textAlign = TextAlign.Center
+        if (events.itemCount > 0) {
+            HomeContent(
+                navController = navController,
+                events = events,
+                paddingValues = paddingValues
+            )
+        } else {
+            HomeEmptyContext(paddingValues = paddingValues)
+        }
+    }
+}
+
+@Composable
+private fun HomeContent(
+    navController: NavController,
+    events: LazyPagingItems<Event>,
+    paddingValues: PaddingValues
+) {
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val gridCells = remember(windowSizeClass) {
+        when (windowSizeClass.windowWidthSizeClass) {
+            WindowWidthSizeClass.COMPACT -> GridCells.Fixed(1)
+            WindowWidthSizeClass.MEDIUM -> GridCells.Fixed(2)
+            else -> GridCells.Adaptive(240.dp)
+        }
+    }
+
+    LazyVerticalGrid(
+        columns = gridCells,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(
+            count = events.itemCount,
+            key = events.itemKey { it.id }
+        ) { index ->
+            val event = events[index]
+            event?.also {
+                HomeItem(
+                    event = it,
+                    navController = navController
                 )
             }
-        } else {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(160.dp),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(
-                    count = events.itemCount,
-                    key = events.itemKey { it.id }
-                ) { index ->
-                    val event = events[index]
-                    event?.also {
-                        HomeItem(
-                            event = it,
-                            navController = navController
-                        )
-                    }
-                }
-            }
         }
+    }
+}
+
+@Composable
+private fun HomeEmptyContext(
+    paddingValues: PaddingValues
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(R.string.hint_empty_dates),
+            style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.Center
+        )
     }
 }

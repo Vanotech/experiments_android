@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import com.vanotech.experiments.core.ui.NavGraph
 import com.vanotech.experiments.feature.lunardates.edit.EditRoute
 import com.vanotech.experiments.feature.lunardates.edit.EditScreen
@@ -18,10 +19,10 @@ object LunarDatesNavGraph : NavGraph {
 
     override fun label(): Int = R.string.route_lunar_dates_home
 
-    override fun startDestination(): Any = HomeRoute
+    override fun startDestination(): Any = LunarDatesRoute
 
     override fun register(navGraphBuilder: NavGraphBuilder, navController: NavController) {
-        navGraphBuilder.apply {
+        navGraphBuilder.navigation<LunarDatesRoute>(startDestination = HomeRoute) {
             composable<HomeRoute> { HomeScreen(navController) }
             composable<EditRoute> { EditScreen(navController) }
         }

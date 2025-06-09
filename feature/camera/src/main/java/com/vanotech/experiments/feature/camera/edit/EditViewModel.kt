@@ -15,7 +15,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vanotech.experiments.feature.camera.CameraRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +29,7 @@ import kotlin.coroutines.suspendCoroutine
 
 @HiltViewModel
 internal class EditViewModel @Inject constructor(
-    private val cameraRepo: CameraRepo
+    private val captureRepo: com.vanotech.experiments.data.camera.CaptureRepo
 ) : ViewModel() {
     private val _surfaceRequest = MutableStateFlow<SurfaceRequest?>(null)
     val surfaceRequest: StateFlow<SurfaceRequest?> = _surfaceRequest
@@ -72,7 +71,7 @@ internal class EditViewModel @Inject constructor(
 
     fun focusOnPoint(offset: Offset) {
         val meteringPoint = surfaceMeteringPointFactory?.createPoint(offset.x, offset.y)
-        meteringPoint?.also { point->
+        meteringPoint?.also { point ->
             val meteringAction = FocusMeteringAction.Builder(point).build()
             cameraControl?.startFocusAndMetering(meteringAction)
         }
@@ -81,24 +80,24 @@ internal class EditViewModel @Inject constructor(
     fun takePhoto() {
         viewModelScope.launch {
             try {
-                val captureFile = cameraRepo.getCaptureFile()
-                val outputOptions = ImageCapture.OutputFileOptions.Builder(captureFile).build()
-                suspendCoroutine { continuation ->
-                    imageCapture.takePicture(
-                        outputOptions,
-                        executor,
-                        object : ImageCapture.OnImageSavedCallback {
-                            override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                                continuation.resume(Unit)
-                            }
+                captureRepo.updateCapture { captureFile ->
+                    suspendCoroutine { continuation ->
+                        val outputOptions = ImageCapture.OutputFileOptions.Builder(captureFile).build()
+                        imageCapture.takePicture(
+                            outputOptions,
+                            executor,
+                            object : ImageCapture.OnImageSavedCallback {
+                                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                                    continuation.resume(Unit)
+                                }
 
-                            override fun onError(exception: ImageCaptureException) {
-                                continuation.resumeWithException(exception)
+                                override fun onError(exception: ImageCaptureException) {
+                                    continuation.resumeWithException(exception)
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
-                cameraRepo.notifyCaptureFileChanged()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

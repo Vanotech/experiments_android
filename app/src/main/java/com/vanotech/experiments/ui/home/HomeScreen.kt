@@ -11,25 +11,26 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.vanotech.experiments.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
+internal fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val destinations = viewModel.items
-
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -41,23 +42,46 @@ fun HomeScreen(
             )
         }
     ) { paddingValues ->
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(160.dp),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(
-                count = destinations.size,
-            ) { index ->
-                HomeItem(
-                    destination = destinations[index],
-                    navController = navController
-                )
-            }
+        HomeContent(
+            navController = navController,
+            viewModel = viewModel,
+            paddingValues = paddingValues
+        )
+    }
+}
+
+@Composable
+private fun HomeContent(
+    navController: NavController,
+    viewModel: HomeViewModel,
+    paddingValues: PaddingValues
+) {
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val gridCells = remember(windowSizeClass) {
+        when (windowSizeClass.windowWidthSizeClass) {
+            WindowWidthSizeClass.COMPACT -> GridCells.Fixed(1)
+            WindowWidthSizeClass.MEDIUM -> GridCells.Fixed(2)
+            else -> GridCells.Adaptive(240.dp)
+        }
+    }
+
+    LazyVerticalGrid(
+        columns = gridCells,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        val destinations = viewModel.items
+        items(
+            count = destinations.size,
+        ) { index ->
+            HomeItem(
+                destination = destinations[index],
+                navController = navController
+            )
         }
     }
 }

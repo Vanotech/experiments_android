@@ -21,7 +21,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun HomeItem(
+internal fun HomeItem(
     destination: HomeViewModel.Destination,
     navController: NavController
 ) {

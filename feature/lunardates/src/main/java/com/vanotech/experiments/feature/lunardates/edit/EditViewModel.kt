@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.vanotech.experiments.core.ui.NamedValue
+import com.vanotech.experiments.core.utils.NamedValue
 import com.vanotech.experiments.data.lunardates.Event
 import com.vanotech.experiments.data.lunardates.EventRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +25,12 @@ internal class EditViewModel @Inject constructor(
 
     val title = MutableStateFlow("")
 
-    val daysOfMonths = List(30) { NamedValue("${it + 1}", it + 1) }
+    val daysOfMonths = List(30) {
+        NamedValue(
+            "${it + 1}",
+            it + 1
+        )
+    }
     val dayOfMonth = MutableStateFlow(daysOfMonths.first())
 
     val months = List(13) { NamedValue("${it + 1}", it) }

@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/core/ui" />
             <option value="$PROJECT_DIR$/core/utils" />
             <option value="$PROJECT_DIR$/data" />
+            <option value="$PROJECT_DIR$/data/camera" />
             <option value="$PROJECT_DIR$/data/lunardates" />
             <option value="$PROJECT_DIR$/data/tvguide" />
             <option value="$PROJECT_DIR$/feature" />

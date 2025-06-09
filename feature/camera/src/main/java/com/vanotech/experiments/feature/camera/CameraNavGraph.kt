@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import com.vanotech.experiments.core.ui.NavGraph
 import com.vanotech.experiments.feature.camera.edit.EditRoute
 import com.vanotech.experiments.feature.camera.edit.EditScreen
@@ -18,10 +19,10 @@ object CameraNavGraph : NavGraph {
 
     override fun label(): Int = R.string.route_camera_home
 
-    override fun startDestination(): Any = HomeRoute
+    override fun startDestination(): Any = CameraRoute
 
     override fun register(navGraphBuilder: NavGraphBuilder, navController: NavController) {
-        navGraphBuilder.apply {
+        navGraphBuilder.navigation<CameraRoute>(startDestination = HomeRoute) {
             composable<HomeRoute> { HomeScreen(navController) }
             composable<EditRoute> { EditScreen(navController) }
         }

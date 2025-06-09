@@ -2,4 +2,8 @@
 <resources>
     <string name="appwidget_name">OS Info</string>
     <string name="appwidget_description">View OS Info</string>
+
+    <string name="label_api_level">API level</string>
+    <string name="label_codename">Codename</string>
+    <string name="label_version">Version</string>
 </resources>

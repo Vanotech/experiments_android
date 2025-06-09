@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.vanotech.experiments.feature.camera.CameraNavGraph
 import com.vanotech.experiments.feature.lunardates.LunarDatesNavGraph
 import com.vanotech.experiments.feature.tvguide.TvGuideNavGraph
+import com.vanotech.experiments.ui.theme.Theme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,19 +21,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val navController = rememberNavController()
-            NavHost(
-                navController = navController,
-                startDestination = MainNavGraph.startDestination()
-            ) {
-                val navGraphs = listOf(
-                    CameraNavGraph,
-                    MainNavGraph,
-                    LunarDatesNavGraph,
-                    TvGuideNavGraph
-                )
-                navGraphs.forEach{ navGraph->
-                    navGraph.register(this, navController)
+            Theme {
+                val navController = rememberNavController()
+                NavHost(
+                    navController = navController,
+                    startDestination = MainNavGraph.startDestination()
+                ) {
+                    val navGraphs = listOf(
+                        CameraNavGraph,
+                        MainNavGraph,
+                        LunarDatesNavGraph,
+                        TvGuideNavGraph
+                    )
+                    navGraphs.forEach { navGraph ->
+                        navGraph.register(this, navController)
+                    }
                 }
             }
         }

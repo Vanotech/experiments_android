@@ -16,10 +16,11 @@ import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T> SimpleExposedDropdownMenuBox(
-    items: List<NamedValue<T>>,
-    selection: NamedValue<T>,
-    onSelect: (NamedValue<T>) -> Unit,
+fun <T> DropdownMenuTextField(
+    items: List<T>,
+    selection: T,
+    onSelect: (T) -> Unit,
+    itemText: (T) -> String,
     modifier: Modifier = Modifier,
     label: @Composable (() -> Unit)? = null,
 ) {
@@ -30,7 +31,7 @@ fun <T> SimpleExposedDropdownMenuBox(
         onExpandedChange = { expand = it }
     ) {
         TextField(
-            value = selection.label,
+            value = itemText(selection),
             onValueChange = {},
             modifier = modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
             readOnly = true,
@@ -44,7 +45,7 @@ fun <T> SimpleExposedDropdownMenuBox(
         ) {
             items.forEach { item ->
                 DropdownMenuItem(
-                    text = { Text(text = item.label) },
+                    text = { Text(text = itemText(item)) },
                     onClick = {
                         onSelect(item)
                         expand = false

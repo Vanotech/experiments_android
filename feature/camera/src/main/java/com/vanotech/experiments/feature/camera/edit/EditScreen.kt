@@ -9,6 +9,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -54,7 +55,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import com.vanotech.experiments.core.ui.NavigateBackButton
+import com.vanotech.experiments.core.ui.BackButton
 import com.vanotech.experiments.feature.camera.R
 import kotlinx.coroutines.delay
 import java.util.UUID
@@ -77,7 +78,7 @@ internal fun EditScreen(
                     Text(text = stringResource(R.string.route_camera_edit))
                 },
                 navigationIcon = {
-                    NavigateBackButton(navController = navController)
+                    BackButton(navController = navController)
                 },
                 scrollBehavior = scrollBehavior
             )
@@ -98,27 +99,23 @@ internal fun EditScreen(
         }
     ) { paddingValues ->
         if (cameraPermissionState.status.isGranted) {
-            EditGrantedScreen(
+            EditGrantedContent(
                 viewModel = viewModel,
-                modifier = Modifier
-                    .fillMaxSize()
+                paddingValues = paddingValues
             )
         } else {
-            EditDeniedScreen(
+            EditDeniedContent(
                 cameraPermissionState = cameraPermissionState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp),
+                paddingValues = paddingValues
             )
         }
     }
 }
 
 @Composable
-private fun EditGrantedScreen(
+private fun EditGrantedContent(
     viewModel: EditViewModel,
-    modifier: Modifier = Modifier,
+    paddingValues: PaddingValues
 ) {
     val context = LocalContext.current
     val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
@@ -145,15 +142,18 @@ private fun EditGrantedScreen(
         CameraXViewfinder(
             surfaceRequest = request,
             coordinateTransformer = coordinateTransformer,
-            modifier = modifier.pointerInput(Unit) {
-                detectTapGestures { gestureOffset ->
-                    val surfaceOffset = with(coordinateTransformer) {
-                        gestureOffset.transform()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .pointerInput(Unit) {
+                    detectTapGestures { gestureOffset ->
+                        val surfaceOffset = with(coordinateTransformer) {
+                            gestureOffset.transform()
+                        }
+                        viewModel.focusOnPoint(surfaceOffset)
+                        autofocusRequest = UUID.randomUUID() to gestureOffset
                     }
-                    viewModel.focusOnPoint(surfaceOffset)
-                    autofocusRequest = UUID.randomUUID() to gestureOffset
                 }
-            }
         )
 
         AnimatedVisibility(
@@ -175,12 +175,15 @@ private fun EditGrantedScreen(
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-private fun EditDeniedScreen(
+private fun EditDeniedContent(
     cameraPermissionState: PermissionState,
-    modifier: Modifier
+    paddingValues: PaddingValues
 ) {
     Column(
-        modifier = modifier,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

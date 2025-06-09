@@ -39,6 +39,17 @@ internal fun HomeItem(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
+            Text(
+                text = event.title,
+                style = MaterialTheme.typography.titleMedium
+            )
+
+            val lunarDate = "${event.month + 1} 月 ${event.dayOfMonth} 日"
+            Text(
+                text = lunarDate,
+                style = MaterialTheme.typography.bodyMedium
+            )
+
             val chineseCalendar = ChineseCalendar().apply {
                 set(Calendar.MONTH, event.month)
                 set(Calendar.DAY_OF_MONTH, event.dayOfMonth)
@@ -46,20 +57,10 @@ internal fun HomeItem(
                     add(Calendar.YEAR, 1)
                 }
             }
-
-            val lunarDate = "${event.month + 1} 月 ${event.dayOfMonth} 日"
             val gregorianDate = DateUtils.formatDateTime(
                 LocalContext.current,
                 chineseCalendar.timeInMillis,
                 DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_SHOW_YEAR
-            )
-            Text(
-                text = event.title,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = lunarDate,
-                style = MaterialTheme.typography.bodyMedium
             )
             Text(
                 text = gregorianDate,

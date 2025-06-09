@@ -9,13 +9,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 
 @Composable
-fun NavigateUpButton(navController: NavController) {
+fun BackButton(onBackPress: () -> Unit) {
+    IconButton(onClick = onBackPress) {
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = stringResource(R.string.action_navigate_back)
+        )
+    }
+}
+
+@Composable
+fun BackButton(navController: NavController) {
     if (navController.previousBackStackEntry != null) {
-        IconButton(onClick = { navController.navigateUp() }) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = stringResource(R.string.action_navigate_up)
-            )
+        BackButton {
+            navController.popBackStack()
         }
     }
 }

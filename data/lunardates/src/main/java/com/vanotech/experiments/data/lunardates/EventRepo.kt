@@ -1,18 +1,17 @@
 package com.vanotech.experiments.data.lunardates
 
+import androidx.paging.PagingSource
 import com.vanotech.experiments.data.lunardates.internal.db.EventDaoService
 import javax.inject.Inject
 
-class EventRepo @Inject internal constructor(
-    private val eventDaoService: EventDaoService,
-) {
-    suspend fun delete(item: Event) = eventDaoService.delete(item)
+interface EventRepo {
+    suspend fun delete(item: Event)
 
-    suspend fun get(id: Int) = eventDaoService.get(id)
+    suspend fun get(id: Int): Event?
 
-    fun getAllAsPagingSource() = eventDaoService.getAllAsPagingSource()
+    fun getAllAsPagingSource(): PagingSource<Int, Event>
 
-    suspend fun upsert(item: Event) = eventDaoService.upsert(item)
+    suspend fun upsert(item: Event): Unit
 
-    suspend fun upsert(items: List<Event>) = eventDaoService.upsert(items)
+    suspend fun upsert(items: Collection<Event>): Unit
 }

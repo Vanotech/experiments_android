@@ -1,9 +1,11 @@
 package com.vanotech.experiments.data.tvguide
 
 import android.content.Context
+import com.vanotech.experiments.data.tvguide.internal.ListingRepoImpl
 import com.vanotech.experiments.data.tvguide.internal.db.ListingDao
 import com.vanotech.experiments.data.tvguide.internal.db.TvGuideDatabase
 import com.vanotech.experiments.data.tvguide.internal.net.TvGuideApi
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,21 +15,28 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object TvGuideDiModule {
+object TvGuideModule {
+
+    @Module
+    @InstallIn(SingletonComponent::class)
+    internal interface Bindings {
+        @Binds
+        fun bindsListingRepo(listingRepo: ListingRepoImpl): ListingRepo
+    }
 
     @Provides
     @Singleton
-    fun providesListingDatabase(@ApplicationContext context: Context): TvGuideDatabase {
+    internal fun providesListingDatabase(@ApplicationContext context: Context): TvGuideDatabase {
         return TvGuideDatabase.getInstance(context)
     }
 
     @Provides
-    fun providesListingDao(database: TvGuideDatabase): ListingDao {
+    internal fun providesListingDao(database: TvGuideDatabase): ListingDao {
         return database.listingDao()
     }
 
     @Provides
-    fun providesTvGuideApi(): TvGuideApi {
+    internal fun providesTvGuideApi(): TvGuideApi {
         return TvGuideApi.getInstance()
     }
 }

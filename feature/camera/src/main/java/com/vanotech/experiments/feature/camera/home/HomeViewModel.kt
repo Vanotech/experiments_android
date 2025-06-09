@@ -1,21 +1,13 @@
 package com.vanotech.experiments.feature.camera.home
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.vanotech.experiments.feature.camera.CameraRepo
+import com.vanotech.experiments.data.camera.CaptureRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
-    private val cameraRepo: CameraRepo
+    captureRepo: CaptureRepo
 ) : ViewModel() {
-    val capture = cameraRepo.capture
-
-    init {
-        viewModelScope.launch {
-            cameraRepo.notifyCaptureFileChanged()
-        }
-    }
+    val capture = captureRepo.capture
 }

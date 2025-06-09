@@ -1,14 +1,16 @@
 package com.vanotech.experiments.feature.camera.home
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -42,7 +44,6 @@ internal fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val placeholder = rememberVectorPainter(Icons.Default.AccountBox)
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -67,28 +68,40 @@ internal fun HomeScreen(
             }
         }
     ) { paddingValues ->
-        Box(
+        HomeContent(
+            viewModel = viewModel,
+            paddingValues = paddingValues
+        )
+    }
+}
+
+@Composable
+private fun HomeContent(
+    viewModel: HomeViewModel,
+    paddingValues: PaddingValues
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        val capture = viewModel.capture.collectAsState(initial = null).value
+        val placeholder = rememberVectorPainter(Icons.Default.Person)
+
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(capture)
+                .build(),
+            contentDescription = null,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            val capture = viewModel.capture.collectAsState().value
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(capture.value)
-                    .build(),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop,
-                error = placeholder,
-                fallback = placeholder,
-                placeholder = placeholder
-            )
-        }
+                .fillMaxWidth()
+                .aspectRatio(1f)
+                .clip(CircleShape),
+            contentScale = ContentScale.Crop,
+            error = placeholder,
+            fallback = placeholder
+        )
     }
 }

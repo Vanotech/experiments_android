@@ -42,7 +42,7 @@ android {
 
 dependencies {
     implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
+    implementation(project(":data:camera"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

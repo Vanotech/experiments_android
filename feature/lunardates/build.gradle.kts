@@ -42,6 +42,7 @@ android {
 
 dependencies {
     implementation(project(":core:ui"))
+    implementation(project(":core:utils"))
     implementation(project(":data:lunardates"))
 
     implementation(libs.androidx.core.ktx)
@@ -53,6 +54,11 @@ dependencies {
     androidTestImplementation(composeBom)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material3.adaptive)
+    implementation(libs.androidx.compose.material3.adaptive.layout)
+    implementation(libs.androidx.compose.material3.adaptive.navigation)
+    implementation(libs.androidx.compose.material3.window.size.clazz)
     implementation(libs.androidx.compose.ui.tooling)
 
     implementation(libs.androidx.hilt.navigation.compose)

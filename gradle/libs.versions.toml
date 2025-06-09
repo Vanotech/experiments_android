@@ -1,5 +1,6 @@
 [versions]
 accompanist = "0.37.3"
+adaptive = "1.1.0-alpha07"
 android-gradle-plugin = "8.10.1"
 androidx-activity-compose = "1.10.1"
 androidx-appcompat = "1.7.0"
@@ -40,6 +41,10 @@ androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidx-compose-bom" }
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended"}
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-material3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive" }
+androidx-compose-material3-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation" }
+androidx-compose-material3-adaptive-layout = { module = "androidx.compose.material3.adaptive:adaptive-layout" }
+androidx-compose-material3-window-size-clazz = { module = "androidx.compose.material3:material3-window-size-class" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }

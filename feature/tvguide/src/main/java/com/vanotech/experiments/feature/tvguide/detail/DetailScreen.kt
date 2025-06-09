@@ -28,7 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
-import com.vanotech.experiments.core.ui.NavigateBackButton
+import com.vanotech.experiments.core.ui.BackButton
 import com.vanotech.experiments.data.tvguide.schema.ListingType
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,7 +54,7 @@ internal fun DetailScreen(
                     }
                 },
                 navigationIcon = {
-                    NavigateBackButton(navController = navController)
+                    BackButton(navController = navController)
                 },
                 scrollBehavior = scrollBehavior
             )
