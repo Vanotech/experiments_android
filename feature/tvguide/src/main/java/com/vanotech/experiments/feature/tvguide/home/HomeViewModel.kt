@@ -11,6 +11,7 @@ import com.vanotech.experiments.data.tvguide.ListingRepo
 import com.vanotech.experiments.data.tvguide.schema.Listing
 import com.vanotech.experiments.data.tvguide.schema.ListingType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.time.LocalTime
@@ -57,6 +58,13 @@ internal class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             listingRepo.getListings(12)
         }
+    }
+
+    fun getListing(id: String): Flow<Listing?> {
+        viewModelScope.launch {
+            listingRepo.getProgram(id)
+        }
+        return listingRepo.getAsFlow(id)
     }
 
     fun setShowEpisodes(value: Boolean) {

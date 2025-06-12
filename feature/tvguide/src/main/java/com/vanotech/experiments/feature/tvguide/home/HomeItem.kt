@@ -1,10 +1,13 @@
 package com.vanotech.experiments.feature.tvguide.home
 
 import android.text.format.DateUtils
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Movie
@@ -21,24 +24,41 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.vanotech.experiments.data.tvguide.schema.Listing
 import com.vanotech.experiments.data.tvguide.schema.ListingType
-import com.vanotech.experiments.feature.tvguide.detail.DetailRoute
 
 @Composable
 internal fun HomeItem(
     listing: Listing,
-    navController: NavController
+    selectable: Boolean = false,
+    selected: Boolean = false,
+    onClick: () -> Unit
 ) {
+    val interactionModifier = when (selectable) {
+        true -> Modifier.selectable(
+            selected = selected,
+            onClick = onClick
+        )
+
+        false -> Modifier.clickable(onClick = onClick)
+    }
+
+    val borderStroke = when (selectable && selected) {
+        true -> BorderStroke(
+            1.dp,
+            MaterialTheme.colorScheme.outline
+        )
+
+        false -> null
+    }
+
     Card(
-        onClick = {
-            navController.navigate(DetailRoute(listing.id))
-        },
-        modifier = Modifier.fillMaxWidth(),
+        border = borderStroke,
+        modifier = Modifier
+            .then(interactionModifier)
+            .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp)
     ) {
         AsyncImage(
@@ -95,8 +115,7 @@ internal fun HomeItem(
 
 @Preview
 @Composable
-fun ListingItemPreview() {
+fun HomeItemPreview() {
     val listing = Listing.mockData(0)
-    val navController = rememberNavController()
-    HomeItem(listing = listing, navController = navController)
+    HomeItem(listing = listing) {}
 }

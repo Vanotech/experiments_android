@@ -9,8 +9,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.vanotech.experiments.core.ui.NavGraph
-import com.vanotech.experiments.feature.tvguide.detail.DetailRoute
-import com.vanotech.experiments.feature.tvguide.detail.DetailScreen
 import com.vanotech.experiments.feature.tvguide.home.HomeRoute
 import com.vanotech.experiments.feature.tvguide.home.HomeScreen
 
@@ -26,7 +24,6 @@ object TvGuideNavGraph : NavGraph {
     override fun register(navGraphBuilder: NavGraphBuilder, navController: NavController) {
         navGraphBuilder.navigation<TvGuideRoute>(startDestination = HomeRoute) {
             composable<HomeRoute> { HomeScreen(navController) }
-            composable<DetailRoute> { DetailScreen(navController) }
         }
     }
 }

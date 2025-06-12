@@ -17,21 +17,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.vanotech.experiments.data.lunardates.Event
 import com.vanotech.experiments.feature.lunardates.edit.EditRoute
 
 @Composable
 internal fun HomeItem(
     event: Event,
-    navController: NavController
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                navController.navigate(route = EditRoute(event.id))
-            },
+            .clickable(onClick = onClick),
         shape = RoundedCornerShape(8.dp)
     ) {
         Column(
@@ -70,12 +67,19 @@ internal fun HomeItem(
     }
 }
 
+@Composable
+internal fun HomeItem(
+    event: Event,
+    navController: NavController
+) {
+    HomeItem(event = event) {
+        navController.navigate(route = EditRoute(event.id))
+    }
+}
+
 @Preview
 @Composable
-fun EventItemPreview() {
+fun HomeItemPreview() {
     val event = Event.mockData(0)
-    HomeItem(
-        event = event,
-        navController = rememberNavController()
-    )
+    HomeItem(event = event) {}
 }

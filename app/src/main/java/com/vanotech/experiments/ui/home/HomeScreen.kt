@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.vanotech.experiments.R
 
@@ -42,18 +43,18 @@ internal fun HomeScreen(
             )
         }
     ) { paddingValues ->
-        HomeContent(
+        Feed(
+            destinations = viewModel.items,
             navController = navController,
-            viewModel = viewModel,
             paddingValues = paddingValues
         )
     }
 }
 
 @Composable
-private fun HomeContent(
+private fun Feed(
+    destinations: List<HomeViewModel.Destination>,
     navController: NavController,
-    viewModel: HomeViewModel,
     paddingValues: PaddingValues
 ) {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
@@ -74,7 +75,6 @@ private fun HomeContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        val destinations = viewModel.items
         items(
             count = destinations.size,
         ) { index ->

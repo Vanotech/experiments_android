@@ -17,7 +17,7 @@ import androidx.glance.layout.padding
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
-import androidx.glance.text.TextDefaults
+import androidx.glance.text.TextStyle
 
 internal class OsInfoAppWidget : GlanceAppWidget() {
 
@@ -39,14 +39,14 @@ internal class OsInfoAppWidget : GlanceAppWidget() {
     private fun Content() {
         Scaffold {
             LazyVerticalGrid(
-                modifier = GlanceModifier.padding(horizontal = 0.dp, vertical = 12.dp),
-                gridCells = GridCells.Fixed(2)
+                gridCells = GridCells.Fixed(2),
+                modifier = GlanceModifier.padding(horizontal = 0.dp, vertical = 12.dp)
             ) {
-                val labelStyle = TextDefaults.defaultTextStyle.copy(
+                val labelStyle = TextStyle(
                     fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Start
                 )
-                val valueStyle = TextDefaults.defaultTextStyle.copy(
+                val valueStyle = TextStyle(
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.End
                 )

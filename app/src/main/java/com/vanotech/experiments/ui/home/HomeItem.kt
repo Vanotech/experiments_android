@@ -18,19 +18,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+
 
 @Composable
 internal fun HomeItem(
     destination: HomeViewModel.Destination,
-    navController: NavController
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                navController.navigate(destination.route)
-            },
+            .clickable(onClick = onClick),
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(
@@ -52,16 +50,23 @@ internal fun HomeItem(
     }
 }
 
+@Composable
+internal fun HomeItem(
+    destination: HomeViewModel.Destination,
+    navController: NavController
+) {
+    HomeItem(destination = destination) {
+        navController.navigate(destination.route)
+    }
+}
+
 @Preview
 @Composable
 fun HomeItemPreview() {
     val destination = HomeViewModel.Destination(
         icon = Icons.Default.Home,
-        label = "Lorem Ipsum",
+        label = "Lorem ipsum",
         route = Unit
     )
-    HomeItem(
-        destination = destination,
-        navController = rememberNavController()
-    )
+    HomeItem(destination = destination) {}
 }

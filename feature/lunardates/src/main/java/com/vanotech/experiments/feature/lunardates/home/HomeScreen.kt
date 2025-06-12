@@ -44,7 +44,6 @@ internal fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val events = viewModel.items.collectAsLazyPagingItems()
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -69,22 +68,23 @@ internal fun HomeScreen(
             }
         }
     ) { paddingValues ->
+        val events = viewModel.items.collectAsLazyPagingItems()
         if (events.itemCount > 0) {
-            HomeContent(
-                navController = navController,
+            Feed(
                 events = events,
+                navController = navController,
                 paddingValues = paddingValues
             )
         } else {
-            HomeEmptyContext(paddingValues = paddingValues)
+            EmptyFeed(paddingValues = paddingValues)
         }
     }
 }
 
 @Composable
-private fun HomeContent(
-    navController: NavController,
+private fun Feed(
     events: LazyPagingItems<Event>,
+    navController: NavController,
     paddingValues: PaddingValues
 ) {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
@@ -121,7 +121,7 @@ private fun HomeContent(
 }
 
 @Composable
-private fun HomeEmptyContext(
+private fun EmptyFeed(
     paddingValues: PaddingValues
 ) {
     Box(

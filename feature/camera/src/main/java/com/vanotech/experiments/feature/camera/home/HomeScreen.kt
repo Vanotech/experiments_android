@@ -10,7 +10,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -68,7 +67,7 @@ internal fun HomeScreen(
             }
         }
     ) { paddingValues ->
-        HomeContent(
+        Content(
             viewModel = viewModel,
             paddingValues = paddingValues
         )
@@ -76,7 +75,7 @@ internal fun HomeScreen(
 }
 
 @Composable
-private fun HomeContent(
+private fun Content(
     viewModel: HomeViewModel,
     paddingValues: PaddingValues
 ) {

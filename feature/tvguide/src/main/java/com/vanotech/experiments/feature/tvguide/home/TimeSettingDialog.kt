@@ -3,7 +3,6 @@ package com.vanotech.experiments.feature.tvguide.home
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -11,12 +10,13 @@ import com.vanotech.experiments.core.ui.TimePickerDialog
 
 @ExperimentalMaterial3Api
 @Composable
-internal fun HomeTimePickerDialog(
+fun TimeSettingDialog(
+    state: TimePickerState,
     onDismissRequest: () -> Unit,
-    onConfirmRequest: () -> Unit,
-    state: TimePickerState
+    onConfirmRequest: () -> Unit
 ) {
     TimePickerDialog(
+        state = state,
         onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(
@@ -37,7 +37,5 @@ internal fun HomeTimePickerDialog(
                 Text(text = stringResource(android.R.string.cancel))
             }
         }
-    ) {
-        TimePicker(state = state)
-    }
+    )
 }

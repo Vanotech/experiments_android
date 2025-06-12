@@ -11,8 +11,10 @@ import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
+import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerColors
 import androidx.compose.material3.TimePickerDefaults
+import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +26,7 @@ import androidx.compose.ui.window.DialogProperties
 @ExperimentalMaterial3Api
 @Composable
 fun TimePickerDialog(
+    state: TimePickerState,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     confirmButton: @Composable () -> Unit,
@@ -31,8 +34,7 @@ fun TimePickerDialog(
     shape: Shape = DatePickerDefaults.shape,
     tonalElevation: Dp = DatePickerDefaults.TonalElevation,
     colors: TimePickerColors = TimePickerDefaults.colors(),
-    properties: DialogProperties = DialogProperties(usePlatformDefaultWidth = false),
-    content: @Composable ColumnScope.() -> Unit,
+    properties: DialogProperties = DialogProperties(usePlatformDefaultWidth = false)
 ) {
     BasicAlertDialog(
         onDismissRequest = onDismissRequest,
@@ -49,7 +51,7 @@ fun TimePickerDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                content()
+                TimePicker(state = state)
                 Box(
                     modifier = Modifier
                         .align(Alignment.End)

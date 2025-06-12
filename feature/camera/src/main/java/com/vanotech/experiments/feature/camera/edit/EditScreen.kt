@@ -99,12 +99,12 @@ internal fun EditScreen(
         }
     ) { paddingValues ->
         if (cameraPermissionState.status.isGranted) {
-            EditGrantedContent(
+            PermissionGrantedContent(
                 viewModel = viewModel,
                 paddingValues = paddingValues
             )
         } else {
-            EditDeniedContent(
+            PermissionDeniedContent(
                 cameraPermissionState = cameraPermissionState,
                 paddingValues = paddingValues
             )
@@ -113,7 +113,7 @@ internal fun EditScreen(
 }
 
 @Composable
-private fun EditGrantedContent(
+private fun PermissionGrantedContent(
     viewModel: EditViewModel,
     paddingValues: PaddingValues
 ) {
@@ -175,7 +175,7 @@ private fun EditGrantedContent(
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-private fun EditDeniedContent(
+private fun PermissionDeniedContent(
     cameraPermissionState: PermissionState,
     paddingValues: PaddingValues
 ) {
