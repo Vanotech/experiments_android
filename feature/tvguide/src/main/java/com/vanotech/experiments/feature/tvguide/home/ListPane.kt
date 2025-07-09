@@ -64,22 +64,13 @@ internal fun ListPane(
             )
         }
     ) { paddingValues ->
-        val listings = viewModel.items.collectAsLazyPagingItems()
-        var selectedIndex by rememberSaveable { mutableStateOf<Int?>(null) }
-
+        val items = viewModel.items.collectAsLazyPagingItems()
         Feed(
-            listings = listings,
-            paddingValues = paddingValues
-        ) { index, listing ->
-            HomeItem(
-                listing = listing,
-                selectable = isListAndDetailVisible,
-                selected = index == selectedIndex
-            ) {
-                selectedIndex = index
-                onItemClick(listing)
-            }
-        }
+            items = items,
+            selectable = isListAndDetailVisible,
+            paddingValues = paddingValues,
+            onItemClick = onItemClick
+        )
 
         if (showSettings) {
             HomeSettingsBottomSheet(
@@ -91,12 +82,16 @@ internal fun ListPane(
         }
     }
 }
+
 @Composable
 private fun Feed(
-    listings: LazyPagingItems<Listing>,
+    items: LazyPagingItems<HomeItem>,
+    selectable: Boolean,
     paddingValues: PaddingValues,
-    transform: @Composable (Int, Listing) -> Unit
+    onItemClick: (Listing) -> Unit
 ) {
+    var selectedIndex by rememberSaveable { mutableStateOf<Int?>(null) }
+
     LazyVerticalGrid(
         columns = GridCells.Adaptive(160.dp),
         modifier = Modifier
@@ -107,12 +102,16 @@ private fun Feed(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(
-            count = listings.itemCount,
-            key = listings.itemKey { it.id }
+            count = items.itemCount,
+            key = items.itemKey { it.id }
         ) { index ->
-            val listing = listings[index]
-            listing?.also {
-                transform(index, it)
+            val item = items[index]
+            item?.Content(
+                selectable = selectable,
+                selected = index == selectedIndex
+            ) {
+                selectedIndex = index
+                onItemClick(item.listing)
             }
         }
     }

@@ -15,58 +15,63 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 
-@Composable
-internal fun HomeItem(
-    destination: HomeViewModel.Destination,
-    onClick: () -> Unit
+internal data class HomeUiModel(
+    private val icon: ImageVector,
+    private val label: String,
+    private val route: Any
 ) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(8.dp)
+    @Composable
+    fun Content(
+        onClick: () -> Unit
     ) {
-        Row(
+        Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .clickable(onClick = onClick),
+            shape = RoundedCornerShape(8.dp)
         ) {
-            Image(
-                imageVector = destination.icon,
-                contentDescription = destination.label
-            )
-            Text(
-                text = destination.label,
-                style = MaterialTheme.typography.titleMedium
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    imageVector = icon,
+                    contentDescription = label
+                )
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
         }
     }
-}
 
-@Composable
-internal fun HomeItem(
-    destination: HomeViewModel.Destination,
-    navController: NavController
-) {
-    HomeItem(destination = destination) {
-        navController.navigate(destination.route)
+    @Composable
+    fun Content(
+        navController: NavController
+    ) {
+        Content {
+            navController.navigate(route)
+        }
     }
 }
 
 @Preview
 @Composable
 fun HomeItemPreview() {
-    val destination = HomeViewModel.Destination(
+    val item = HomeUiModel(
         icon = Icons.Default.Home,
         label = "Lorem ipsum",
         route = Unit
     )
-    HomeItem(destination = destination) {}
+    item.Content { }
 }

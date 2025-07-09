@@ -5,8 +5,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import androidx.paging.map
 import com.vanotech.experiments.data.lunardates.EventRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,5 +23,9 @@ internal class HomeViewModel @Inject constructor(
 
     private val pagingDataFlow = pager.flow.cachedIn(viewModelScope)
 
-    val items = pagingDataFlow.cachedIn(viewModelScope)
+    val items = pagingDataFlow.map { pagingData ->
+        pagingData.map { event ->
+            HomeUiModel(event)
+        }
+    }.cachedIn(viewModelScope)
 }

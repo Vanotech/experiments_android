@@ -32,7 +32,6 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.vanotech.experiments.data.lunardates.Event
 import com.vanotech.experiments.feature.lunardates.R
 import com.vanotech.experiments.feature.lunardates.edit.EditRoute
 
@@ -68,10 +67,10 @@ internal fun HomeScreen(
             }
         }
     ) { paddingValues ->
-        val events = viewModel.items.collectAsLazyPagingItems()
-        if (events.itemCount > 0) {
+        val items = viewModel.items.collectAsLazyPagingItems()
+        if (items.itemCount > 0) {
             Feed(
-                events = events,
+                items = items,
                 navController = navController,
                 paddingValues = paddingValues
             )
@@ -83,7 +82,7 @@ internal fun HomeScreen(
 
 @Composable
 private fun Feed(
-    events: LazyPagingItems<Event>,
+    items: LazyPagingItems<HomeUiModel>,
     navController: NavController,
     paddingValues: PaddingValues
 ) {
@@ -106,16 +105,11 @@ private fun Feed(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(
-            count = events.itemCount,
-            key = events.itemKey { it.id }
+            count = items.itemCount,
+            key = items.itemKey { it.id }
         ) { index ->
-            val event = events[index]
-            event?.also {
-                HomeItem(
-                    event = it,
-                    navController = navController
-                )
-            }
+            val item = items[index]
+            item?.Content(navController = navController)
         }
     }
 }

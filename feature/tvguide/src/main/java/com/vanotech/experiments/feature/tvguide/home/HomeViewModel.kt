@@ -6,6 +6,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.filter
+import androidx.paging.map
 import com.vanotech.experiments.core.utils.TimeUtils
 import com.vanotech.experiments.data.tvguide.ListingRepo
 import com.vanotech.experiments.data.tvguide.schema.Listing
@@ -13,6 +14,7 @@ import com.vanotech.experiments.data.tvguide.schema.ListingType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 import javax.inject.Inject
@@ -51,6 +53,10 @@ internal class HomeViewModel @Inject constructor(
                 isShowType(listing, ListingType.MOVIE) -> showMovies
                 else -> true
             }
+        }
+    }.map { pagingData ->
+        pagingData.map { listing ->
+            HomeItem(listing)
         }
     }.cachedIn(viewModelScope)
 
