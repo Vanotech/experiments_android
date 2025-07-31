@@ -5,8 +5,8 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Channel(
-    @Json(name = "pa_id") val paId: String,
+    @field:Json(name = "pa_id") val paId: String,
     val title: String,
-    @Json(name = "logo_url") val logoUrl: String,
+    @field:Json(name = "logo_url") val logoUrl: String,
     val schedules: List<Schedule>
 )

@@ -67,7 +67,7 @@ internal fun HomeScreen(
             }
         }
     ) { paddingValues ->
-        Content(
+        CaptureContent(
             viewModel = viewModel,
             paddingValues = paddingValues
         )
@@ -75,7 +75,7 @@ internal fun HomeScreen(
 }
 
 @Composable
-private fun Content(
+private fun CaptureContent(
     viewModel: HomeViewModel,
     paddingValues: PaddingValues
 ) {

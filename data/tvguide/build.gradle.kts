@@ -50,6 +50,8 @@ dependencies {
     implementation(libs.moshi)
     ksp(libs.moshi.kotlin.codegen)
 
+    val retrofitBom = platform(libs.retrofit.bom)
+    implementation(retrofitBom)
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.moshi)
 

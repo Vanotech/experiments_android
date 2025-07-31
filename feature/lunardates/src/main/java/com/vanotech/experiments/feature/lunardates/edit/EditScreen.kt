@@ -90,7 +90,7 @@ internal fun EditScreen(
 }
 
 @Composable
-internal fun EditContent(
+private fun EditContent(
     navController: NavController,
     viewModel: EditViewModel,
     paddingValues: PaddingValues

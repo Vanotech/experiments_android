@@ -67,7 +67,7 @@ internal fun DetailPane(
 }
 
 @Composable
-internal fun DetailContent(
+private fun DetailContent(
     listing: Listing,
     paddingValues: PaddingValues
 ) {

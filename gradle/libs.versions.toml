@@ -1,31 +1,31 @@
 [versions]
 accompanist = "0.37.3"
-android-gradle-plugin = "8.10.1"
+android-gradle-plugin = "8.11.1"
 androidx-activity-compose = "1.10.1"
-androidx-appcompat = "1.7.0"
-androidx-camera = "1.5.0-beta01"
-androidx-compose-bom = "2025.05.00"
+androidx-appcompat = "1.7.1"
+androidx-camera = "1.5.0-beta02"
+androidx-compose-bom = "2025.07.00"
 androidx-core = "1.16.0"
-androidx-datastore = "1.1.6"
+androidx-datastore = "1.1.7"
 androidx-espresso-core = "3.6.1"
 androidx-glance = "1.1.1"
 androidx-hilt = "1.2.0"
 androidx-junit = "1.2.1"
-androidx-lifecycle = "2.9.0"
-androidx-navigation = "2.9.0"
+androidx-lifecycle = "2.9.2"
+androidx-navigation = "2.9.2"
 androidx-paging = "3.3.6"
-androidx-room = "2.7.1"
-androidx-work = "2.10.1"
-autonomousapps-dependency-analysis = "2.17.0"
-coil-bom = "3.0.1"
-hilt = "2.56.2"
+androidx-room = "2.7.2"
+androidx-work = "2.10.2"
+autonomousapps-dependency-analysis = "2.19.0"
+coil-bom = "3.3.0"
+hilt = "2.57"
 junit = "4.13.2"
-kotlin = "2.0.20"
-kotlinx-serialization-json = "1.6.3"
-ksp = "2.0.20-1.0.25"
+kotlin = "2.2.0"
+kotlinx-serialization-json = "1.9.0"
+ksp = "2.2.0-2.0.2"               # must match kotlin version
 material = "1.12.0"
-moshi = "1.15.1"
-retrofit = "2.11.0"
+moshi = "1.15.2"
+retrofit-bom = "3.0.0"
 timber = "5.0.1"
 
 [libraries]
@@ -35,10 +35,10 @@ androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "a
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "androidx-camera" }
 androidx-camera-compose = { module = "androidx.camera:camera-compose", version.ref = "androidx-camera" }
 androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "androidx-camera" }
-androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "androidx-camera" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "androidx-camera" }
 androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "androidx-camera" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidx-compose-bom" }
-androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended"}
+androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-material3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive" }
 androidx-compose-material3-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation" }
@@ -70,8 +70,9 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 material = { module = "com.google.android.material:material", version.ref = "material" }
 moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-retrofit-converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
+retrofit-bom = { module = "com.squareup.retrofit2:retrofit-bom", version.ref = "retrofit-bom" }
+retrofit = { module = "com.squareup.retrofit2:retrofit" }
+retrofit-converter-moshi = { module = "com.squareup.retrofit2:converter-moshi" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 [plugins]
