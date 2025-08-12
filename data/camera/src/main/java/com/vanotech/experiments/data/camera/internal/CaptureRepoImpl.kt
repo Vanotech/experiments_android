@@ -1,6 +1,8 @@
 package com.vanotech.experiments.data.camera.internal
 
 import android.content.Context
+import android.net.Uri
+import androidx.core.net.toUri
 import com.vanotech.experiments.data.camera.CaptureRepo
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.BufferOverflow
@@ -14,26 +16,52 @@ import javax.inject.Singleton
 internal class CaptureRepoImpl @Inject internal constructor(
     @ApplicationContext private val context: Context
 ) : CaptureRepo {
-    private val _captureFile = MutableSharedFlow<File>(
+    private val _capture = MutableSharedFlow<Uri>(
         replay = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
-    override val capture: Flow<File> = _captureFile
+    override val capture: Flow<Uri> = _capture
 
     init {
-        val captureFile = getCaptureFile()
-        _captureFile.tryEmit(captureFile)
+        val captureUri = getCaptureUri()
+        _capture.tryEmit(captureUri)
     }
 
-    private fun getCaptureFile(): File {
-        val parentDir = File(context.filesDir, "camera")
+    private fun getCaptureUri(): Uri {
+        val parentDir = File(context.filesDir, CAPTURE_DIRECTORY_NAME)
         parentDir.mkdirs()
-        return File(parentDir, "photo.jpg")
+        val file = File(parentDir, CAPTURE_FILE_NAME)
+        return file.toUri()
     }
 
-    override suspend fun updateCapture(block: suspend (File) -> Unit) {
-        val captureFile = getCaptureFile()
-        block(captureFile)
-        _captureFile.emit(captureFile)
+    private suspend fun updateCapture(block: suspend (Uri) -> Unit) {
+        val captureUri = getCaptureUri()
+        block(captureUri)
+        _capture.emit(captureUri)
+    }
+
+    override suspend fun updateCapture(source: File) {
+        updateCapture { target ->
+            source.inputStream().use { input ->
+                context.contentResolver.openOutputStream(target)?.use { output ->
+                    input.copyTo(output)
+                }
+            }
+        }
+    }
+
+    override suspend fun updateCapture(source: Uri) {
+        updateCapture { target ->
+            context.contentResolver.openInputStream(source)?.use { input ->
+                context.contentResolver.openOutputStream(target)?.use { output ->
+                    input.copyTo(output)
+                }
+            }
+        }
+    }
+
+    companion object {
+        private const val CAPTURE_DIRECTORY_NAME = "capture"
+        private const val CAPTURE_FILE_NAME = "capture.jpg"
     }
 }
