@@ -33,6 +33,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,6 +59,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.vanotech.experiments.core.ui.BackButton
 import com.vanotech.experiments.feature.camera.R
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 
@@ -69,6 +71,7 @@ internal fun EditScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -87,7 +90,10 @@ internal fun EditScreen(
             if (cameraPermissionState.status.isGranted) {
                 FloatingActionButton(
                     onClick = {
-                        viewModel.takePhoto()
+                        coroutineScope.launch {
+                            viewModel.takePhoto()
+                            navController.popBackStack()
+                        }
                     },
                 ) {
                     Icon(

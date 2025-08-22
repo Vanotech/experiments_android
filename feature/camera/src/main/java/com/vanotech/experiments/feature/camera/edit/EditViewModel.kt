@@ -14,14 +14,15 @@ import androidx.camera.lifecycle.awaitInstance
 import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.vanotech.experiments.data.camera.CaptureRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.concurrent.Executors
 import javax.inject.Inject
@@ -31,6 +32,7 @@ import kotlin.coroutines.suspendCoroutine
 
 @HiltViewModel
 internal class EditViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val captureRepo: CaptureRepo
 ) : ViewModel() {
     private val _surfaceRequest = MutableStateFlow<SurfaceRequest?>(null)
@@ -79,32 +81,32 @@ internal class EditViewModel @Inject constructor(
         }
     }
 
-    fun takePhoto() {
-        viewModelScope.launch {
-            val captureFile = File.createTempFile(CAPTURE_FILE_PREFIX, null, null)
-            try {
-                suspendCoroutine { continuation ->
-                    val outputOptions = ImageCapture.OutputFileOptions.Builder(captureFile).build()
-                    imageCapture.takePicture(
-                        outputOptions,
-                        executor,
-                        object : ImageCapture.OnImageSavedCallback {
-                            override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                                continuation.resume(Unit)
-                            }
-
-                            override fun onError(exception: ImageCaptureException) {
-                                continuation.resumeWithException(exception)
-                            }
+    suspend fun takePhoto() {
+        val captureFile = withContext(Dispatchers.IO) {
+            File.createTempFile(CAPTURE_FILE_PREFIX, null, context.cacheDir)
+        }
+        try {
+            suspendCoroutine { continuation ->
+                val outputOptions = ImageCapture.OutputFileOptions.Builder(captureFile).build()
+                imageCapture.takePicture(
+                    outputOptions,
+                    executor,
+                    object : ImageCapture.OnImageSavedCallback {
+                        override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                            continuation.resume(Unit)
                         }
-                    )
-                }
-                captureRepo.updateCapture(captureFile)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
-                captureFile.delete()
+
+                        override fun onError(exception: ImageCaptureException) {
+                            continuation.resumeWithException(exception)
+                        }
+                    }
+                )
             }
+            captureRepo.updateCapture(captureFile)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            captureFile.delete()
         }
     }
 

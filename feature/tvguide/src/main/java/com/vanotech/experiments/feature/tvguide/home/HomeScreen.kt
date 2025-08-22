@@ -2,6 +2,7 @@ package com.vanotech.experiments.feature.tvguide.home
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
@@ -31,24 +32,29 @@ internal fun HomeScreen(
     NavigableListDetailPaneScaffold(
         navigator = navigator,
         listPane = {
-            ListPane(
-                viewModel = viewModel,
-                isListAndDetailVisible = isListAndDetailVisible
-            ) { listing ->
-                coroutineScope.launch {
-                    navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, listing.id)
+            AnimatedPane {
+                ListPane(
+                    viewModel = viewModel,
+                    isListAndDetailVisible = isListAndDetailVisible
+                ) { listing ->
+                    coroutineScope.launch {
+                        navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, listing.id)
+                    }
                 }
             }
         },
         detailPane = {
             navigator.currentDestination?.contentKey?.also { listingId ->
-                val listing = viewModel.getListing(listingId).collectAsState(initial = null).value
-                DetailPane(
-                    listing = listing,
-                    isListAndDetailVisible = isListAndDetailVisible
-                ) {
-                    coroutineScope.launch {
-                        navigator.navigateBack()
+                AnimatedPane {
+                    val listing =
+                        viewModel.getListing(listingId).collectAsState(initial = null).value
+                    DetailPane(
+                        listing = listing,
+                        isListAndDetailVisible = isListAndDetailVisible
+                    ) {
+                        coroutineScope.launch {
+                            navigator.navigateBack()
+                        }
                     }
                 }
             }
