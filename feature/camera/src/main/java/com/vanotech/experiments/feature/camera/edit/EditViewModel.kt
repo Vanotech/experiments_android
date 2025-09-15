@@ -32,7 +32,7 @@ import kotlin.coroutines.suspendCoroutine
 
 @HiltViewModel
 internal class EditViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
     private val captureRepo: CaptureRepo
 ) : ViewModel() {
     private val _surfaceRequest = MutableStateFlow<SurfaceRequest?>(null)
@@ -102,7 +102,7 @@ internal class EditViewModel @Inject constructor(
                     }
                 )
             }
-            captureRepo.updateCapture(captureFile)
+            captureRepo.setCapture(captureFile)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {

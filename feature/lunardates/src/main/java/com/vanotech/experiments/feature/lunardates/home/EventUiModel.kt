@@ -21,7 +21,7 @@ import androidx.navigation.NavController
 import com.vanotech.experiments.data.lunardates.Event
 import com.vanotech.experiments.feature.lunardates.edit.EditRoute
 
-internal data class HomeUiModel(
+internal data class EventUiModel(
     private val event: Event,
 ) {
     val id = event.id
@@ -88,8 +88,8 @@ internal data class HomeUiModel(
 
 @Preview
 @Composable
-fun HomeItemPreview() {
+fun EventUiModelPreview() {
     val event = Event.mockData(0)
-    val item = HomeUiModel(event = event)
+    val item = EventUiModel(event = event)
     item.Content { }
 }

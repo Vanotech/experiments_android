@@ -7,7 +7,7 @@ import java.time.Duration
 import java.time.Instant
 
 @JsonClass(generateAdapter = true)
-data class ProgramResponse(
+data class SingleResponse(
     @field:Json(name = "pa_id") val paId: String,
     val title: String,
     val type: String,

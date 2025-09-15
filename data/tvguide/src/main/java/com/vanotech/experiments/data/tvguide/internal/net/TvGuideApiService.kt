@@ -3,7 +3,9 @@ package com.vanotech.experiments.data.tvguide.internal.net
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Type
 import com.vanotech.experiments.data.tvguide.schema.Listing
 import com.vanotech.experiments.data.tvguide.schema.ListingType
-import java.time.LocalDate
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 internal class TvGuideApiService @Inject constructor(
@@ -12,9 +14,11 @@ internal class TvGuideApiService @Inject constructor(
     suspend fun getListings(
         platform: String,
         region: String,
-        date: LocalDate,
-        hour: Int,
+        instant: Instant
     ): List<Listing> {
+        val dateTime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC)
+        val date = dateTime.toLocalDate()
+        val hour = dateTime.hour
         val channels = api.getListings(
             platform = platform,
             region = region,
@@ -39,10 +43,10 @@ internal class TvGuideApiService @Inject constructor(
         }
     }
 
-    suspend fun getProgram(
+    suspend fun getSingle(
         paId: String
     ): Listing {
-        val program = api.getProgram(paId)
+        val program = api.getSingle(paId)
         return Listing(
             id = program.paId,
             title = program.title,

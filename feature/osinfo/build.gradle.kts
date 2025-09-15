@@ -33,9 +33,11 @@ android {
         sourceCompatibility = rootProject.extra["sourceCompatibility"] as JavaVersion
         targetCompatibility = rootProject.extra["targetCompatibility"] as JavaVersion
     }
-    kotlinOptions {
-        jvmTarget = rootProject.extra["jvmTarget"] as String
-    }
+}
+
+kotlin {
+    val jdkVersion = rootProject.extra["jdkVersion"] as Int
+    jvmToolchain(jdkVersion)
 }
 
 dependencies {

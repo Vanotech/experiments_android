@@ -2,9 +2,9 @@ buildscript {
     val compileSdk by extra(35)
     val minSdk by extra(26)
     val targetSdk by extra(35)
-    val sourceCompatibility by extra(JavaVersion.VERSION_11)
-    val targetCompatibility by extra(JavaVersion.VERSION_11)
-    val jvmTarget by extra("11")
+    val sourceCompatibility by extra(JavaVersion.VERSION_21)
+    val targetCompatibility by extra(JavaVersion.VERSION_21)
+    val jdkVersion by extra(21)
 }
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.

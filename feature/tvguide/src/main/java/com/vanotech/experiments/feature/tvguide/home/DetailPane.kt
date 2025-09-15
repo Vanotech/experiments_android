@@ -1,7 +1,6 @@
 package com.vanotech.experiments.feature.tvguide.home
 
 import android.text.format.DateUtils
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,10 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.vanotech.experiments.core.ui.BackButton
@@ -38,7 +34,7 @@ import com.vanotech.experiments.data.tvguide.schema.ListingType
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun DetailPane(
-    listing: Listing?,
+    viewModel: HomeViewModel,
     isListAndDetailVisible: Boolean,
     onBackPress: () -> Unit
 ) {
@@ -57,6 +53,8 @@ internal fun DetailPane(
             )
         }
     ) { paddingValues ->
+        val state = viewModel.state.collectAsState().value
+        val listing = state.listing.collectAsState(null).value
         listing?.also { listing ->
             DetailContent(
                 listing = listing,

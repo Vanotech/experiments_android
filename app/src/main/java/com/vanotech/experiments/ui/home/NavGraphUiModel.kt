@@ -21,11 +21,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 
-internal data class HomeUiModel(
+internal data class NavGraphUiModel(
     private val icon: ImageVector,
     private val label: String,
     private val route: Any
 ) {
+    private fun navigate(navController: NavController) {
+        navController.navigate(route)
+    }
+
     @Composable
     fun Content(
         onClick: () -> Unit
@@ -60,15 +64,15 @@ internal data class HomeUiModel(
         navController: NavController
     ) {
         Content {
-            navController.navigate(route)
+            navigate(navController)
         }
     }
 }
 
 @Preview
 @Composable
-fun HomeItemPreview() {
-    val item = HomeUiModel(
+fun NavGraphUiModelPreview() {
+    val item = NavGraphUiModel(
         icon = Icons.Default.Home,
         label = "Lorem ipsum",
         route = Unit

@@ -7,23 +7,34 @@ import com.vanotech.experiments.feature.lunardates.LunarDatesNavGraph
 import com.vanotech.experiments.feature.tvguide.TvGuideNavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext context: Context
 ) : ViewModel() {
-    private val navGraphs = listOf(
-        CameraNavGraph,
-        LunarDatesNavGraph,
-        TvGuideNavGraph
-    )
 
-    val items = navGraphs.map { navGraph ->
-        HomeUiModel(
-            icon = navGraph.icon(),
-            label = context.getString(navGraph.label()),
-            route = navGraph.startDestination()
-        )
+    private val _state = MutableStateFlow(HomeViewState())
+    val state: StateFlow<HomeViewState> = _state
+
+    init {
+        val navGraphs = listOf(
+            CameraNavGraph,
+            LunarDatesNavGraph,
+            TvGuideNavGraph
+        ).map {
+            NavGraphUiModel(
+                icon = it.icon(),
+                label = context.getString(it.label()),
+                route = it.startDestination()
+            )
+        }
+
+        _state.update {
+            it.copy(navGraphs = navGraphs)
+        }
     }
 }

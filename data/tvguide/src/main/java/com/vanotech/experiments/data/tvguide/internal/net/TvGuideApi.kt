@@ -4,7 +4,7 @@ import com.squareup.moshi.Moshi
 import com.vanotech.experiments.core.utils.moshi.DurationAdapter
 import com.vanotech.experiments.core.utils.moshi.InstantAdapter
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Channel
-import com.vanotech.experiments.data.tvguide.internal.net.schema.ProgramResponse
+import com.vanotech.experiments.data.tvguide.internal.net.schema.SingleResponse
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -24,9 +24,9 @@ internal interface TvGuideApi {
     ): List<Channel>
 
     @GET("single")
-    suspend fun getProgram(
+    suspend fun getSingle(
         @Query("pa_id") paId: String
-    ): ProgramResponse
+    ): SingleResponse
 
     companion object {
         private const val BASE_URL = "https://api-2.tvguide.co.uk/"

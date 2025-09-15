@@ -1,6 +1,6 @@
 package com.vanotech.experiments.data.camera
 
-import android.graphics.Bitmap
+import android.content.Context
 import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 import java.io.File
@@ -8,6 +8,7 @@ import java.io.File
 interface CaptureRepo {
     val capture: Flow<Uri?>
 
-    suspend fun updateCapture(source: File)
-    suspend fun updateCapture(source: Uri)
+    suspend fun setCapture(source: File)
+
+    suspend fun setCapture(context: Context, source: Uri)
 }

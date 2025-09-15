@@ -3,6 +3,7 @@ package com.vanotech.experiments.data.tvguide
 import android.content.Context
 import com.vanotech.experiments.data.tvguide.internal.ListingRepoImpl
 import com.vanotech.experiments.data.tvguide.internal.db.ListingDao
+import com.vanotech.experiments.data.tvguide.internal.db.RemoteKeyDao
 import com.vanotech.experiments.data.tvguide.internal.db.TvGuideDatabase
 import com.vanotech.experiments.data.tvguide.internal.net.TvGuideApi
 import dagger.Binds
@@ -33,6 +34,11 @@ object TvGuideModule {
     @Provides
     internal fun providesListingDao(database: TvGuideDatabase): ListingDao {
         return database.listingDao()
+    }
+
+    @Provides
+    internal fun providesRemoteKeyDao(database: TvGuideDatabase): RemoteKeyDao {
+        return database.remoteKeyDao()
     }
 
     @Provides

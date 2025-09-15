@@ -8,7 +8,6 @@ import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -44,12 +43,11 @@ internal fun HomeScreen(
             }
         },
         detailPane = {
-            navigator.currentDestination?.contentKey?.also { listingId ->
-                AnimatedPane {
-                    val listing =
-                        viewModel.getListing(listingId).collectAsState(initial = null).value
+            AnimatedPane {
+                navigator.currentDestination?.contentKey?.also { listingId ->
+                    viewModel.getListing(listingId)
                     DetailPane(
-                        listing = listing,
+                        viewModel = viewModel,
                         isListAndDetailVisible = isListAndDetailVisible
                     ) {
                         coroutineScope.launch {

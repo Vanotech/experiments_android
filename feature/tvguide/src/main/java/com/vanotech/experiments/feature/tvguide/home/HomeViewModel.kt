@@ -2,8 +2,6 @@ package com.vanotech.experiments.feature.tvguide.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.map
@@ -12,9 +10,12 @@ import com.vanotech.experiments.data.tvguide.ListingRepo
 import com.vanotech.experiments.data.tvguide.schema.Listing
 import com.vanotech.experiments.data.tvguide.schema.ListingType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 import javax.inject.Inject
@@ -27,50 +28,55 @@ internal class HomeViewModel @Inject constructor(
     val showMovies = listingRepo.showMovies
     val startTime = listingRepo.startTime
     val endTime = listingRepo.endTime
-
-    private val pager = Pager(
-        config = PagingConfig(pageSize = 50)
-    ) {
-        listingRepo.getAllAsPagingSource()
-    }
-
-    private val pagingDataFlow = pager.flow.cachedIn(viewModelScope)
-
-    val items = combine(
-        pagingDataFlow,
-        showEpisodes,
-        showMovies,
-        startTime,
-        endTime
-    ) { pagingData, showEpisodes, showMovies, startTime, endTime ->
-        val now = System.currentTimeMillis()
-        pagingData.filter { listing ->
-            val endAt = listing.startAt.plus(listing.duration).toEpochMilli()
-            when {
-                endAt < now -> false
-                !isPrimeTime(listing, startTime, endTime) -> false
-                isShowType(listing, ListingType.EPISODE) -> showEpisodes
-                isShowType(listing, ListingType.MOVIE) -> showMovies
-                else -> true
-            }
-        }
-    }.map { pagingData ->
-        pagingData.map { listing ->
-            HomeItem(listing)
-        }
-    }.cachedIn(viewModelScope)
+    private val _state = MutableStateFlow(HomeViewState())
+    val state: StateFlow<HomeViewState> = _state
 
     init {
-        viewModelScope.launch {
-            listingRepo.getListings(12)
+        initListings()
+    }
+
+    private fun initListings() {
+        val pagingDataFlow = listingRepo.getAllAsPagingData().cachedIn(viewModelScope)
+
+        val items = combine(
+            pagingDataFlow,
+            showEpisodes,
+            showMovies,
+            startTime,
+            endTime
+        ) { pagingData, showEpisodes, showMovies, startTime, endTime ->
+            val now = System.currentTimeMillis()
+            pagingData.filter { listing ->
+                val endAt = listing.startAt.plus(listing.duration).toEpochMilli()
+                when {
+                    endAt < now -> false
+                    !isPrimeTime(listing, startTime, endTime) -> false
+                    isShowType(listing, ListingType.EPISODE) -> showEpisodes
+                    isShowType(listing, ListingType.MOVIE) -> showMovies
+                    else -> true
+                }
+            }
+        }.map { pagingData ->
+            pagingData.map { listing ->
+                ListingUiModel(listing)
+            }
+        }.cachedIn(viewModelScope)
+
+        _state.update {
+            it.copy(listings = items)
         }
     }
 
-    fun getListing(id: String): Flow<Listing?> {
-        viewModelScope.launch {
-            listingRepo.getProgram(id)
+    private var listingJob: Job? = null
+    fun getListing(id: String) {
+        listingJob?.cancel()
+        listingJob = viewModelScope.launch {
+            listingRepo.get(id).getOrNull()
+            val listing = listingRepo.getAsFlow(id)
+            _state.update {
+                it.copy(listing = listing)
+            }
         }
-        return listingRepo.getAsFlow(id)
     }
 
     fun setShowEpisodes(value: Boolean) {

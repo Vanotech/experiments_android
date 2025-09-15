@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
     private val captureRepo: CaptureRepo
 ) : ViewModel() {
     val capture = captureRepo.capture
@@ -28,7 +28,7 @@ internal class HomeViewModel @Inject constructor(
     fun takePhoto(uri: Uri) {
         viewModelScope.launch {
             try {
-                captureRepo.updateCapture(uri)
+                captureRepo.setCapture(context, uri)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

@@ -1,8 +1,12 @@
 package com.vanotech.experiments.data.lunardates.internal
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.vanotech.experiments.data.lunardates.Event
 import com.vanotech.experiments.data.lunardates.EventRepo
 import com.vanotech.experiments.data.lunardates.internal.db.EventDaoService
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 internal class EventRepoImpl @Inject constructor(
@@ -12,7 +16,13 @@ internal class EventRepoImpl @Inject constructor(
 
     override suspend fun get(id: Int) = eventDaoService.get(id)
 
-    override fun getAllAsPagingSource() = eventDaoService.getAllAsPagingSource()
+    override fun getAllAsPagingData(): Flow<PagingData<Event>> {
+        return Pager(
+            config = PagingConfig(pageSize = 50)
+        ) {
+            eventDaoService.getAllAsPagingSource()
+        }.flow
+    }
 
     override suspend fun upsert(item: Event) = eventDaoService.upsert(item)
 

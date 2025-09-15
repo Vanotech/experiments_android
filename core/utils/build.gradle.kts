@@ -28,9 +28,11 @@ android {
         sourceCompatibility = rootProject.extra["sourceCompatibility"] as JavaVersion
         targetCompatibility = rootProject.extra["targetCompatibility"] as JavaVersion
     }
-    kotlinOptions {
-        jvmTarget = rootProject.extra["jvmTarget"] as String
-    }
+}
+
+kotlin {
+    val jdkVersion = rootProject.extra["jdkVersion"] as Int
+    jvmToolchain(jdkVersion)
 }
 
 dependencies {
@@ -38,6 +40,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
 
     implementation(libs.androidx.datastore.preferences)
+
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)

@@ -19,6 +19,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,7 +68,8 @@ internal fun HomeScreen(
             }
         }
     ) { paddingValues ->
-        val items = viewModel.items.collectAsLazyPagingItems()
+        val state = viewModel.state.collectAsState().value
+        val items = state.events.collectAsLazyPagingItems()
         if (items.itemCount > 0) {
             Feed(
                 items = items,
@@ -82,7 +84,7 @@ internal fun HomeScreen(
 
 @Composable
 private fun Feed(
-    items: LazyPagingItems<HomeUiModel>,
+    items: LazyPagingItems<EventUiModel>,
     navController: NavController,
     paddingValues: PaddingValues
 ) {

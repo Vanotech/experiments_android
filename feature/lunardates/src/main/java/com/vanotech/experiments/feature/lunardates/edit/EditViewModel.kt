@@ -68,7 +68,7 @@ internal class EditViewModel @Inject constructor(
         viewModelScope.launch {
             eventRepo.delete(
                 Event(
-                    id = this@EditViewModel.eventId ?: 0,
+                    id = this@EditViewModel.eventId,
                     title = title.value,
                     dayOfMonth = dayOfMonth.value.value,
                     month = month.value.value

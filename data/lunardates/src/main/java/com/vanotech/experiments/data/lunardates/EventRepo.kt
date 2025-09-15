@@ -1,15 +1,14 @@
 package com.vanotech.experiments.data.lunardates
 
-import androidx.paging.PagingSource
-import com.vanotech.experiments.data.lunardates.internal.db.EventDaoService
-import javax.inject.Inject
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
 
 interface EventRepo {
     suspend fun delete(item: Event)
 
     suspend fun get(id: Int): Event?
 
-    fun getAllAsPagingSource(): PagingSource<Int, Event>
+    fun getAllAsPagingData(): Flow<PagingData<Event>>
 
     suspend fun upsert(item: Event): Unit
 

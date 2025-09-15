@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -64,7 +65,8 @@ internal fun ListPane(
             )
         }
     ) { paddingValues ->
-        val items = viewModel.items.collectAsLazyPagingItems()
+        val state = viewModel.state.collectAsState().value
+        val items = state.listings.collectAsLazyPagingItems()
         Feed(
             items = items,
             selectable = isListAndDetailVisible,
@@ -85,7 +87,7 @@ internal fun ListPane(
 
 @Composable
 private fun Feed(
-    items: LazyPagingItems<HomeItem>,
+    items: LazyPagingItems<ListingUiModel>,
     selectable: Boolean,
     paddingValues: PaddingValues,
     onItemClick: (Listing) -> Unit

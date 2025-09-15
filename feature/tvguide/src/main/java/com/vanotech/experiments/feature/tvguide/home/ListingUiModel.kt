@@ -30,7 +30,7 @@ import coil3.request.ImageRequest
 import com.vanotech.experiments.data.tvguide.schema.Listing
 import com.vanotech.experiments.data.tvguide.schema.ListingType
 
-internal data class HomeItem(
+internal data class ListingUiModel(
     val listing: Listing
 ) {
     val id = listing.id
@@ -125,8 +125,8 @@ internal data class HomeItem(
 
 @Preview
 @Composable
-fun HomeItemPreview() {
+fun ListingUiModelPreview() {
     val listing = Listing.mockData(0)
-    val item = HomeItem(listing = listing)
+    val item = ListingUiModel(listing = listing)
     item.Content { }
 }

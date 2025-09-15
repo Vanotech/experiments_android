@@ -13,6 +13,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -42,8 +43,10 @@ internal fun HomeScreen(
             )
         }
     ) { paddingValues ->
+        val state = viewModel.state.collectAsState().value
+        val items = state.navGraphs
         Feed(
-            items = viewModel.items,
+            items = items,
             navController = navController,
             paddingValues = paddingValues
         )
@@ -52,7 +55,7 @@ internal fun HomeScreen(
 
 @Composable
 private fun Feed(
-    items: List<HomeUiModel>,
+    items: List<NavGraphUiModel>,
     navController: NavController,
     paddingValues: PaddingValues
 ) {

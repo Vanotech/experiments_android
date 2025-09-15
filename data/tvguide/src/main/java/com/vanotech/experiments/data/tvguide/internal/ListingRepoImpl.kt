@@ -1,18 +1,25 @@
 package com.vanotech.experiments.data.tvguide.internal
 
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.vanotech.experiments.data.tvguide.ListingRepo
 import com.vanotech.experiments.data.tvguide.internal.db.ListingDaoService
+import com.vanotech.experiments.data.tvguide.internal.db.TvGuideDatabase
 import com.vanotech.experiments.data.tvguide.internal.net.TvGuideApiService
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import java.time.LocalDateTime
+import com.vanotech.experiments.data.tvguide.internal.net.schema.Platform
+import com.vanotech.experiments.data.tvguide.internal.net.schema.Region
+import com.vanotech.experiments.data.tvguide.schema.Listing
+import kotlinx.coroutines.flow.Flow
+import java.time.Instant
 import java.time.LocalTime
 import javax.inject.Inject
 
 internal class ListingRepoImpl @Inject constructor(
     private val listingDaoService: ListingDaoService,
     private val tvGuideApiService: TvGuideApiService,
+    private val tvGuideDatabase: TvGuideDatabase,
     private val tvGuideDataStore: TvGuideDataStore
 ) : ListingRepo {
     override val showEpisodes = tvGuideDataStore.showEpisodesFlow
@@ -20,49 +27,33 @@ internal class ListingRepoImpl @Inject constructor(
     override val startTime = tvGuideDataStore.startTimeFlow
     override val endTime = tvGuideDataStore.endTimeFlow
 
-    override fun getAllAsPagingSource() = listingDaoService.getAllAsPagingSource()
-
-    override fun getAsFlow(id: String) = listingDaoService.getAsFlow(id)
-
-    override suspend fun getListings(
-        hours: Int,
-        platform: String,
-        region: String,
-    ): Result<Unit> {
+    override suspend fun get(id: String): Result<Listing> {
         return try {
-            listingDaoService.deleteAll()
-            val listings = coroutineScope {
-                val startDateTime = LocalDateTime.now()
-                val range = 0..hours step 3
-                range.map { hour ->
-                    async {
-                        val dateTime = startDateTime.plusHours(hour.toLong())
-                        tvGuideApiService.getListings(
-                            platform = platform,
-                            region = region,
-                            date = dateTime.toLocalDate(),
-                            hour = dateTime.hour
-                        )
-                    }
-                }
-            }.awaitAll().flatten()
-            listingDaoService.upsert(listings)
-            Result.success(Unit)
+            val listing = tvGuideApiService.getSingle(id)
+            listingDaoService.upsert(listing)
+            Result.success(listing)
         } catch (e: Exception) {
             e.printStackTrace()
             Result.failure(e)
         }
     }
 
-    override suspend fun getProgram(paId: String): Result<Unit> {
-        return try {
-            val listing = tvGuideApiService.getProgram(paId)
-            listingDaoService.upsert(listing)
-            Result.success(Unit)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Result.failure(e)
-        }
+    override fun getAsFlow(id: String) = listingDaoService.getAsFlow(id)
+
+    @OptIn(ExperimentalPagingApi::class)
+    override fun getAllAsPagingData(): Flow<PagingData<Listing>> {
+        return Pager(
+            config = PagingConfig(pageSize = 50),
+            remoteMediator = GetListingsRemoteMediator(
+                platform = Platform.VIRGIN,
+                region = Region.NORTH_WEST,
+                instant = Instant.now(),
+                apiService = tvGuideApiService,
+                database = tvGuideDatabase
+            )
+        ) {
+            listingDaoService.getAllAsPagingSource()
+        }.flow
     }
 
     override suspend fun setShowEpisodes(value: Boolean) = tvGuideDataStore.setShowEpisodes(value)
