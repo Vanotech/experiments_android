@@ -7,6 +7,8 @@ import androidx.navigation.toRoute
 import com.vanotech.experiments.core.utils.NamedValue
 import com.vanotech.experiments.data.lunardates.Event
 import com.vanotech.experiments.data.lunardates.EventRepo
+import com.vanotech.experiments.data.lunardates.usecases.DeleteEventUseCase
+import com.vanotech.experiments.data.lunardates.usecases.UpsertEventUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -50,7 +52,8 @@ internal class EditViewModel @Inject constructor(
 
     fun updateEvent() {
         viewModelScope.launch {
-            eventRepo.upsert(
+            val upsertEventUseCase = UpsertEventUseCase(eventRepo)
+            upsertEventUseCase.execute(
                 Event(
                     id = eventId,
                     title = title.value,
@@ -66,7 +69,8 @@ internal class EditViewModel @Inject constructor(
 
     fun deleteEvent() {
         viewModelScope.launch {
-            eventRepo.delete(
+            val deleteEventUseCase = DeleteEventUseCase(eventRepo)
+            deleteEventUseCase.execute(
                 Event(
                     id = this@EditViewModel.eventId,
                     title = title.value,

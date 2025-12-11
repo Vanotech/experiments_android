@@ -1,14 +1,19 @@
 package com.vanotech.experiments.feature.lunardates.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -24,15 +29,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import androidx.window.core.layout.WindowWidthSizeClass
+import androidx.window.core.layout.WindowSizeClass
+import com.vanotech.experiments.data.lunardates.Event
 import com.vanotech.experiments.feature.lunardates.R
 import com.vanotech.experiments.feature.lunardates.edit.EditRoute
 
@@ -77,7 +85,9 @@ internal fun HomeScreen(
                 paddingValues = paddingValues
             )
         } else {
-            EmptyFeed(paddingValues = paddingValues)
+            EmptyFeed(
+                paddingValues = paddingValues
+            )
         }
     }
 }
@@ -90,10 +100,14 @@ private fun Feed(
 ) {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val gridCells = remember(windowSizeClass) {
-        when (windowSizeClass.windowWidthSizeClass) {
-            WindowWidthSizeClass.COMPACT -> GridCells.Fixed(1)
-            WindowWidthSizeClass.MEDIUM -> GridCells.Fixed(2)
-            else -> GridCells.Adaptive(240.dp)
+        when {
+            windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND) ->
+                GridCells.Adaptive(240.dp)
+
+            windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) ->
+                GridCells.Fixed(2)
+
+            else -> GridCells.Fixed(1)
         }
     }
 
@@ -111,7 +125,12 @@ private fun Feed(
             key = items.itemKey { it.id }
         ) { index ->
             val item = items[index]
-            item?.Content(navController = navController)
+            if (item != null) {
+                Item(
+                    item = item,
+                    navController = navController
+                )
+            }
         }
     }
 }
@@ -128,9 +147,61 @@ private fun EmptyFeed(
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = stringResource(R.string.hint_empty_dates),
+            text = stringResource(R.string.hint_home_empty_feed),
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center
         )
     }
+}
+
+@Composable
+private fun Item(
+    item: EventUiModel,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = item.title,
+                style = MaterialTheme.typography.titleMedium
+            )
+
+            Text(
+                text = item.lunarDate,
+                style = MaterialTheme.typography.bodyMedium
+            )
+
+            Text(
+                text = item.gregorianDate(LocalContext.current),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
+}
+
+@Composable
+private fun Item(
+    item: EventUiModel,
+    navController: NavController
+) {
+    Item(item) {
+        item.navigate(navController)
+    }
+}
+
+@Preview
+@Composable
+fun EventUiModelPreview() {
+    val event = Event.mockData(0)
+    val item = EventUiModel(event = event)
+    Item(item) { }
 }

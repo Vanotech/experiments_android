@@ -7,7 +7,11 @@ plugins {
 
 android {
     namespace = "com.vanotech.experiment.feature.osinfo"
-    compileSdk = rootProject.extra["compileSdk"] as Int
+
+    compileSdk {
+        val compileSdk = rootProject.extra["compileSdk"] as Int
+        version = release(compileSdk)
+    }
 
     defaultConfig {
         minSdk = rootProject.extra["minSdk"] as Int

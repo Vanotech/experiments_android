@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -19,10 +20,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.SwitchCamera
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -47,7 +50,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -58,6 +61,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.vanotech.experiments.core.ui.BackButton
 import com.vanotech.experiments.feature.camera.R
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -107,6 +111,7 @@ internal fun EditScreen(
         if (cameraPermissionState.status.isGranted) {
             PermissionGrantedContent(
                 viewModel = viewModel,
+                coroutineScope = coroutineScope,
                 paddingValues = paddingValues
             )
         } else {
@@ -121,6 +126,7 @@ internal fun EditScreen(
 @Composable
 private fun PermissionGrantedContent(
     viewModel: EditViewModel,
+    coroutineScope: CoroutineScope,
     paddingValues: PaddingValues
 ) {
     val context = LocalContext.current
@@ -143,38 +149,55 @@ private fun PermissionGrantedContent(
     }
 
     val surfaceRequest by viewModel.surfaceRequest.collectAsStateWithLifecycle()
-    surfaceRequest?.let { request ->
-        val coordinateTransformer = remember { MutableCoordinateTransformer() }
-        CameraXViewfinder(
-            surfaceRequest = request,
-            coordinateTransformer = coordinateTransformer,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .pointerInput(Unit) {
-                    detectTapGestures { gestureOffset ->
-                        val surfaceOffset = with(coordinateTransformer) {
-                            gestureOffset.transform()
+    surfaceRequest?.also { request ->
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            val coordinateTransformer = remember { MutableCoordinateTransformer() }
+            CameraXViewfinder(
+                surfaceRequest = request,
+                coordinateTransformer = coordinateTransformer,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .pointerInput(viewModel, coordinateTransformer) {
+                        detectTapGestures { gestureOffset ->
+                            val surfaceOffset = with(coordinateTransformer) {
+                                gestureOffset.transform()
+                            }
+                            viewModel.focusOnPoint(surfaceOffset)
+                            autofocusRequest = UUID.randomUUID() to gestureOffset
                         }
-                        viewModel.focusOnPoint(surfaceOffset)
-                        autofocusRequest = UUID.randomUUID() to gestureOffset
+                    }
+            )
+
+            AnimatedVisibility(
+                visible = showAutofocusIndicator,
+                enter = fadeIn(),
+                exit = fadeOut(),
+                modifier = Modifier
+                    .offset { autofocusOffset.takeOrElse { Offset.Zero }.round() }
+                    .offset((-24).dp, (-24).dp)
+            ) {
+                Spacer(
+                    modifier = Modifier
+                        .border(2.dp, Color.White, CircleShape)
+                        .size(48.dp)
+                )
+            }
+
+            IconButton(
+                onClick = {
+                    coroutineScope.launch {
+                        viewModel.switchCamera(context, lifecycleOwner)
                     }
                 }
-        )
-
-        AnimatedVisibility(
-            visible = showAutofocusIndicator,
-            enter = fadeIn(),
-            exit = fadeOut(),
-            modifier = Modifier
-                .offset { autofocusOffset.takeOrElse { Offset.Zero }.round() }
-                .offset((-24).dp, (-24).dp)
-        ) {
-            Spacer(
-                modifier = Modifier
-                    .border(2.dp, Color.White, CircleShape)
-                    .size(48.dp)
-            )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.SwitchCamera,
+                    contentDescription = stringResource(R.string.action_take_photo)
+                )
+            }
         }
     }
 }

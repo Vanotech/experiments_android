@@ -13,5 +13,5 @@
     <string name="hint_day">Day</string>
     <string name="hint_month">Month</string>
 
-    <string name="hint_empty_dates">No dates</string>
+    <string name="hint_home_empty_feed">No dates</string>
 </resources>

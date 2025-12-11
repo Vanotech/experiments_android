@@ -21,7 +21,7 @@ import androidx.glance.text.TextStyle
 
 internal class OsInfoAppWidget : GlanceAppWidget() {
 
-    private val data = listOf(
+    private val dataSet = listOf(
         R.string.label_api_level to OsInfo.getApiLevel(),
         R.string.label_codename to OsInfo.getCodeName(),
         R.string.label_version to OsInfo.getVersion()
@@ -50,7 +50,7 @@ internal class OsInfoAppWidget : GlanceAppWidget() {
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.End
                 )
-                data.forEach {
+                dataSet.forEach {
                     item {
                         Text(
                             text = LocalContext.current.getString(it.first),

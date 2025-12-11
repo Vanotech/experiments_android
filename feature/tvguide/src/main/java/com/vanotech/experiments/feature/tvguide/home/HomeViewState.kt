@@ -7,5 +7,6 @@ import kotlinx.coroutines.flow.emptyFlow
 
 internal data class HomeViewState(
     val listings: Flow<PagingData<ListingUiModel>> = emptyFlow(),
-    val listing: Flow<Listing?> = emptyFlow()
+    val listing: Flow<Listing?> = emptyFlow(),
+    val isRefreshing: Boolean = false
 )

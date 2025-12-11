@@ -3,9 +3,10 @@
     <string name="route_camera_home">Camera</string>
     <string name="route_camera_edit">Take Photo</string>
 
-    <string name="action_take_photo">Take photo</string>
     <string name="action_pick_photo">Pick a photo</string>
     <string name="action_request_permission">Request permission</string>
+    <string name="action_switch_camera">Switch camera</string>
+    <string name="action_take_photo">Take photo</string>
 
     <string name="permission_rationale_camera">We need access to your camera so you can take pictures</string>
 </resources>

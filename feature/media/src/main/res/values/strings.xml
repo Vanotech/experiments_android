@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="route_media_home">Media</string>
+    <string name="route_media_view">View</string>
+
+    <string name="hint_home_empty_feed">No media</string>
+</resources>

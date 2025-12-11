@@ -4,36 +4,35 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.vanotech.experiments.feature.camera.CameraNavGraph
-import com.vanotech.experiments.feature.lunardates.LunarDatesNavGraph
-import com.vanotech.experiments.feature.tvguide.TvGuideNavGraph
+import com.vanotech.experiments.ui.home.HomeViewModel
 import com.vanotech.experiments.ui.theme.Theme
+import com.vanotech.experiments.ui.theme.ThemedSystemBars
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
-
         super.onCreate(savedInstanceState)
+
+        enableEdgeToEdge()
 
         setContent {
             Theme {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
-                    startDestination = MainNavGraph.startDestination()
+                    startDestination = HomeViewModel.START_NAV_GRAPH.startDestination()
                 ) {
-                    val navGraphs = listOf(
-                        CameraNavGraph,
-                        MainNavGraph,
-                        LunarDatesNavGraph,
-                        TvGuideNavGraph
-                    )
-                    navGraphs.forEach { navGraph ->
+                    HomeViewModel.START_NAV_GRAPH.also { navGraph ->
+                        navGraph.register(this, navController)
+
+                    }
+                    HomeViewModel.NAV_GRAPHS.forEach { navGraph ->
                         navGraph.register(this, navController)
                     }
                 }

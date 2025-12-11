@@ -27,7 +27,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,7 +36,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -54,7 +53,6 @@ internal fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -138,18 +136,21 @@ private fun TakePictureFloatingActionButton(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun TakePictureIconButton(viewModel: HomeViewModel) {
-    val takePictureLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-            if (success) {
-                viewModel.takePhoto(viewModel.uri)
-            }
+    val takePictureLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { success ->
+        if (success) {
+            viewModel.takePhoto(viewModel.uri)
         }
-    val takePicturePermissionState =
-        rememberPermissionState(android.Manifest.permission.CAMERA) { granted ->
-            if (granted) {
-                takePictureLauncher.launch(viewModel.uri)
-            }
+    }
+
+    val takePicturePermissionState = rememberPermissionState(
+        android.Manifest.permission.CAMERA
+    ) { granted ->
+        if (granted) {
+            takePictureLauncher.launch(viewModel.uri)
         }
+    }
 
     IconButton(
         onClick = {
@@ -165,12 +166,13 @@ private fun TakePictureIconButton(viewModel: HomeViewModel) {
 
 @Composable
 private fun PickVisualMediaIconButton(viewModel: HomeViewModel) {
-    val pickVisualMediaLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            uri?.also {
-                viewModel.takePhoto(it)
-            }
+    val pickVisualMediaLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        uri?.also {
+            viewModel.takePhoto(it)
         }
+    }
 
     IconButton(
         onClick = {

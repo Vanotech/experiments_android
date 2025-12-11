@@ -6,7 +6,11 @@ plugins {
 
 android {
     namespace = "com.vanotech.experiments.core.utils"
-    compileSdk = rootProject.extra["compileSdk"] as Int
+
+    compileSdk {
+        val compileSdk = rootProject.extra["compileSdk"] as Int
+        version = release(compileSdk)
+    }
 
     defaultConfig {
         minSdk = rootProject.extra["minSdk"] as Int
@@ -42,6 +46,8 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+    implementation(libs.androidx.paging.runtime.ktx)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)

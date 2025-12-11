@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.vanotech.experiments.feature.camera.CameraNavGraph
 import com.vanotech.experiments.feature.lunardates.LunarDatesNavGraph
+import com.vanotech.experiments.feature.media.MediaNavGraph
 import com.vanotech.experiments.feature.tvguide.TvGuideNavGraph
+import com.vanotech.experiments.ui.MainNavGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,20 +23,23 @@ internal class HomeViewModel @Inject constructor(
     val state: StateFlow<HomeViewState> = _state
 
     init {
-        val navGraphs = listOf(
-            CameraNavGraph,
-            LunarDatesNavGraph,
-            TvGuideNavGraph
-        ).map {
-            NavGraphUiModel(
-                icon = it.icon(),
-                label = context.getString(it.label()),
-                route = it.startDestination()
-            )
+        val navGraphs = NAV_GRAPHS.map {
+            NavGraphUiModel(context, it)
         }
 
         _state.update {
             it.copy(navGraphs = navGraphs)
         }
+    }
+
+    companion object {
+        val NAV_GRAPHS = listOf(
+            CameraNavGraph,
+            LunarDatesNavGraph,
+            MediaNavGraph,
+            TvGuideNavGraph
+        )
+
+        val START_NAV_GRAPH = MainNavGraph
     }
 }

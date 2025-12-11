@@ -9,7 +9,11 @@ plugins {
 
 android {
     namespace = "com.vanotech.experiments"
-    compileSdk = rootProject.extra["compileSdk"] as Int
+
+    compileSdk {
+        val compileSdk = rootProject.extra["compileSdk"] as Int
+        version = release(compileSdk)
+    }
 
     defaultConfig {
         applicationId = "com.vanotech.experiments"
@@ -49,6 +53,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":feature:camera"))
     implementation(project(":feature:lunardates"))
+    implementation(project(":feature:media"))
     implementation(project(":feature:osinfo"))
     implementation(project(":feature:tvguide"))
 
@@ -59,6 +64,7 @@ dependencies {
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
+    implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.adaptive)
     implementation(libs.androidx.compose.material3.adaptive.layout)

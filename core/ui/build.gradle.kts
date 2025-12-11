@@ -6,7 +6,11 @@ plugins {
 
 android {
     namespace = "com.vanotech.experiments.core.ui"
-    compileSdk = rootProject.extra["compileSdk"] as Int
+
+    compileSdk {
+        val compileSdk = rootProject.extra["compileSdk"] as Int
+        version = release(compileSdk)
+    }
 
     defaultConfig {
         minSdk = rootProject.extra["minSdk"] as Int
@@ -49,6 +53,7 @@ dependencies {
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
+    implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui.tooling)
 
