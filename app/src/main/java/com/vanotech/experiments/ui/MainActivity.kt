@@ -4,13 +4,10 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.vanotech.experiments.ui.home.HomeViewModel
 import com.vanotech.experiments.ui.theme.Theme
-import com.vanotech.experiments.ui.theme.ThemedSystemBars
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

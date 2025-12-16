@@ -1,13 +1,12 @@
 package com.vanotech.experiments.data.tvguide.internal.net
 
-import com.squareup.moshi.Moshi
-import com.vanotech.experiments.core.utils.moshi.DurationAdapter
-import com.vanotech.experiments.core.utils.moshi.InstantAdapter
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Channel
 import com.vanotech.experiments.data.tvguide.internal.net.schema.SingleResponse
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
@@ -34,10 +33,11 @@ internal interface TvGuideApi {
         fun getInstance(
             baseUrl: String = BASE_URL
         ): TvGuideApi {
-            val moshi = Moshi.Builder()
-                .add(InstantAdapter())
-                .add(DurationAdapter())
-                .build()
+            val jsonConverterFactory = Json {
+                ignoreUnknownKeys = true
+            }.asConverterFactory(
+                "application/json; charset=utf-8".toMediaType()
+            )
 
             val okHttpClient = OkHttpClient.Builder()
                 .connectTimeout(30, TimeUnit.SECONDS)
@@ -48,7 +48,7 @@ internal interface TvGuideApi {
             val retrofit = Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(okHttpClient)
-                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .addConverterFactory(jsonConverterFactory)
                 .build()
 
             return retrofit.create(TvGuideApi::class.java)
