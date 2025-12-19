@@ -9,7 +9,7 @@ import com.vanotech.experiments.data.tvguide.internal.db.TvGuideDatabase
 import com.vanotech.experiments.data.tvguide.internal.db.schema.RemoteKey
 import com.vanotech.experiments.data.tvguide.internal.net.TvGuideApiService
 import com.vanotech.experiments.data.tvguide.schema.Listing
-import retrofit2.HttpException
+import io.ktor.client.plugins.ResponseException
 import java.io.IOException
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -92,7 +92,7 @@ internal class GetListingsRemoteMediator(
             )
         } catch (e: IOException) {
             MediatorResult.Error(e)
-        } catch (e: HttpException) {
+        } catch (e: ResponseException) {
             MediatorResult.Error(e)
         }
     }

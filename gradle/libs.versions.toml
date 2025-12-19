@@ -24,8 +24,8 @@ junit = "4.13.2"
 kotlin = "2.2.21"
 kotlinx-serialization-json = "1.9.0"
 ksp = "2.2.21-2.0.4"               # must match kotlin version
+ktor = "3.3.3"
 material = "1.13.0"
-retrofit-bom = "3.0.0"
 timber = "5.0.1"
 
 [libraries]
@@ -63,16 +63,17 @@ androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "an
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
 coil-bom = { module = "io.coil-kt.coil3:coil-bom", version.ref = "coil-bom" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose" }
-coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp" }
+coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3" }
 coil-video = { module = "io.coil-kt.coil3:coil-video" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
-retrofit-bom = { module = "com.squareup.retrofit2:retrofit-bom", version.ref = "retrofit-bom" }
-retrofit = { module = "com.squareup.retrofit2:retrofit" }
-retrofit-converter-kotlinx-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 [plugins]

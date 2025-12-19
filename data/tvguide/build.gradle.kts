@@ -56,10 +56,10 @@ dependencies {
 
     implementation(libs.kotlinx.serialization.json)
 
-    val retrofitBom = platform(libs.retrofit.bom)
-    implementation(retrofitBom)
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.kotlinx.serialization)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -25,7 +25,7 @@ object LunarDatesModule {
 
     @Provides
     @Singleton
-    internal fun providesEventDatabase(@ApplicationContext context: Context): LunarDatesDatabase {
+    internal fun providesLunarDatesDatabase(@ApplicationContext context: Context): LunarDatesDatabase {
         return LunarDatesDatabase.getInstance(context)
     }
 

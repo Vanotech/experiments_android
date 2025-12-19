@@ -1,6 +1,8 @@
 package com.vanotech.experiments.core.utils.net
 
-import okhttp3.Credentials
+import java.nio.charset.Charset
+import kotlin.io.encoding.Base64
+import kotlin.text.Charsets.ISO_8859_1
 
 @Suppress("unused")
 object Http {
@@ -12,7 +14,16 @@ object Http {
 
             fun token(token: String?) = token(SCHEME, token)
 
-            fun token(username: String, password: String) = Credentials.basic(username, password)
+            fun token(
+                username: String,
+                password: String,
+                charset: Charset = ISO_8859_1,
+            ): String {
+                val encoder = Base64.Default
+                val source = "$username:$password".toByteArray(charset)
+                val token = encoder.encode(source)
+                return token(token)
+            }
         }
 
         object Bearer {

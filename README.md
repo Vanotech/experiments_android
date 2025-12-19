@@ -8,6 +8,7 @@ Experimental app to explore various Android concepts and technologies.
 * Compose
 * Hilt
 * Kotlinx Serialization
+* Ktor
 * ~~Moshi~~
 * Paging3
 * Retrofit
