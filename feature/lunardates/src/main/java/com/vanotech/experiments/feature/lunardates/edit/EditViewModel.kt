@@ -12,7 +12,7 @@ import com.vanotech.experiments.data.lunardates.usecases.UpsertEventUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,32 +23,56 @@ internal class EditViewModel @Inject constructor(
 ) : ViewModel() {
     private val args = savedStateHandle.toRoute<EditRoute>()
     private val eventId = args.eventId
-    val createOnly = args.createOnly
+    private val _uiState = let {
+        val daysOfMonth = List(30) {
+            NamedValue(
+                "${it + 1}",
+                it + 1
+            )
+        }
 
-    val title = MutableStateFlow("")
+        val months = List(13) {
+            NamedValue("${it + 1}", it)
+        }
 
-    val daysOfMonths = List(30) {
-        NamedValue(
-            "${it + 1}",
-            it + 1
+        MutableStateFlow(
+            EditUiState(
+                createOnly = args.createOnly,
+                title = "",
+                daysOfMonth = daysOfMonth,
+                dayOfMonth = daysOfMonth.first(),
+                months = months,
+                month = months.first()
+            )
         )
     }
-    val dayOfMonth = MutableStateFlow(daysOfMonths.first())
-
-    val months = List(13) { NamedValue("${it + 1}", it) }
-    val month = MutableStateFlow(months.first())
+    val uiState: StateFlow<EditUiState> = _uiState
 
     init {
         viewModelScope.launch {
             eventRepo.get(eventId)?.also { event ->
-                title.value = event.title
-                dayOfMonth.value = daysOfMonths.first { it.value == event.dayOfMonth }
-                month.value = months.first { it.value == event.month }
+                _uiState.update {
+                    it.copy(
+                        title = event.title,
+                        dayOfMonth = it.daysOfMonth.first { it.value == event.dayOfMonth },
+                        month = it.months.first { it.value == event.month }
+                    )
+                }
             }
         }
     }
 
-    val canUpdateEvent = title.map { it.isNotBlank() }
+    fun updateTitle(value: String) {
+        _uiState.update { it.copy(title = value) }
+    }
+
+    fun updateDayOfMonth(value: NamedValue<Int>) {
+        _uiState.update { it.copy(dayOfMonth = value) }
+    }
+
+    fun updateMonth(value: NamedValue<Int>) {
+        _uiState.update { it.copy(month = value) }
+    }
 
     fun updateEvent() {
         viewModelScope.launch {
@@ -56,26 +80,23 @@ internal class EditViewModel @Inject constructor(
             upsertEventUseCase.execute(
                 Event(
                     id = eventId,
-                    title = title.value,
-                    dayOfMonth = dayOfMonth.value.value,
-                    month = month.value.value
+                    title = _uiState.value.title,
+                    dayOfMonth = _uiState.value.dayOfMonth.value,
+                    month = _uiState.value.month.value
                 )
             )
         }
     }
-
-    private val _canDeleteEvent = MutableStateFlow(true)
-    val canDeleteEvent: StateFlow<Boolean> = _canDeleteEvent
 
     fun deleteEvent() {
         viewModelScope.launch {
             val deleteEventUseCase = DeleteEventUseCase(eventRepo)
             deleteEventUseCase.execute(
                 Event(
-                    id = this@EditViewModel.eventId,
-                    title = title.value,
-                    dayOfMonth = dayOfMonth.value.value,
-                    month = month.value.value
+                    id = eventId,
+                    title = "",
+                    dayOfMonth = 0,
+                    month = 0
                 )
             )
         }

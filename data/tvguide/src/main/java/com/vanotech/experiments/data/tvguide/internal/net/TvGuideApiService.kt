@@ -1,7 +1,6 @@
 package com.vanotech.experiments.data.tvguide.internal.net
 
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Channel
-import com.vanotech.experiments.data.tvguide.internal.net.schema.Schedule
 import com.vanotech.experiments.data.tvguide.internal.net.schema.SingleResponse
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Type
 import com.vanotech.experiments.data.tvguide.schema.Listing

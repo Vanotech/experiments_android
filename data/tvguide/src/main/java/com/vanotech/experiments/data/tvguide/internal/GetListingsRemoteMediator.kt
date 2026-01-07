@@ -9,7 +9,8 @@ import com.vanotech.experiments.data.tvguide.internal.db.TvGuideDatabase
 import com.vanotech.experiments.data.tvguide.internal.db.schema.RemoteKey
 import com.vanotech.experiments.data.tvguide.internal.net.TvGuideApiService
 import com.vanotech.experiments.data.tvguide.schema.Listing
-import io.ktor.client.plugins.ResponseException
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
 import java.io.IOException
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -92,7 +93,9 @@ internal class GetListingsRemoteMediator(
             )
         } catch (e: IOException) {
             MediatorResult.Error(e)
-        } catch (e: ResponseException) {
+        } catch (e: ClientRequestException) {
+            MediatorResult.Error(e)
+        } catch (e: ServerResponseException) {
             MediatorResult.Error(e)
         }
     }

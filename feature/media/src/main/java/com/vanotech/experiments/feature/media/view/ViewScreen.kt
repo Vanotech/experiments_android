@@ -28,8 +28,8 @@ internal fun ViewScreen(
 ) {
     val lifecycleOwner by rememberUpdatedState(LocalLifecycleOwner.current)
     val lifecycle = lifecycleOwner.lifecycle
-    val media = viewModel.media.collectAsState().value
-    media?.url?.also { url ->
+    val uiState = viewModel.uiState.collectAsState().value
+    uiState.media?.url?.also { url ->
         VideoContent(
             lifecycle = lifecycle,
             lifecycleOwner = lifecycleOwner,

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -23,7 +24,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -37,6 +41,7 @@ import androidx.navigation.NavController
 import com.vanotech.experiments.core.ui.BackButton
 import com.vanotech.experiments.core.ui.DropdownMenuTextField
 import com.vanotech.experiments.feature.lunardates.R
+import kotlinx.coroutines.flow.collectLatest
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,13 +51,13 @@ internal fun EditScreen(
     viewModel: EditViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-
+    val uiState = viewModel.uiState.collectAsState().value
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
-                    val title = when (viewModel.createOnly) {
+                    val title = when (uiState.createOnly) {
                         true -> R.string.route_lunar_dates_add
                         else -> R.string.route_lunar_dates_edit
                     }
@@ -62,13 +67,13 @@ internal fun EditScreen(
                     BackButton(navController = navController)
                 },
                 actions = {
-                    if (!viewModel.createOnly) {
+                    if (!uiState.createOnly) {
                         IconButton(
                             onClick = {
                                 viewModel.deleteEvent()
                                 navController.popBackStack()
                             },
-                            enabled = viewModel.canDeleteEvent.collectAsState().value
+                            enabled = uiState.canDeleteEvent
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
@@ -104,17 +109,24 @@ private fun EditContent(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        val uiState = viewModel.uiState.collectAsState().value
+        val initialUiState  = remember(viewModel) { viewModel.uiState.value }
+
+        val titleState = rememberTextFieldState(initialUiState .title)
         val titleKeyboardOptions = KeyboardOptions.Default.copy(
             capitalization = KeyboardCapitalization.Sentences,
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Next
         )
-
+        LaunchedEffect(titleState) {
+            snapshotFlow {
+                titleState.text.toString()
+            }.collectLatest {
+                viewModel.updateTitle(it)
+            }
+        }
         TextField(
-            value = viewModel.title.collectAsState().value,
-            onValueChange = {
-                viewModel.title.value = it
-            },
+            state = titleState,
             modifier = Modifier.fillMaxWidth(),
             label = {
                 Text(text = stringResource(id = R.string.hint_title))
@@ -123,10 +135,10 @@ private fun EditContent(
         )
 
         DropdownMenuTextField(
-            items = viewModel.daysOfMonths,
-            selection = viewModel.dayOfMonth.collectAsState().value,
+            items = uiState.daysOfMonth,
+            selection = uiState.dayOfMonth,
             onSelect = {
-                viewModel.dayOfMonth.value = it
+                viewModel.updateDayOfMonth(it)
             },
             itemText = { it.label },
             modifier = Modifier.fillMaxWidth(),
@@ -136,10 +148,10 @@ private fun EditContent(
         )
 
         DropdownMenuTextField(
-            items = viewModel.months,
-            selection = viewModel.month.collectAsState().value,
+            items = uiState.months,
+            selection = uiState.month,
             onSelect = {
-                viewModel.month.value = it
+                viewModel.updateMonth(it)
             },
             itemText = { it.label },
             modifier = Modifier.fillMaxWidth(),
@@ -154,7 +166,7 @@ private fun EditContent(
                 navController.popBackStack()
             },
             modifier = Modifier.align(Alignment.End),
-            enabled = viewModel.canUpdateEvent.collectAsState(initial = false).value,
+            enabled = uiState.canUpdateEvent
         ) {
             Icon(
                 imageVector = Icons.Default.Check,

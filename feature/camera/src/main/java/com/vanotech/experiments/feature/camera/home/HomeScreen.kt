@@ -96,13 +96,14 @@ private fun CaptureContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val context = LocalContext.current
+        val uiState = viewModel.uiState.collectAsState().value
 
-        val capture = viewModel.capture.collectAsState(initial = null).value
+        val context = LocalContext.current
+        val uri = uiState.uri.collectAsState(null).value
         val placeholder = rememberVectorPainter(Icons.Default.Person)
         AsyncImage(
             model = ImageRequest.Builder(context)
-                .data(capture)
+                .data(uri)
                 .build(),
             contentDescription = null,
             modifier = Modifier
@@ -140,7 +141,7 @@ private fun TakePictureIconButton(viewModel: HomeViewModel) {
         ActivityResultContracts.TakePicture()
     ) { success ->
         if (success) {
-            viewModel.takePhoto(viewModel.uri)
+            viewModel.updatePhoto(viewModel.uri)
         }
     }
 
@@ -170,7 +171,7 @@ private fun PickVisualMediaIconButton(viewModel: HomeViewModel) {
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         uri?.also {
-            viewModel.takePhoto(it)
+            viewModel.updatePhoto(it)
         }
     }
 

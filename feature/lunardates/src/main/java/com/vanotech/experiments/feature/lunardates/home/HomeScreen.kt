@@ -76,8 +76,8 @@ internal fun HomeScreen(
             }
         }
     ) { paddingValues ->
-        val state = viewModel.state.collectAsState().value
-        val items = state.events.collectAsLazyPagingItems()
+        val uiState = viewModel.uiState.collectAsState().value
+        val items = uiState.events.collectAsLazyPagingItems()
         if (items.itemCount > 0) {
             Feed(
                 items = items,

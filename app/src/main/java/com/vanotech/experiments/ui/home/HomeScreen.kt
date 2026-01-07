@@ -55,8 +55,8 @@ internal fun HomeScreen(
         }
     ) { paddingValues ->
 
-        val state = viewModel.state.collectAsState().value
-        val items = state.navGraphs
+        val uiState = viewModel.uiState.collectAsState().value
+        val items = uiState.navGraphs
         Feed(
             items = items,
             navController = navController,

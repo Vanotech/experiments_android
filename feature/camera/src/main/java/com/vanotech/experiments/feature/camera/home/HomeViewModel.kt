@@ -8,6 +8,8 @@ import com.vanotech.experiments.data.camera.CameraFileProvider
 import com.vanotech.experiments.data.camera.CaptureRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,8 +18,10 @@ internal class HomeViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val captureRepo: CaptureRepo
 ) : ViewModel() {
-    val capture = captureRepo.capture
-
+    private val _uiState = MutableStateFlow(HomeUiState(
+        uri = captureRepo.capture
+    ))
+    val uiState: StateFlow<HomeUiState> = _uiState
     val uri = CameraFileProvider.getTempUri(context, CAPTURE_FILE_PREFIX, null)
 
     override fun onCleared() {
@@ -25,7 +29,7 @@ internal class HomeViewModel @Inject constructor(
         super.onCleared()
     }
 
-    fun takePhoto(uri: Uri) {
+    fun updatePhoto(uri: Uri) {
         viewModelScope.launch {
             try {
                 captureRepo.setCapture(context, uri)

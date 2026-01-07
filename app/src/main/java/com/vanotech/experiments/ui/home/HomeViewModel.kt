@@ -19,15 +19,15 @@ internal class HomeViewModel @Inject constructor(
     @ApplicationContext context: Context
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(HomeViewState())
-    val state: StateFlow<HomeViewState> = _state
+    private val _uiState = MutableStateFlow(HomeUiState())
+    val uiState: StateFlow<HomeUiState> = _uiState
 
     init {
         val navGraphs = NAV_GRAPHS.map {
             NavGraphUiModel(context, it)
         }
 
-        _state.update {
+        _uiState.update {
             it.copy(navGraphs = navGraphs)
         }
     }

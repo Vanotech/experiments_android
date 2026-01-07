@@ -55,8 +55,8 @@ internal fun DetailPane(
             )
         }
     ) { paddingValues ->
-        val state = viewModel.state.collectAsState().value
-        val listing = state.listing.collectAsState(null).value
+        val uiState = viewModel.uiState.collectAsState().value
+        val listing = uiState.listing.collectAsState(null).value
         listing?.also { listing ->
             DetailContent(
                 listing = listing,

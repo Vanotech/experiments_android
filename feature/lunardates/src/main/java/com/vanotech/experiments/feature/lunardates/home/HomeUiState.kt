@@ -4,6 +4,6 @@ import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
-internal data class HomeViewState(
+internal data class HomeUiState(
     val events: Flow<PagingData<EventUiModel>> = emptyFlow()
 )

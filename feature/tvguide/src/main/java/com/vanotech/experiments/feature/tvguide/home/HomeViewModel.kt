@@ -28,8 +28,8 @@ internal class HomeViewModel @Inject constructor(
     val showMovies = listingRepo.showMovies
     val startTime = listingRepo.startTime
     val endTime = listingRepo.endTime
-    private val _state = MutableStateFlow(HomeViewState())
-    val state: StateFlow<HomeViewState> = _state
+    private val _uiState = MutableStateFlow(HomeUiState())
+    val uiState: StateFlow<HomeUiState> = _uiState
 
     init {
         initListings()
@@ -62,15 +62,15 @@ internal class HomeViewModel @Inject constructor(
             }
         }.cachedIn(viewModelScope)
 
-        _state.update {
+        _uiState.update {
             it.copy(listings = items)
         }
     }
 
     fun refreshListings() {
-        _state.update { it.copy(isRefreshing = true) }
+        _uiState.update { it.copy(isRefreshing = true) }
         viewModelScope.launch {
-            _state.update { it.copy(isRefreshing = false) }
+            _uiState.update { it.copy(isRefreshing = false) }
         }
     }
 
@@ -80,7 +80,7 @@ internal class HomeViewModel @Inject constructor(
         getListingJob = viewModelScope.launch {
             listingRepo.get(id).getOrNull()
             val listing = listingRepo.getAsFlow(id)
-            _state.update {
+            _uiState.update {
                 it.copy(listing = listing)
             }
         }

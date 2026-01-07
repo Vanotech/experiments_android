@@ -17,8 +17,8 @@ internal class HomeViewModel @Inject constructor(
     eventRepo: EventRepo
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(HomeViewState())
-    val state: StateFlow<HomeViewState> = _state
+    private val _uiState = MutableStateFlow(HomeUiState())
+    val uiState: StateFlow<HomeUiState> = _uiState
 
     init {
         val pagingDataFlow = eventRepo.getAllAsPagingData().cachedIn(viewModelScope)
@@ -29,7 +29,7 @@ internal class HomeViewModel @Inject constructor(
             }
         }.cachedIn(viewModelScope)
 
-        _state.update {
+        _uiState.update {
             it.copy(events = items)
         }
     }

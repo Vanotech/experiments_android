@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.stateIn
 internal class StateReducerFlowImpl<State, Intent>(
     initialState: State,
     reduceState: (State, Intent) -> State,
-    scope: CoroutineScope
+    coroutineScope: CoroutineScope
 ) : StateReducerFlow<State, Intent> {
 
     private val intents = Channel<Intent>()
@@ -19,7 +19,7 @@ internal class StateReducerFlowImpl<State, Intent>(
     private val stateFlow = intents
         .receiveAsFlow()
         .runningFold(initialState, reduceState)
-        .stateIn(scope, Eagerly, initialState)
+        .stateIn(coroutineScope, Eagerly, initialState)
 
     override val replayCache get() = stateFlow.replayCache
 

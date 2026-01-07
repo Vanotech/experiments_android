@@ -4,11 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.vanotech.experiments.data.media.Media
 import com.vanotech.experiments.data.media.MediaRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,12 +20,16 @@ internal class ViewViewModel @Inject constructor(
     private val args = savedStateHandle.toRoute<ViewRoute>()
     private val mediaId = args.mediaId
 
-    private val _media = MutableStateFlow<Media?>(null)
-    val media: StateFlow<Media?> = _media
+    private val _uiState = MutableStateFlow(ViewUiState())
+    val uiState: StateFlow<ViewUiState> = _uiState
 
     init {
         viewModelScope.launch {
-            _media.value = mediaRepo.get(mediaId)
+            mediaRepo.get(mediaId)?.also { media ->
+                _uiState.update {
+                    it.copy(media = media)
+                }
+            }
         }
     }
 }

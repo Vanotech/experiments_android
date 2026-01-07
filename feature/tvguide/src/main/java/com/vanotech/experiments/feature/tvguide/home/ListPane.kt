@@ -87,13 +87,13 @@ internal fun ListPane(
             )
         }
     ) { paddingValues ->
-        val state = viewModel.state.collectAsState().value
-        val items = state.listings.collectAsLazyPagingItems()
+        val uiState = viewModel.uiState.collectAsState().value
+        val items = uiState.listings.collectAsLazyPagingItems()
         Feed(
             items = items,
             paddingValues = paddingValues,
             selectable = isListAndDetailVisible,
-            isRefreshing = state.isRefreshing,
+            isRefreshing = uiState.isRefreshing,
             onRefresh = viewModel::refreshListings,
             onItemClick = onItemClick
         )
