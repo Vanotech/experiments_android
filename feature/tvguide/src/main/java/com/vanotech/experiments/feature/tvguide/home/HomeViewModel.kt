@@ -67,22 +67,13 @@ internal class HomeViewModel @Inject constructor(
         }
     }
 
-    fun refreshListings() {
-        _uiState.update { it.copy(isRefreshing = true) }
-        viewModelScope.launch {
-            _uiState.update { it.copy(isRefreshing = false) }
-        }
-    }
-
     private var getListingJob: Job? = null
     fun getListing(id: String) {
         getListingJob?.cancel()
         getListingJob = viewModelScope.launch {
             listingRepo.get(id).getOrNull()
             val listing = listingRepo.getAsFlow(id)
-            _uiState.update {
-                it.copy(listing = listing)
-            }
+            _uiState.update { it.copy(listing = listing) }
         }
     }
 

@@ -1,6 +1,7 @@
 package com.vanotech.experiments.feature.camera.edit
 
 import android.content.Context
+import android.util.Size
 import androidx.camera.core.CameraControl
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.FocusMeteringAction
@@ -11,7 +12,6 @@ import androidx.camera.core.SurfaceOrientedMeteringPointFactory
 import androidx.camera.core.SurfaceRequest
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.lifecycle.awaitInstance
-import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,8 +72,8 @@ internal class SimpleCamera {
     }
 
 
-    fun focusOnPoint(offset: Offset) {
-        val meteringPoint = surfaceMeteringPointFactory?.createPoint(offset.x, offset.y)
+    fun focusOnPoint(surfaceBounds: Size, x: Float, y: Float) {
+        val meteringPoint = surfaceMeteringPointFactory?.createPoint(x, y)
         meteringPoint?.also { point ->
             val meteringAction = FocusMeteringAction.Builder(point).build()
             cameraControl?.startFocusAndMetering(meteringAction)

@@ -42,8 +42,8 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
+import com.vanotech.experiments.feature.camera.CameraNavGraph
 import com.vanotech.experiments.feature.camera.R
-import com.vanotech.experiments.feature.camera.edit.EditRoute
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -124,7 +124,7 @@ private fun TakePictureFloatingActionButton(
 ) {
     FloatingActionButton(
         onClick = {
-            navController.navigate(route = EditRoute)
+            CameraNavGraph.navigateToEdit(navController)
         },
     ) {
         Icon(

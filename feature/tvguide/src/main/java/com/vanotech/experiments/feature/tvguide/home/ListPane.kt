@@ -45,6 +45,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -89,12 +90,13 @@ internal fun ListPane(
     ) { paddingValues ->
         val uiState = viewModel.uiState.collectAsState().value
         val items = uiState.listings.collectAsLazyPagingItems()
+        val isRefreshing = items.loadState.refresh == LoadState.Loading
         Feed(
             items = items,
             paddingValues = paddingValues,
             selectable = isListAndDetailVisible,
-            isRefreshing = uiState.isRefreshing,
-            onRefresh = viewModel::refreshListings,
+            isRefreshing = isRefreshing,
+            onRefresh = { items.refresh() },
             onItemClick = onItemClick
         )
 
@@ -122,12 +124,11 @@ private fun Feed(
     PullToRefreshBox(
         isRefreshing = isRefreshing,
         onRefresh = onRefresh,
+        modifier = Modifier.padding(paddingValues),
     ) {
         LazyVerticalGrid(
             columns = GridCells.Adaptive(160.dp),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+            modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)

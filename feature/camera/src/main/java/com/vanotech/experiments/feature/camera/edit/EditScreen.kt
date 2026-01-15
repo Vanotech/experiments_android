@@ -33,6 +33,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,7 +54,6 @@ import androidx.compose.ui.unit.round
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
@@ -148,24 +148,29 @@ private fun PermissionGrantedContent(
         }
     }
 
-    val surfaceRequest by viewModel.surfaceRequest.collectAsStateWithLifecycle()
-    surfaceRequest?.also { request ->
+    val currentSurfaceRequest by viewModel.surfaceRequest.collectAsState()
+    currentSurfaceRequest?.also { surfaceRequest ->
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
             val coordinateTransformer = remember { MutableCoordinateTransformer() }
             CameraXViewfinder(
-                surfaceRequest = request,
+                surfaceRequest = surfaceRequest,
                 coordinateTransformer = coordinateTransformer,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
                     .pointerInput(viewModel, coordinateTransformer) {
+                        // TODO: account for container (scaffold) offsets
                         detectTapGestures { gestureOffset ->
                             val surfaceOffset = with(coordinateTransformer) {
                                 gestureOffset.transform()
                             }
-                            viewModel.focusOnPoint(surfaceOffset)
+                            viewModel.focusOnPoint(
+                                surfaceRequest.resolution,
+                                surfaceOffset.x,
+                                surfaceOffset.y
+                            )
                             autofocusRequest = UUID.randomUUID() to gestureOffset
                         }
                     }

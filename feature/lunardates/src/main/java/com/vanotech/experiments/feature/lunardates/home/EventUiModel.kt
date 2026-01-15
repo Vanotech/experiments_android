@@ -6,7 +6,7 @@ import android.icu.util.ChineseCalendar
 import android.text.format.DateUtils
 import androidx.navigation.NavController
 import com.vanotech.experiments.data.lunardates.Event
-import com.vanotech.experiments.feature.lunardates.edit.EditRoute
+import com.vanotech.experiments.feature.lunardates.LunarDatesNavGraph
 
 internal data class EventUiModel(
     private val event: Event
@@ -33,6 +33,6 @@ internal data class EventUiModel(
     }
 
     fun navigate(navController: NavController) {
-        navController.navigate(route = EditRoute(event.id))
+        LunarDatesNavGraph.navigateToEdit(navController, event.id)
     }
 }

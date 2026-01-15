@@ -1,8 +1,8 @@
 package com.vanotech.experiments.feature.camera.edit
 
 import android.content.Context
+import android.util.Size
 import androidx.camera.core.SurfaceRequest
-import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import com.vanotech.experiments.data.camera.CaptureRepo
@@ -28,8 +28,8 @@ internal class EditViewModel @Inject constructor(
         camera.bindToCamera(context, lifecycleOwner)
     }
 
-    fun focusOnPoint(offset: Offset) {
-        camera.focusOnPoint(offset)
+    fun focusOnPoint(surfaceBounds: Size, x: Float, y: Float) {
+        camera.focusOnPoint(surfaceBounds, x, y)
     }
 
     suspend fun switchCamera(context: Context, lifecycleOwner: LifecycleOwner) {

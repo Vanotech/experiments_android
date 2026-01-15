@@ -41,6 +41,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import androidx.window.core.layout.WindowSizeClass
 import com.vanotech.experiments.data.lunardates.Event
+import com.vanotech.experiments.feature.lunardates.LunarDatesNavGraph
 import com.vanotech.experiments.feature.lunardates.R
 import com.vanotech.experiments.feature.lunardates.edit.EditRoute
 
@@ -66,7 +67,7 @@ internal fun HomeScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(route = EditRoute(0))
+                    LunarDatesNavGraph.navigateToEdit(navController, 0)
                 },
             ) {
                 Icon(

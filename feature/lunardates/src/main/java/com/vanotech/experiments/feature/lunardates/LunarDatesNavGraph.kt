@@ -27,4 +27,8 @@ object LunarDatesNavGraph : NavGraph {
             composable<EditRoute> { EditScreen(navController) }
         }
     }
+
+    internal fun navigateToEdit(navController: NavController, eventId: Int) {
+        navController.navigate(EditRoute(eventId))
+    }
 }

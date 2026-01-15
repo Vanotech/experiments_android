@@ -17,7 +17,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.ui.compose.PlayerSurface
+import androidx.media3.ui.compose.ContentFrame
 import androidx.navigation.NavController
 
 
@@ -57,7 +57,7 @@ private fun VideoContent(
                 exoPlayer.prepare()
             }
     }
-    DisposableEffect(key1 = lifecycleOwner) {
+    DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_PAUSE -> {
@@ -79,6 +79,6 @@ private fun VideoContent(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        PlayerSurface(player = exoPlayer)
+        ContentFrame(player = exoPlayer)
     }
 }

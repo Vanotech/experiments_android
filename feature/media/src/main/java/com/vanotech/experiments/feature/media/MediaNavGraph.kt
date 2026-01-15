@@ -29,4 +29,8 @@ object MediaNavGraph : NavGraph {
             composable<ViewRoute> { ViewScreen(navController) }
         }
     }
+
+    internal fun navigateToView(navController: NavController, mediaId: Int) {
+        navController.navigate(ViewRoute(mediaId))
+    }
 }

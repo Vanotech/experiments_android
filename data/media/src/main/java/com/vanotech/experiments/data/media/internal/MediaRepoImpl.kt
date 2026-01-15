@@ -27,7 +27,7 @@ internal class MediaRepoImpl @Inject constructor(
         private val MEDIA = listOf(
             Media(
                 id = 1,
-                url = "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/1080/Big_Buck_Bunny_1080_10s_1MB.mp4",
+                url = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
                 title = "Big Buck Bunny"
             ),
             Media(
@@ -37,7 +37,7 @@ internal class MediaRepoImpl @Inject constructor(
             ),
             Media(
                 id = 3,
-                url = "https://test-videos.co.uk/vids/sintel/mp4/h264/1080/Sintel_1080_10s_1MB.mp4",
+                url = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
                 title = "Sintel"
             )
         )

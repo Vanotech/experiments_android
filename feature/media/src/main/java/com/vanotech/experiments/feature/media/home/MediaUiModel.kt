@@ -2,7 +2,7 @@ package com.vanotech.experiments.feature.media.home
 
 import androidx.navigation.NavController
 import com.vanotech.experiments.data.media.Media
-import com.vanotech.experiments.feature.media.view.ViewRoute
+import com.vanotech.experiments.feature.media.MediaNavGraph
 
 internal data class MediaUiModel(
     private val media: Media
@@ -12,6 +12,6 @@ internal data class MediaUiModel(
     val title = media.title
 
     fun navigate(navController: NavController) {
-        navController.navigate(route = ViewRoute(media.id))
+        MediaNavGraph.navigateToView(navController, media.id)
     }
 }

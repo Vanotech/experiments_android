@@ -27,4 +27,8 @@ object CameraNavGraph : NavGraph {
             composable<EditRoute> { EditScreen(navController) }
         }
     }
+
+    internal fun navigateToEdit(navController: NavController) {
+        navController.navigate(EditRoute)
+    }
 }
