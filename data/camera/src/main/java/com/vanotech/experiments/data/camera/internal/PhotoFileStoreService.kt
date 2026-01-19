@@ -10,20 +10,20 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-internal class CaptureFileStoreService @Inject internal constructor(
+internal class PhotoFileStoreService @Inject internal constructor(
     @ApplicationContext context: Context
 ) : RecentFileStore(
-    parentDir = File(context.filesDir, CAPTURE_DIRECTORY_NAME),
-    filePrefix = CAPTURE_FILE_NAME,
-    fileSuffix = CAPTURE_FILE_EXT
+    parentDir = File(context.filesDir, DIRECTORY_NAME),
+    filePrefix = FILE_NAME,
+    fileSuffix = FILE_EXT
 ) {
-    val capture: Flow<File?> = files.map {
+    val photo: Flow<File?> = files.map {
         it.firstOrNull()
     }
 
     companion object {
-        private const val CAPTURE_DIRECTORY_NAME = "capture"
-        private const val CAPTURE_FILE_NAME = "capture"
-        private const val CAPTURE_FILE_EXT = ".image"
+        private const val DIRECTORY_NAME = "photo"
+        private const val FILE_NAME = "photo"
+        private const val FILE_EXT = ".image"
     }
 }

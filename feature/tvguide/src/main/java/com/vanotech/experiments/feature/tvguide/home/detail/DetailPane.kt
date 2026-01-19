@@ -1,9 +1,8 @@
-package com.vanotech.experiments.feature.tvguide.home
+package com.vanotech.experiments.feature.tvguide.home.detail
 
 import android.text.format.DateUtils
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
@@ -36,8 +34,8 @@ import com.vanotech.experiments.data.tvguide.schema.ListingType
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun DetailPane(
-    viewModel: HomeViewModel,
     isListAndDetailVisible: Boolean,
+    listing: Listing?,
     onBackPress: () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -54,13 +52,11 @@ internal fun DetailPane(
                 scrollBehavior = scrollBehavior
             )
         }
-    ) { paddingValues ->
-        val uiState = viewModel.uiState.collectAsState().value
-        val listing = uiState.listing.collectAsState(null).value
+    ) { innerPadding ->
         listing?.also { listing ->
             DetailContent(
                 listing = listing,
-                paddingValues = paddingValues
+                modifier = Modifier.padding(innerPadding)
             )
         }
     }
@@ -69,12 +65,11 @@ internal fun DetailPane(
 @Composable
 private fun DetailContent(
     listing: Listing,
-    paddingValues: PaddingValues
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(paddingValues)
             .verticalScroll(rememberScrollState())
     ) {
         AsyncImage(

@@ -5,10 +5,10 @@ import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
-interface CaptureRepo {
+interface PhotoRepo {
     val capture: Flow<Uri?>
 
-    suspend fun setCapture(source: File)
+    suspend fun setPhoto(source: File)
 
-    suspend fun setCapture(context: Context, source: Uri)
+    suspend fun setPhoto(context: Context, source: Uri)
 }

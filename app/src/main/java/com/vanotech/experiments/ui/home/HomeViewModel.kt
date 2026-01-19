@@ -23,8 +23,8 @@ internal class HomeViewModel @Inject constructor(
     val uiState: StateFlow<HomeUiState> = _uiState
 
     init {
-        val navGraphs = NAV_GRAPHS.map {
-            NavGraphUiModel(context, it)
+        val navGraphs = NAV_GRAPHS.mapIndexed { index, it ->
+            NavGraphUiModel(context, index, it)
         }
 
         _uiState.update {

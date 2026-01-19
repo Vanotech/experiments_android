@@ -29,7 +29,8 @@ internal class SimpleCamera {
 
     private var cameraControl: CameraControl? = null
 
-    private var cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+    @CameraSelector.LensFacing
+    private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
 
     private var surfaceMeteringPointFactory: SurfaceOrientedMeteringPointFactory? = null
 
@@ -54,6 +55,10 @@ internal class SimpleCamera {
         try {
             processCameraProvider.unbindAll()
 
+            val cameraSelector = CameraSelector.Builder()
+                .requireLensFacing(lensFacing)
+                .build()
+
             val camera = processCameraProvider.bindToLifecycle(
                 lifecycleOwner,
                 cameraSelector,
@@ -62,7 +67,7 @@ internal class SimpleCamera {
             )
             cameraControl = camera.cameraControl
 
-            cameraSelector = camera.cameraInfo.cameraSelector
+            lensFacing = camera.cameraInfo.lensFacing
 
             awaitCancellation()
         } finally {
@@ -72,7 +77,7 @@ internal class SimpleCamera {
     }
 
 
-    fun focusOnPoint(surfaceBounds: Size, x: Float, y: Float) {
+    fun focusOnPoint(bounds: Size, x: Float, y: Float) {
         val meteringPoint = surfaceMeteringPointFactory?.createPoint(x, y)
         meteringPoint?.also { point ->
             val meteringAction = FocusMeteringAction.Builder(point).build()
@@ -81,9 +86,9 @@ internal class SimpleCamera {
     }
 
     suspend fun switchCamera(context: Context, lifecycleOwner: LifecycleOwner) {
-        cameraSelector = when (cameraSelector) {
-            CameraSelector.DEFAULT_BACK_CAMERA -> CameraSelector.DEFAULT_FRONT_CAMERA
-            else -> CameraSelector.DEFAULT_BACK_CAMERA
+        lensFacing = when (lensFacing) {
+            CameraSelector.LENS_FACING_BACK -> CameraSelector.LENS_FACING_FRONT
+            else -> CameraSelector.LENS_FACING_BACK
         }
         bindToCamera(context, lifecycleOwner)
     }

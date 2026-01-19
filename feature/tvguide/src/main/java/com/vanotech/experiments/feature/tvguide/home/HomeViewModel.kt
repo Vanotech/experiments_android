@@ -2,6 +2,7 @@ package com.vanotech.experiments.feature.tvguide.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.map
@@ -9,10 +10,13 @@ import com.vanotech.experiments.core.utils.TimeUtils
 import com.vanotech.experiments.data.tvguide.ListingRepo
 import com.vanotech.experiments.data.tvguide.schema.Listing
 import com.vanotech.experiments.data.tvguide.schema.ListingType
+import com.vanotech.experiments.feature.tvguide.home.list.ListingUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
@@ -24,35 +28,49 @@ import javax.inject.Inject
 internal class HomeViewModel @Inject constructor(
     private val listingRepo: ListingRepo
 ) : ViewModel() {
-    val showEpisodes = listingRepo.showEpisodes
-    val showMovies = listingRepo.showMovies
-    val startTime = listingRepo.startTime
-    val endTime = listingRepo.endTime
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState
 
     init {
-        initListings()
+        viewModelScope.launch {
+            listingRepo.showEpisodes.collectLatest { showEpisodes ->
+                _uiState.update { it.copy(showEpisodes = showEpisodes) }
+            }
+        }
+        viewModelScope.launch {
+            listingRepo.showMovies.collectLatest { showMovies ->
+                _uiState.update { it.copy(showMovies = showMovies) }
+            }
+        }
+        viewModelScope.launch {
+            listingRepo.startTime.collectLatest { startTime ->
+                _uiState.update { it.copy(startTime = startTime) }
+            }
+        }
+        viewModelScope.launch {
+            listingRepo.endTime.collectLatest { endTime ->
+                _uiState.update { it.copy(endTime = endTime) }
+            }
+        }
     }
 
-    private fun initListings() {
-        val pagingDataFlow = listingRepo.getAllAsPagingData().cachedIn(viewModelScope)
+    val listings: Flow<PagingData<ListingUiModel>> = run {
+        val pagingData = listingRepo.getAllAsPagingData().cachedIn(viewModelScope)
 
-        val items = combine(
-            pagingDataFlow,
-            showEpisodes,
-            showMovies,
-            startTime,
-            endTime
-        ) { pagingData, showEpisodes, showMovies, startTime, endTime ->
+        combine(
+            pagingData,
+            uiState,
+        ) { pagingData, uiState ->
+            pagingData to uiState
+        }.map { (pagingData, uiState) ->
             val now = System.currentTimeMillis()
             pagingData.filter { listing ->
                 val endAt = listing.startAt.plus(listing.duration).toEpochMilli()
                 when {
                     endAt < now -> false
-                    !isPrimeTime(listing, startTime, endTime) -> false
-                    isShowType(listing, ListingType.EPISODE) -> showEpisodes
-                    isShowType(listing, ListingType.MOVIE) -> showMovies
+                    !isValidTime(listing, uiState.startTime, uiState.endTime) -> false
+                    isValidType(listing, ListingType.EPISODE) -> uiState.showEpisodes
+                    isValidType(listing, ListingType.MOVIE) -> uiState.showMovies
                     else -> true
                 }
             }
@@ -61,53 +79,44 @@ internal class HomeViewModel @Inject constructor(
                 ListingUiModel(listing)
             }
         }.cachedIn(viewModelScope)
-
-        _uiState.update {
-            it.copy(listings = items)
-        }
     }
 
-    private var getListingJob: Job? = null
-    fun getListing(id: String) {
-        getListingJob?.cancel()
-        getListingJob = viewModelScope.launch {
-            listingRepo.get(id).getOrNull()
+    private var setListingJob: Job? = null
+
+    fun setListing(id: String) {
+        setListingJob?.cancel()
+        setListingJob = viewModelScope.launch {
+            listingRepo.get(id)
             val listing = listingRepo.getAsFlow(id)
-            _uiState.update { it.copy(listing = listing) }
+            listing.collectLatest { listing ->
+                _uiState.update { it.copy(listing = listing) }
+            }
         }
     }
 
-    fun setShowEpisodes(value: Boolean) {
-        viewModelScope.launch {
-            listingRepo.setShowEpisodes(value)
-        }
+    suspend fun setShowEpisodes(value: Boolean) {
+        listingRepo.setShowEpisodes(value)
     }
 
-    fun setShowMovies(value: Boolean) {
-        viewModelScope.launch {
-            listingRepo.setShowMovies(value)
-        }
+    suspend fun setShowMovies(value: Boolean) {
+        listingRepo.setShowMovies(value)
     }
 
-    fun setStartTime(value: LocalTime) {
-        viewModelScope.launch {
-            listingRepo.setStartTime(value)
-        }
+    suspend fun setStartTime(value: LocalTime) {
+        listingRepo.setStartTime(value)
     }
 
-    fun setEndTime(value: LocalTime) {
-        viewModelScope.launch {
-            listingRepo.setEndTime(value)
-        }
+    suspend fun setEndTime(value: LocalTime) {
+        listingRepo.setEndTime(value)
     }
 
     companion object {
-        private fun isShowType(
+        private fun isValidType(
             listing: Listing,
             showType: ListingType
         ): Boolean = listing.type == showType
 
-        private fun isPrimeTime(
+        private fun isValidTime(
             listing: Listing,
             startTime: LocalTime,
             endTime: LocalTime

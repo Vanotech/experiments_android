@@ -1,11 +1,11 @@
-package com.vanotech.experiments.feature.tvguide.home
+package com.vanotech.experiments.feature.tvguide.home.settings
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,15 +14,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SwitchSetting(
+internal fun ValueSetting(
     text: String,
-    checked: Boolean,
-    onCheckedChange: ((Boolean) -> Unit)?
+    value: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
+            .clickable(onClick = onClick)
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -30,18 +32,19 @@ fun SwitchSetting(
             text = text,
             style = MaterialTheme.typography.bodyMedium
         )
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }
 
 @Preview
 @Composable
-fun SwitchSettingPreview() {
-    SwitchSetting(
+internal fun ValueSettingPreview() {
+    ValueSetting(
         text = "Lorem ipsum",
-        checked = true
-    ) {}
+        value = "dolor sit amet",
+        onClick = {}
+    )
 }

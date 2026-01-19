@@ -1,14 +1,15 @@
 package com.vanotech.experiments.ui.home
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -21,7 +22,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,21 +31,42 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.window.core.layout.WindowSizeClass
 import com.vanotech.experiments.R
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HomeScreen(
     navController: NavController,
+    modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
+) {
+    val adaptiveInfo = currentWindowAdaptiveInfo()
+    val gridCells = remember(adaptiveInfo) {
+        HomeUiState.calculateGridCells(adaptiveInfo)
+    }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    HomeScreen(
+        items = uiState.navGraphs,
+        onItemClick = { it.navigate(navController) },
+        gridCells = gridCells,
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HomeScreen(
+    items: List<NavGraphUiModel>,
+    onItemClick: (NavGraphUiModel) -> Unit,
+    gridCells: GridCells,
+    modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
@@ -52,68 +74,55 @@ internal fun HomeScreen(
                 },
                 scrollBehavior = scrollBehavior
             )
-        }
-    ) { paddingValues ->
-
-        val uiState = viewModel.uiState.collectAsState().value
-        val items = uiState.navGraphs
-        Feed(
+        },
+    ) { innerPadding ->
+        HomeContentGrid(
             items = items,
-            navController = navController,
-            paddingValues = paddingValues
+            onItemClick = onItemClick,
+            gridCells = gridCells,
+            modifier = Modifier.padding(innerPadding),
         )
     }
 }
 
 @Composable
-private fun Feed(
+private fun HomeContentGrid(
     items: List<NavGraphUiModel>,
-    navController: NavController,
-    paddingValues: PaddingValues
+    onItemClick: (NavGraphUiModel) -> Unit,
+    gridCells: GridCells,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(16.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(16.dp),
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(16.dp)
 ) {
-    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-    val gridCells = remember(windowSizeClass) {
-        when {
-            windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)
-                -> GridCells.Adaptive(240.dp)
-
-            windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
-                -> GridCells.Fixed(2)
-
-            else -> GridCells.Fixed(1)
-        }
-    }
-
     LazyVerticalGrid(
         columns = gridCells,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(paddingValues),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = modifier.fillMaxSize(),
+        contentPadding = contentPadding,
+        verticalArrangement = verticalArrangement,
+        horizontalArrangement = horizontalArrangement
     ) {
         items(
-            count = items.size,
-        ) { index ->
-            val item = items[index]
-            Item(
+            items = items,
+            key = { it.id }
+        ) { item ->
+            NavGraphCard(
                 item = item,
-                navController = navController
+                onClick = onItemClick
             )
         }
     }
 }
 
 @Composable
-private fun Item(
+private fun NavGraphCard(
     item: NavGraphUiModel,
-    onClick: () -> Unit
+    onClick: (NavGraphUiModel) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
+        onClick = { onClick(item) },
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(
@@ -125,7 +134,7 @@ private fun Item(
         ) {
             Image(
                 imageVector = item.icon,
-                contentDescription = item.label
+                contentDescription = null
             )
             Text(
                 text = item.label,
@@ -135,23 +144,14 @@ private fun Item(
     }
 }
 
-@Composable
-private fun Item(
-    item: NavGraphUiModel,
-    navController: NavController
-) {
-    Item(item) {
-        item.navigate(navController)
-    }
-}
-
 @Preview
 @Composable
-private fun ItemPreview() {
+private fun NavGraphCardPreview() {
     val item = NavGraphUiModel(
+        id = 1,
         icon = Icons.Default.Home,
         label = "Lorem ipsum",
         route = Unit
     )
-    Item(item) { }
+    NavGraphCard(item, onClick = {})
 }

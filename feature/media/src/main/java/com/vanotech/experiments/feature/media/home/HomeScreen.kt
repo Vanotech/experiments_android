@@ -1,6 +1,5 @@
 package com.vanotech.experiments.feature.media.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +21,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,17 +42,32 @@ import coil3.video.VideoFrameDecoder
 import com.vanotech.experiments.core.ui.AspectRatio
 import com.vanotech.experiments.feature.media.R
 
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 internal fun HomeScreen(
     navController: NavController,
+    modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
+) {
+    val items = viewModel.media.collectAsLazyPagingItems()
+
+    HomeScreen(
+        items = items,
+        onItemClick = { it.navigate(navController) },
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@Composable
+private fun HomeScreen(
+    items: LazyPagingItems<MediaUiModel>,
+    onItemClick: (MediaUiModel) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
@@ -63,28 +76,30 @@ internal fun HomeScreen(
                 scrollBehavior = scrollBehavior
             )
         }
-    ) { paddingValues ->
-        val uiState = viewModel.uiState.collectAsState().value
-        val items = uiState.media.collectAsLazyPagingItems()
+    ) { innerPadding ->
         if (items.itemCount > 0) {
-            Feed(
+            HomeContentGrid(
                 items = items,
-                navController = navController,
-                paddingValues = paddingValues
+                onItemClick = onItemClick,
+                modifier = Modifier.padding(innerPadding),
             )
         } else {
             EmptyFeed(
-                paddingValues = paddingValues
+                modifier = Modifier.padding(innerPadding),
             )
         }
     }
 }
 
 @Composable
-private fun Feed(
+private fun HomeContentGrid(
     items: LazyPagingItems<MediaUiModel>,
-    navController: NavController,
-    paddingValues: PaddingValues
+    onItemClick: (MediaUiModel) -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(16.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(16.dp),
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(16.dp)
+
 ) {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val gridCells = remember(windowSizeClass) {
@@ -101,12 +116,10 @@ private fun Feed(
 
     LazyVerticalGrid(
         columns = gridCells,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = modifier.fillMaxSize(),
+        contentPadding = contentPadding,
+        verticalArrangement = verticalArrangement,
+        horizontalArrangement = horizontalArrangement
     ) {
         items(
             count = items.itemCount,
@@ -114,9 +127,9 @@ private fun Feed(
         ) { index ->
             val item = items[index]
             if (item != null) {
-                Item(
+                MediaCard(
                     item = item,
-                    navController = navController
+                    onClick = onItemClick
                 )
             }
         }
@@ -124,11 +137,12 @@ private fun Feed(
 }
 
 @Composable
-private fun EmptyFeed(paddingValues: PaddingValues) {
+private fun EmptyFeed(
+    modifier: Modifier = Modifier
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .padding(paddingValues)
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -141,14 +155,14 @@ private fun EmptyFeed(paddingValues: PaddingValues) {
 }
 
 @Composable
-private fun Item(
+private fun MediaCard(
     item: MediaUiModel,
-    onClick: () -> Unit
+    onClick: (MediaUiModel) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
+        onClick = { onClick(item) },
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp)
     ) {
         AsyncImage(
@@ -180,13 +194,4 @@ private fun Item(
     }
 }
 
-@Composable
-private fun Item(
-    item: MediaUiModel,
-    navController: NavController
-) {
-    Item(item) {
-        item.navigate(navController)
-    }
-}
 

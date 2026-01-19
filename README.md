@@ -7,9 +7,10 @@ Experimental app to explore various Android concepts and technologies.
 * Coil
 * Compose
 * Hilt
+* Kotlin Multiplatform (initial work only)
 * Kotlinx Serialization
 * Ktor
 * ~~Moshi~~
 * Paging3
-* Retrofit
+* ~~Retrofit~~
 * Room

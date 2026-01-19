@@ -1,13 +1,15 @@
-package com.vanotech.experiments.feature.tvguide.home
+package com.vanotech.experiments.feature.tvguide.home.list
 
 import android.content.Context
 import android.text.format.DateUtils
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Tv
+import androidx.compose.runtime.Immutable
 import com.vanotech.experiments.data.tvguide.schema.Listing
 import com.vanotech.experiments.data.tvguide.schema.ListingType
 
+@Immutable
 internal data class ListingUiModel(
     private val listing: Listing
 ) {

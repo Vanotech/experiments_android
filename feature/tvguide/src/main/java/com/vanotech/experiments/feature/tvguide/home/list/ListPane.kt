@@ -1,4 +1,4 @@
-package com.vanotech.experiments.feature.tvguide.home
+package com.vanotech.experiments.feature.tvguide.home.list
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -29,7 +29,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,26 +46,36 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.vanotech.experiments.core.ui.AspectRatio
 import com.vanotech.experiments.data.tvguide.schema.Listing
 import com.vanotech.experiments.feature.tvguide.R
+import com.vanotech.experiments.feature.tvguide.home.settings.HomeSettingsBottomSheet
+import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ListPane(
-    viewModel: HomeViewModel,
     isListAndDetailVisible: Boolean,
-    onItemClick: (ListingUiModel) -> Unit
+    items: LazyPagingItems<ListingUiModel>,
+    onItemClick: (ListingUiModel) -> Unit,
+    showEpisodes: Boolean,
+    onShowEpisodesChanged: (Boolean) -> Unit,
+    showMovies: Boolean,
+    onShowMoviesChanged: (Boolean) -> Unit,
+    startTime: LocalTime,
+    onStartTimeChanged: (LocalTime) -> Unit,
+    endTime: LocalTime,
+    onEndTimeChanged: (LocalTime) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     var showSettings by remember { mutableStateOf(false) }
 
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
@@ -88,43 +97,48 @@ internal fun ListPane(
             )
         }
     ) { paddingValues ->
-        val uiState = viewModel.uiState.collectAsState().value
-        val items = uiState.listings.collectAsLazyPagingItems()
         val isRefreshing = items.loadState.refresh == LoadState.Loading
-        Feed(
+
+        ListContent(
             items = items,
-            paddingValues = paddingValues,
-            selectable = isListAndDetailVisible,
+            onItemClick = onItemClick,
+            isItemSelectable = isListAndDetailVisible,
             isRefreshing = isRefreshing,
             onRefresh = { items.refresh() },
-            onItemClick = onItemClick
+            modifier = Modifier.padding(paddingValues),
         )
 
         if (showSettings) {
             HomeSettingsBottomSheet(
-                viewModel = viewModel,
-                onDismissRequest = {
-                    showSettings = false
-                }
+                onDismissRequest = { showSettings = false },
+                showEpisodes = showEpisodes,
+                onShowEpisodesChanged = onShowEpisodesChanged,
+                showMovies = showMovies,
+                onShowMoviesChanged = onShowMoviesChanged,
+                startTime = startTime,
+                onStartTimeChanged = onStartTimeChanged,
+                endTime = endTime,
+                onEndTimeChanged = onEndTimeChanged
             )
         }
     }
 }
 
 @Composable
-private fun Feed(
+private fun ListContent(
     items: LazyPagingItems<ListingUiModel>,
-    paddingValues: PaddingValues,
-    selectable: Boolean,
+    onItemClick: (ListingUiModel) -> Unit,
+    isItemSelectable: Boolean,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    onItemClick: (ListingUiModel) -> Unit
+    modifier: Modifier = Modifier
 ) {
     var selectedIndex by rememberSaveable { mutableStateOf<Int?>(null) }
+
     PullToRefreshBox(
         isRefreshing = isRefreshing,
         onRefresh = onRefresh,
-        modifier = Modifier.padding(paddingValues),
+        modifier = modifier,
     ) {
         LazyVerticalGrid(
             columns = GridCells.Adaptive(160.dp),
@@ -139,9 +153,9 @@ private fun Feed(
             ) { index ->
                 val item = items[index]
                 if (item != null) {
-                    Item(
+                    ListingCard(
                         item = item,
-                        selectable = selectable,
+                        selectable = isItemSelectable,
                         selected = index == selectedIndex
                     ) {
                         selectedIndex = index
@@ -156,7 +170,7 @@ private fun Feed(
 }
 
 @Composable
-private fun Item(
+private fun ListingCard(
     item: ListingUiModel,
     selectable: Boolean = false,
     selected: Boolean = false,
@@ -232,10 +246,10 @@ private fun Item(
 
 @Preview
 @Composable
-private fun ItemPreview() {
+private fun ListingCardPreview() {
     val listing = Listing.mockData(0)
     val item = ListingUiModel(listing = listing)
-    Item(item) { }
+    ListingCard(item) { }
 }
 
 @Composable

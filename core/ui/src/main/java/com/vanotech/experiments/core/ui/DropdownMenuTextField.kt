@@ -1,5 +1,7 @@
 package com.vanotech.experiments.core.ui
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -24,31 +26,34 @@ fun <T> DropdownMenuTextField(
     modifier: Modifier = Modifier,
     label: @Composable (() -> Unit)? = null,
 ) {
-    var expand by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
-        expanded = expand,
-        onExpandedChange = { expand = it }
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = modifier
     ) {
         TextField(
             value = itemText(selection),
             onValueChange = {},
-            modifier = modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
             readOnly = true,
             label = label,
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expand) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
         )
         ExposedDropdownMenu(
-            expanded = expand,
-            onDismissRequest = { expand = false }
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
         ) {
             items.forEach { item ->
                 DropdownMenuItem(
                     text = { Text(text = itemText(item)) },
                     onClick = {
                         onSelect(item)
-                        expand = false
+                        expanded = false
                     }
                 )
             }

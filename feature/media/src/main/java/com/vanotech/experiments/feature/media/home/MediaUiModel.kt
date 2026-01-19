@@ -1,9 +1,11 @@
 package com.vanotech.experiments.feature.media.home
 
+import androidx.compose.runtime.Immutable
 import androidx.navigation.NavController
 import com.vanotech.experiments.data.media.Media
 import com.vanotech.experiments.feature.media.MediaNavGraph
 
+@Immutable
 internal data class MediaUiModel(
     private val media: Media
 ) {

@@ -1,6 +1,5 @@
 package com.vanotech.experiments.feature.lunardates.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +23,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,19 +41,36 @@ import androidx.window.core.layout.WindowSizeClass
 import com.vanotech.experiments.data.lunardates.Event
 import com.vanotech.experiments.feature.lunardates.LunarDatesNavGraph
 import com.vanotech.experiments.feature.lunardates.R
-import com.vanotech.experiments.feature.lunardates.edit.EditRoute
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HomeScreen(
     navController: NavController,
+    modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
+) {
+    val items = viewModel.events.collectAsLazyPagingItems()
+
+    HomeScreen(
+        items = items,
+        onItemClick = { it.navigate(navController) },
+        onNavigateToEdit = { LunarDatesNavGraph.navigateToEdit(navController, 0) },
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HomeScreen(
+    items: LazyPagingItems<EventUiModel>,
+    onItemClick: (EventUiModel) -> Unit,
+    onNavigateToEdit: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
@@ -65,39 +80,36 @@ internal fun HomeScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    LunarDatesNavGraph.navigateToEdit(navController, 0)
-                },
-            ) {
+            FloatingActionButton(onClick = onNavigateToEdit) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = stringResource(R.string.action_add_date)
                 )
             }
         }
-    ) { paddingValues ->
-        val uiState = viewModel.uiState.collectAsState().value
-        val items = uiState.events.collectAsLazyPagingItems()
+    ) { innerPadding ->
         if (items.itemCount > 0) {
-            Feed(
+            HomeContentGrid(
                 items = items,
-                navController = navController,
-                paddingValues = paddingValues
+                onItemClick = onItemClick,
+                modifier = Modifier.padding(innerPadding),
             )
         } else {
             EmptyFeed(
-                paddingValues = paddingValues
+                modifier = Modifier.padding(innerPadding),
             )
         }
     }
 }
 
 @Composable
-private fun Feed(
+private fun HomeContentGrid(
     items: LazyPagingItems<EventUiModel>,
-    navController: NavController,
-    paddingValues: PaddingValues
+    onItemClick: (EventUiModel) -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(16.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(16.dp),
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(16.dp)
 ) {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val gridCells = remember(windowSizeClass) {
@@ -114,12 +126,10 @@ private fun Feed(
 
     LazyVerticalGrid(
         columns = gridCells,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = modifier.fillMaxSize(),
+        contentPadding = contentPadding,
+        verticalArrangement = verticalArrangement,
+        horizontalArrangement = horizontalArrangement
     ) {
         items(
             count = items.itemCount,
@@ -127,9 +137,9 @@ private fun Feed(
         ) { index ->
             val item = items[index]
             if (item != null) {
-                Item(
+                EventCard(
                     item = item,
-                    navController = navController
+                    onClick = onItemClick
                 )
             }
         }
@@ -138,12 +148,11 @@ private fun Feed(
 
 @Composable
 private fun EmptyFeed(
-    paddingValues: PaddingValues
+    modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .padding(paddingValues)
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -156,14 +165,14 @@ private fun EmptyFeed(
 }
 
 @Composable
-private fun Item(
+private fun EventCard(
     item: EventUiModel,
-    onClick: () -> Unit
+    onClick: (EventUiModel) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
+        onClick = { onClick(item) },
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp)
     ) {
         Column(
@@ -189,20 +198,13 @@ private fun Item(
     }
 }
 
-@Composable
-private fun Item(
-    item: EventUiModel,
-    navController: NavController
-) {
-    Item(item) {
-        item.navigate(navController)
-    }
-}
-
 @Preview
 @Composable
-fun EventUiModelPreview() {
+fun EventCardPreview() {
     val event = Event.mockData(0)
     val item = EventUiModel(event = event)
-    Item(item) { }
+    EventCard(
+        item = item,
+        onClick = { }
+    )
 }

@@ -1,5 +1,6 @@
 package com.vanotech.experiments.feature.camera.edit
 
+import android.Manifest
 import androidx.camera.compose.CameraXViewfinder
 import androidx.camera.viewfinder.compose.MutableCoordinateTransformer
 import androidx.compose.animation.AnimatedVisibility
@@ -10,7 +11,6 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -56,68 +56,96 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.vanotech.experiments.core.ui.BackButton
 import com.vanotech.experiments.feature.camera.R
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.UUID
 
+
+@Composable
+internal fun EditScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    viewModel: EditViewModel = hiltViewModel()
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    EditScreen(
+        camera = remember { SimpleCamera() },
+        file = viewModel.captureFile,
+        onBackPress = { navController.popBackStack() },
+        onSwitchCamera = { camera ->
+            coroutineScope.launch {
+                camera.switchCamera(context, lifecycleOwner)
+            }
+        },
+        onUpdatePhoto = { camera, file ->
+            coroutineScope.launch {
+                camera.takePhoto(file)
+                viewModel.setPhoto(file)
+                navController.popBackStack()
+            }
+        },
+        modifier = modifier
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 internal fun EditScreen(
-    navController: NavController,
-    viewModel: EditViewModel = hiltViewModel()
+    camera: SimpleCamera,
+    file: File,
+    onBackPress: () -> Unit,
+    onSwitchCamera: (SimpleCamera) -> Unit,
+    onUpdatePhoto: (SimpleCamera, File) -> Unit,
+    modifier: Modifier = Modifier
 ) {
+    val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
-    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
                     Text(text = stringResource(R.string.route_camera_edit))
                 },
                 navigationIcon = {
-                    BackButton(navController = navController)
+                    BackButton(onBackPress = onBackPress)
+                },
+                actions = {
+                    SwitchCameraIconButton(
+                        onClick = { onSwitchCamera(camera) }
+                    )
                 },
                 scrollBehavior = scrollBehavior
             )
         },
         floatingActionButton = {
             if (cameraPermissionState.status.isGranted) {
-                FloatingActionButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            viewModel.takePhoto()
-                            navController.popBackStack()
-                        }
-                    },
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.CameraAlt,
-                        contentDescription = stringResource(R.string.action_take_photo)
-                    )
-                }
+                TakePictureFloatingActionButton(
+                    onClick = { onUpdatePhoto(camera, file) }
+                )
             }
         }
     ) { paddingValues ->
         if (cameraPermissionState.status.isGranted) {
             PermissionGrantedContent(
-                viewModel = viewModel,
-                coroutineScope = coroutineScope,
-                paddingValues = paddingValues
+                camera = camera,
+                modifier = Modifier.padding(paddingValues)
             )
         } else {
             PermissionDeniedContent(
-                cameraPermissionState = cameraPermissionState,
-                paddingValues = paddingValues
+                onRequestPermission = {
+                    cameraPermissionState.launchPermissionRequest()
+                },
+                modifier = Modifier.padding(paddingValues)
             )
         }
     }
@@ -125,15 +153,14 @@ internal fun EditScreen(
 
 @Composable
 private fun PermissionGrantedContent(
-    viewModel: EditViewModel,
-    coroutineScope: CoroutineScope,
-    paddingValues: PaddingValues
+    camera: SimpleCamera,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(lifecycleOwner) {
-        viewModel.bindToCamera(context, lifecycleOwner)
+        camera.bindToCamera(context, lifecycleOwner)
     }
 
     var autofocusRequest by remember { mutableStateOf(UUID.randomUUID() to Offset.Unspecified) }
@@ -148,10 +175,10 @@ private fun PermissionGrantedContent(
         }
     }
 
-    val currentSurfaceRequest by viewModel.surfaceRequest.collectAsState()
+    val currentSurfaceRequest = camera.surfaceRequest.collectAsState().value
     currentSurfaceRequest?.also { surfaceRequest ->
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = modifier.fillMaxSize()
         ) {
             val coordinateTransformer = remember { MutableCoordinateTransformer() }
             CameraXViewfinder(
@@ -159,14 +186,12 @@ private fun PermissionGrantedContent(
                 coordinateTransformer = coordinateTransformer,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
-                    .pointerInput(viewModel, coordinateTransformer) {
-                        // TODO: account for container (scaffold) offsets
+                    .pointerInput(surfaceRequest, coordinateTransformer) {
                         detectTapGestures { gestureOffset ->
                             val surfaceOffset = with(coordinateTransformer) {
                                 gestureOffset.transform()
                             }
-                            viewModel.focusOnPoint(
+                            camera.focusOnPoint(
                                 surfaceRequest.resolution,
                                 surfaceOffset.x,
                                 surfaceOffset.y
@@ -190,19 +215,6 @@ private fun PermissionGrantedContent(
                         .size(48.dp)
                 )
             }
-
-            IconButton(
-                onClick = {
-                    coroutineScope.launch {
-                        viewModel.switchCamera(context, lifecycleOwner)
-                    }
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.SwitchCamera,
-                    contentDescription = stringResource(R.string.action_take_photo)
-                )
-            }
         }
     }
 }
@@ -210,13 +222,12 @@ private fun PermissionGrantedContent(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun PermissionDeniedContent(
-    cameraPermissionState: PermissionState,
-    paddingValues: PaddingValues
+    onRequestPermission: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .padding(paddingValues)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -226,8 +237,41 @@ private fun PermissionDeniedContent(
             style = MaterialTheme.typography.titleMedium
         )
         Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = { cameraPermissionState.launchPermissionRequest() }) {
+        Button(onClick = onRequestPermission) {
             Text(stringResource(R.string.action_request_permission))
         }
+    }
+}
+
+@Composable
+private fun TakePictureFloatingActionButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    FloatingActionButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = Icons.Default.CameraAlt,
+            contentDescription = stringResource(R.string.action_take_photo)
+        )
+    }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+private fun SwitchCameraIconButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = Icons.Default.SwitchCamera,
+            contentDescription = stringResource(R.string.action_take_photo)
+        )
     }
 }

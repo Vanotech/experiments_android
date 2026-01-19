@@ -4,10 +4,12 @@ import android.content.Context
 import android.icu.util.Calendar
 import android.icu.util.ChineseCalendar
 import android.text.format.DateUtils
+import androidx.compose.runtime.Immutable
 import androidx.navigation.NavController
 import com.vanotech.experiments.data.lunardates.Event
 import com.vanotech.experiments.feature.lunardates.LunarDatesNavGraph
 
+@Immutable
 internal data class EventUiModel(
     private val event: Event
 ) {

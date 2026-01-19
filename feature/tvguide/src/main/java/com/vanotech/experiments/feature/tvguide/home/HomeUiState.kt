@@ -1,11 +1,12 @@
 package com.vanotech.experiments.feature.tvguide.home
 
-import androidx.paging.PagingData
 import com.vanotech.experiments.data.tvguide.schema.Listing
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
+import java.time.LocalTime
 
 internal data class HomeUiState(
-    val listings: Flow<PagingData<ListingUiModel>> = emptyFlow(),
-    val listing: Flow<Listing?> = emptyFlow(),
+    val listing: Listing? = null,
+    val showEpisodes: Boolean = false,
+    val showMovies: Boolean = false,
+    val startTime: LocalTime = LocalTime.MIDNIGHT,
+    val endTime: LocalTime = LocalTime.MIDNIGHT
 )

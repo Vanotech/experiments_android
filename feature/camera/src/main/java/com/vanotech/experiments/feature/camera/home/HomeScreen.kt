@@ -1,12 +1,13 @@
 package com.vanotech.experiments.feature.camera.home
 
+import android.Manifest
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,7 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -44,62 +46,82 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.vanotech.experiments.feature.camera.CameraNavGraph
 import com.vanotech.experiments.feature.camera.R
+import kotlinx.coroutines.launch
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HomeScreen(
     navController: NavController,
+    modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+
+    HomeScreen(
+        displayUri = uiState.uri,
+        captureUri = viewModel.captureUri,
+        onNavigateToCamera = { CameraNavGraph.navigateToEdit(navController) },
+        onUpdatePhoto = {
+            coroutineScope.launch {
+                viewModel.setPhoto(it)
+            }
+        },
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HomeScreen(
+    displayUri: Uri?,
+    captureUri: Uri,
+    modifier: Modifier = Modifier,
+    onNavigateToCamera: () -> Unit,
+    onUpdatePhoto: (Uri) -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {
                     Text(text = stringResource(R.string.route_camera_home))
                 },
                 actions = {
-                    TakePictureIconButton(viewModel = viewModel)
-                    PickVisualMediaIconButton(viewModel = viewModel)
-
+                    TakePictureIconButton(
+                        uri = captureUri,
+                        onTakePicture = onUpdatePhoto
+                    )
+                    PickVisualMediaIconButton(onPickVisualMedia = onUpdatePhoto)
                 },
                 scrollBehavior = scrollBehavior
             )
         },
         floatingActionButton = {
-            TakePictureFloatingActionButton(
-                navController = navController,
-            )
+            TakePictureFloatingActionButton(onClick = onNavigateToCamera)
         }
     ) { paddingValues ->
         CaptureContent(
-            viewModel = viewModel,
-            paddingValues = paddingValues
+            uri = displayUri,
+            modifier = Modifier.padding(paddingValues)
         )
     }
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun CaptureContent(
-    viewModel: HomeViewModel,
-    paddingValues: PaddingValues
+    uri: Uri?,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .padding(paddingValues)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val uiState = viewModel.uiState.collectAsState().value
-
         val context = LocalContext.current
-        val uri = uiState.uri.collectAsState(null).value
         val placeholder = rememberVectorPainter(Icons.Default.Person)
         AsyncImage(
             model = ImageRequest.Builder(context)
@@ -120,43 +142,12 @@ private fun CaptureContent(
 
 @Composable
 private fun TakePictureFloatingActionButton(
-    navController: NavController,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     FloatingActionButton(
-        onClick = {
-            CameraNavGraph.navigateToEdit(navController)
-        },
-    ) {
-        Icon(
-            imageVector = Icons.Default.CameraAlt,
-            contentDescription = stringResource(R.string.action_take_photo)
-        )
-    }
-}
-
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-private fun TakePictureIconButton(viewModel: HomeViewModel) {
-    val takePictureLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.TakePicture()
-    ) { success ->
-        if (success) {
-            viewModel.updatePhoto(viewModel.uri)
-        }
-    }
-
-    val takePicturePermissionState = rememberPermissionState(
-        android.Manifest.permission.CAMERA
-    ) { granted ->
-        if (granted) {
-            takePictureLauncher.launch(viewModel.uri)
-        }
-    }
-
-    IconButton(
-        onClick = {
-            takePicturePermissionState.launchPermissionRequest()
-        }
+        onClick = onClick,
+        modifier = modifier
     ) {
         Icon(
             imageVector = Icons.Default.CameraAlt,
@@ -166,12 +157,15 @@ private fun TakePictureIconButton(viewModel: HomeViewModel) {
 }
 
 @Composable
-private fun PickVisualMediaIconButton(viewModel: HomeViewModel) {
+private fun PickVisualMediaIconButton(
+    onPickVisualMedia: (Uri) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val pickVisualMediaLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         uri?.also {
-            viewModel.updatePhoto(it)
+            onPickVisualMedia(it)
         }
     }
 
@@ -181,10 +175,48 @@ private fun PickVisualMediaIconButton(viewModel: HomeViewModel) {
                 ActivityResultContracts.PickVisualMedia.ImageOnly
             )
             pickVisualMediaLauncher.launch(input)
-        }) {
+        },
+        modifier = modifier
+    ) {
         Icon(
             imageVector = Icons.Default.AddPhotoAlternate,
             contentDescription = stringResource(R.string.action_pick_photo)
+        )
+    }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+private fun TakePictureIconButton(
+    uri: Uri,
+    onTakePicture: (Uri) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val takePictureLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { success ->
+        if (success) {
+            onTakePicture(uri)
+        }
+    }
+
+    val takePicturePermissionState = rememberPermissionState(
+        Manifest.permission.CAMERA
+    ) { granted ->
+        if (granted) {
+            takePictureLauncher.launch(uri)
+        }
+    }
+
+    IconButton(
+        onClick = {
+            takePicturePermissionState.launchPermissionRequest()
+        },
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = Icons.Default.CameraAlt,
+            contentDescription = stringResource(R.string.action_take_photo)
         )
     }
 }

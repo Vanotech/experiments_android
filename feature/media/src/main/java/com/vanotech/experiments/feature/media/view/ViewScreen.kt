@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -15,6 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.compose.ContentFrame
@@ -26,12 +26,20 @@ internal fun ViewScreen(
     navController: NavController,
     viewModel: ViewViewModel = hiltViewModel()
 ) {
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+
+    ViewScreen(
+        videoUri = uiState.media?.url
+    )
+}
+
+@Composable
+private fun ViewScreen(
+    videoUri: String?
+) {
     val lifecycleOwner by rememberUpdatedState(LocalLifecycleOwner.current)
-    val lifecycle = lifecycleOwner.lifecycle
-    val uiState = viewModel.uiState.collectAsState().value
-    uiState.media?.url?.also { url ->
+    videoUri?.also { url ->
         VideoContent(
-            lifecycle = lifecycle,
             lifecycleOwner = lifecycleOwner,
             videoUri = url
         )
@@ -40,7 +48,6 @@ internal fun ViewScreen(
 
 @Composable
 private fun VideoContent(
-    lifecycle: Lifecycle,
     lifecycleOwner: LifecycleOwner,
     videoUri: String,
 ) {
@@ -71,14 +78,15 @@ private fun VideoContent(
                 else -> Unit
             }
         }
-        lifecycle.addObserver(observer)
+        lifecycleOwner.lifecycle.addObserver(observer)
         onDispose {
             exoPlayer.release()
-            lifecycle.removeObserver(observer)
+            lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        ContentFrame(player = exoPlayer)
-    }
+    ContentFrame(
+        player = exoPlayer,
+        modifier = Modifier.fillMaxSize()
+    )
 }
