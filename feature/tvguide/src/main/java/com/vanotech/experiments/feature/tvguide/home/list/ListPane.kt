@@ -50,7 +50,7 @@ import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.vanotech.experiments.core.ui.AspectRatio
-import com.vanotech.experiments.data.tvguide.schema.Listing
+import com.vanotech.experiments.data.tvguide.Listing
 import com.vanotech.experiments.feature.tvguide.R
 import com.vanotech.experiments.feature.tvguide.home.settings.HomeSettingsBottomSheet
 import java.time.LocalTime

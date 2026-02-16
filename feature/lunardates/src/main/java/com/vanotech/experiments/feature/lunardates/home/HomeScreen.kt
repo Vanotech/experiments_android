@@ -54,7 +54,7 @@ internal fun HomeScreen(
     HomeScreen(
         items = items,
         onItemClick = { it.navigate(navController) },
-        onNavigateToEdit = { LunarDatesNavGraph.navigateToEdit(navController, 0) },
+        onNavigateToAdd = { LunarDatesNavGraph.navigateToAdd(navController) },
         modifier = modifier
     )
 }
@@ -64,7 +64,7 @@ internal fun HomeScreen(
 private fun HomeScreen(
     items: LazyPagingItems<EventUiModel>,
     onItemClick: (EventUiModel) -> Unit,
-    onNavigateToEdit: () -> Unit,
+    onNavigateToAdd: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -80,23 +80,23 @@ private fun HomeScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onNavigateToEdit) {
+            FloatingActionButton(onClick = onNavigateToAdd) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = stringResource(R.string.action_add_date)
                 )
             }
         }
-    ) { innerPadding ->
+    ) { contentPadding ->
         if (items.itemCount > 0) {
             HomeContentGrid(
                 items = items,
                 onItemClick = onItemClick,
-                modifier = Modifier.padding(innerPadding),
+                modifier = Modifier.padding(contentPadding),
             )
         } else {
-            EmptyFeed(
-                modifier = Modifier.padding(innerPadding),
+            HomeContentEmptyPlaceholder(
+                modifier = Modifier.padding(contentPadding),
             )
         }
     }
@@ -147,7 +147,7 @@ private fun HomeContentGrid(
 }
 
 @Composable
-private fun EmptyFeed(
+private fun HomeContentEmptyPlaceholder(
     modifier: Modifier = Modifier
 ) {
     Box(

@@ -1,7 +1,7 @@
 package com.vanotech.experiments.data.tvguide
 
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.vanotech.experiments.data.tvguide.schema.Listing
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalTime
 
@@ -15,7 +15,7 @@ interface ListingRepo {
 
     fun getAsFlow(id: String): Flow<Listing?>
 
-    fun getAllAsPagingData(): Flow<PagingData<Listing>>
+    fun getAllAsPagingData(config: PagingConfig): Flow<PagingData<Listing>>
 
     suspend fun setShowEpisodes(value: Boolean)
     suspend fun setShowMovies(value: Boolean)

@@ -28,6 +28,10 @@ object LunarDatesNavGraph : NavGraph {
         }
     }
 
+    internal fun navigateToAdd(navController: NavController) {
+        navigateToEdit(navController, 0)
+    }
+
     internal fun navigateToEdit(navController: NavController, eventId: Int) {
         navController.navigate(EditRoute(eventId))
     }

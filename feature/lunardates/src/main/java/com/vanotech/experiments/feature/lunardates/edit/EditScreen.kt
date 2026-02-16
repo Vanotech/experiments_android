@@ -100,78 +100,80 @@ private fun EditContent(
     viewModel: EditViewModel,
     paddingValues: PaddingValues
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)
-            .padding(16.dp)
-            .imePadding()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        val uiState = viewModel.uiState.collectAsState().value
-        val initialUiState  = remember(viewModel) { viewModel.uiState.value }
-
-        val titleState = rememberTextFieldState(initialUiState .title)
-        val titleKeyboardOptions = KeyboardOptions.Default.copy(
-            capitalization = KeyboardCapitalization.Sentences,
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Next
-        )
-        LaunchedEffect(titleState) {
-            snapshotFlow {
-                titleState.text.toString()
-            }.collectLatest {
-                viewModel.updateTitle(it)
-            }
-        }
-        TextField(
-            state = titleState,
-            modifier = Modifier.fillMaxWidth(),
-            label = {
-                Text(text = stringResource(id = R.string.hint_title))
-            },
-            keyboardOptions = titleKeyboardOptions
-        )
-
-        DropdownMenuTextField(
-            items = uiState.daysOfMonth,
-            selection = uiState.dayOfMonth,
-            onSelect = {
-                viewModel.updateDayOfMonth(it)
-            },
-            itemText = { it.label },
-            modifier = Modifier.fillMaxWidth(),
-            label = {
-                Text(text = stringResource(id = R.string.hint_day))
-            }
-        )
-
-        DropdownMenuTextField(
-            items = uiState.months,
-            selection = uiState.month,
-            onSelect = {
-                viewModel.updateMonth(it)
-            },
-            itemText = { it.label },
-            modifier = Modifier.fillMaxWidth(),
-            label = {
-                Text(text = stringResource(id = R.string.hint_month))
-            }
-        )
-
-        Button(
-            onClick = {
-                viewModel.updateEvent()
-                navController.popBackStack()
-            },
-            modifier = Modifier.align(Alignment.End),
-            enabled = uiState.canUpdateEvent
+    val uiState = viewModel.uiState.collectAsState().value
+    if (uiState.initialized) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp)
+                .imePadding()
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Icon(
-                imageVector = Icons.Default.Check,
-                contentDescription = stringResource(R.string.action_save_date)
+            val initialUiState = remember(viewModel) { viewModel.uiState.value }
+
+            val titleState = rememberTextFieldState(initialUiState.title)
+            val titleKeyboardOptions = KeyboardOptions.Default.copy(
+                capitalization = KeyboardCapitalization.Sentences,
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
             )
+            LaunchedEffect(titleState) {
+                snapshotFlow {
+                    titleState.text.toString()
+                }.collectLatest {
+                    viewModel.updateTitle(it)
+                }
+            }
+            TextField(
+                state = titleState,
+                modifier = Modifier.fillMaxWidth(),
+                label = {
+                    Text(text = stringResource(id = R.string.hint_title))
+                },
+                keyboardOptions = titleKeyboardOptions
+            )
+
+            DropdownMenuTextField(
+                items = uiState.daysOfMonth,
+                selection = uiState.dayOfMonth,
+                onSelect = {
+                    viewModel.updateDayOfMonth(it)
+                },
+                itemText = { it.label },
+                modifier = Modifier.fillMaxWidth(),
+                label = {
+                    Text(text = stringResource(id = R.string.hint_day))
+                }
+            )
+
+            DropdownMenuTextField(
+                items = uiState.months,
+                selection = uiState.month,
+                onSelect = {
+                    viewModel.updateMonth(it)
+                },
+                itemText = { it.label },
+                modifier = Modifier.fillMaxWidth(),
+                label = {
+                    Text(text = stringResource(id = R.string.hint_month))
+                }
+            )
+
+            Button(
+                onClick = {
+                    viewModel.updateEvent()
+                    navController.popBackStack()
+                },
+                modifier = Modifier.align(Alignment.End),
+                enabled = uiState.canUpdateEvent
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = stringResource(R.string.action_save_date)
+                )
+            }
         }
     }
 }

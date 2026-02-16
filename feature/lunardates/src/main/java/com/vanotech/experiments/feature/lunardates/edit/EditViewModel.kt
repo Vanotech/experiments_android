@@ -37,6 +37,7 @@ internal class EditViewModel @Inject constructor(
 
         MutableStateFlow(
             EditUiState(
+                initialized = false,
                 createOnly = args.createOnly,
                 title = "",
                 daysOfMonth = daysOfMonth,
@@ -59,6 +60,7 @@ internal class EditViewModel @Inject constructor(
                     )
                 }
             }
+            _uiState.update { it.copy(initialized = true) }
         }
     }
 

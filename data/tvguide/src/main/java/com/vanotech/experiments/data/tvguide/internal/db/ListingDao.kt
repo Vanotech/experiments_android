@@ -5,7 +5,6 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
-import com.vanotech.experiments.data.tvguide.schema.Listing
 import kotlinx.coroutines.flow.Flow
 
 
@@ -13,24 +12,24 @@ import kotlinx.coroutines.flow.Flow
 internal interface ListingDao {
 
     @Delete
-    suspend fun delete(item: Listing)
+    suspend fun delete(item: ListingEntity)
 
     @Query("DELETE FROM $TABLE_NAME")
     suspend fun deleteAll()
 
     @Query("SELECT * FROM $TABLE_NAME ORDER BY startAt, duration")
-    fun getAllAsPagingSource(): PagingSource<Int, Listing>
+    fun getAllAsPagingSource(): PagingSource<Int, ListingEntity>
 
     @Query("SELECT * FROM $TABLE_NAME WHERE id = :id")
-    fun getAsFlow(id: String): Flow<Listing?>
+    fun getAsFlow(id: String): Flow<ListingEntity?>
 
     @Upsert
-    suspend fun upsert(item: Listing)
+    suspend fun upsert(item: ListingEntity)
 
     @Upsert
-    suspend fun upsert(items: Collection<Listing>)
+    suspend fun upsert(items: Collection<ListingEntity>)
 
     companion object {
-        private const val TABLE_NAME = Listing.TABLE_NAME
+        private const val TABLE_NAME = ListingEntity.TABLE_NAME
     }
 }

@@ -2,6 +2,7 @@ package com.vanotech.experiments.feature.lunardates.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
@@ -17,7 +18,9 @@ internal class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     val events: Flow<PagingData<EventUiModel>> = run {
-        val pagedData = eventRepo.getAllAsPagingData().cachedIn(viewModelScope)
+        val pagedData = eventRepo.getAllAsPagingData(
+            config = PagingConfig(pageSize = 50)
+        ).cachedIn(viewModelScope)
 
         pagedData.map { pagingData ->
             pagingData.map {

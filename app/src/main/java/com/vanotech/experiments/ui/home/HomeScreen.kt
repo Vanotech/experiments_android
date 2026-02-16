@@ -75,12 +75,12 @@ private fun HomeScreen(
                 scrollBehavior = scrollBehavior
             )
         },
-    ) { innerPadding ->
+    ) { contentPadding ->
         HomeContentGrid(
             items = items,
             onItemClick = onItemClick,
             gridCells = gridCells,
-            modifier = Modifier.padding(innerPadding),
+            modifier = Modifier.padding(contentPadding),
         )
     }
 }

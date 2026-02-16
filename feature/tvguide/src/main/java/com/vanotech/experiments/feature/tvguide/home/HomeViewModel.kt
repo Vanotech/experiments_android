@@ -2,14 +2,15 @@ package com.vanotech.experiments.feature.tvguide.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.map
 import com.vanotech.experiments.core.utils.TimeUtils
+import com.vanotech.experiments.data.tvguide.Listing
 import com.vanotech.experiments.data.tvguide.ListingRepo
-import com.vanotech.experiments.data.tvguide.schema.Listing
-import com.vanotech.experiments.data.tvguide.schema.ListingType
+import com.vanotech.experiments.data.tvguide.ListingType
 import com.vanotech.experiments.feature.tvguide.home.list.ListingUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -55,7 +56,9 @@ internal class HomeViewModel @Inject constructor(
     }
 
     val listings: Flow<PagingData<ListingUiModel>> = run {
-        val pagingData = listingRepo.getAllAsPagingData().cachedIn(viewModelScope)
+        val pagingData = listingRepo.getAllAsPagingData(
+            config = PagingConfig(pageSize = 50)
+        ).cachedIn(viewModelScope)
 
         combine(
             pagingData,

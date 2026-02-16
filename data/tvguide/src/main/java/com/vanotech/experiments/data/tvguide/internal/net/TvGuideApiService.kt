@@ -1,10 +1,8 @@
 package com.vanotech.experiments.data.tvguide.internal.net
 
+import com.vanotech.experiments.data.tvguide.Listing
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Channel
 import com.vanotech.experiments.data.tvguide.internal.net.schema.SingleResponse
-import com.vanotech.experiments.data.tvguide.internal.net.schema.Type
-import com.vanotech.experiments.data.tvguide.schema.Listing
-import com.vanotech.experiments.data.tvguide.schema.ListingType
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -38,17 +36,7 @@ internal class TvGuideApiService @Inject constructor(
         val body: List<Channel> = response.body()
         return body.flatMap { channel ->
             channel.schedules.map { schedule ->
-                Listing(
-                    id = schedule.paId,
-                    title = schedule.title,
-                    type = programTypeOf(schedule.type),
-                    imageUrl = schedule.imageUrl,
-                    startAt = schedule.startAt,
-                    duration = schedule.duration,
-                    channelTitle = channel.title,
-                    channelLogoUrl = channel.logoUrl,
-                    summary = null
-                )
+                schedule.toListing(channel)
             }
         }
     }
@@ -62,28 +50,10 @@ internal class TvGuideApiService @Inject constructor(
             }
         }
         val body: SingleResponse = response.body()
-        return Listing(
-            id = body.paId,
-            title = body.title,
-            type = programTypeOf(body.type),
-            imageUrl = body.imageUrl,
-            startAt = body.startAt,
-            duration = body.duration,
-            channelTitle = body.channelTitle,
-            channelLogoUrl = body.channelLogoUrl,
-            summary = body.summaryLong
-        )
+        return body.toListing()
     }
 
     companion object {
         private const val BASE_URL = "https://api-2.tvguide.co.uk"
-
-        private fun programTypeOf(type: String): ListingType {
-            return when (type) {
-                Type.EPISODE -> ListingType.EPISODE
-                Type.MOVIE -> ListingType.MOVIE
-                else -> ListingType.UNKNOWN
-            }
-        }
     }
 }

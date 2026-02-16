@@ -5,10 +5,11 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
+import com.vanotech.experiments.data.tvguide.internal.db.ListingEntity
+import com.vanotech.experiments.data.tvguide.internal.db.RemoteKeyEntity
 import com.vanotech.experiments.data.tvguide.internal.db.TvGuideDatabase
-import com.vanotech.experiments.data.tvguide.internal.db.schema.RemoteKey
+import com.vanotech.experiments.data.tvguide.internal.db.toListingEntity
 import com.vanotech.experiments.data.tvguide.internal.net.TvGuideApiService
-import com.vanotech.experiments.data.tvguide.schema.Listing
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import java.io.IOException
@@ -23,7 +24,7 @@ internal class GetListingsRemoteMediator(
     private val instant: Instant,
     private val apiService: TvGuideApiService,
     private val database: TvGuideDatabase
-) : RemoteMediator<Int, Listing>() {
+) : RemoteMediator<Int, ListingEntity>() {
     private val listingDao = database.listingDao()
     private val remoteKeyDao = database.remoteKeyDao()
 
@@ -41,7 +42,7 @@ internal class GetListingsRemoteMediator(
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, Listing>
+        state: PagingState<Int, ListingEntity>
     ): MediatorResult {
         return try {
             val loadKey = when (loadType) {
@@ -69,7 +70,9 @@ internal class GetListingsRemoteMediator(
                 platform = platform,
                 region = region,
                 instant = loadKey
-            )
+            ).map {
+                it.toListingEntity()
+            }
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -78,7 +81,7 @@ internal class GetListingsRemoteMediator(
                 }
 
                 val remoteKeys = listings.map {
-                    RemoteKey(
+                    RemoteKeyEntity(
                         id = it.id,
                         loadKey = loadKey
                     )
@@ -100,23 +103,23 @@ internal class GetListingsRemoteMediator(
         }
     }
 
-    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, Listing>): RemoteKey? {
+    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, ListingEntity>): RemoteKeyEntity? {
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.id?.let { id ->
-                database.remoteKeyDao().get(id)
+                remoteKeyDao.get(id)
             }
         }
     }
 
-    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, Listing>): RemoteKey? {
+    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, ListingEntity>): RemoteKeyEntity? {
         return state.firstItemOrNull()?.let { item ->
-            database.remoteKeyDao().get(item.id)
+            remoteKeyDao.get(item.id)
         }
     }
 
-    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, Listing>): RemoteKey? {
+    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, ListingEntity>): RemoteKeyEntity? {
         return state.lastItemOrNull()?.let { item ->
-            database.remoteKeyDao().get(item.id)
+            remoteKeyDao.get(item.id)
         }
     }
 }

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
-internal class MediaRepoImpl @Inject constructor(
+internal class DefaultMediaRepo @Inject constructor(
 ) : MediaRepo {
     override suspend fun delete(item: Media) = TODO()
 

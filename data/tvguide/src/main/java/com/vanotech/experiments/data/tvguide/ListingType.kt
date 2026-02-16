@@ -1,4 +1,4 @@
-package com.vanotech.experiments.data.tvguide.schema
+package com.vanotech.experiments.data.tvguide
 
 enum class ListingType {
     UNKNOWN,

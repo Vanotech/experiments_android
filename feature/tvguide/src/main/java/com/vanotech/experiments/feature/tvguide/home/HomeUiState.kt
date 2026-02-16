@@ -1,6 +1,6 @@
 package com.vanotech.experiments.feature.tvguide.home
 
-import com.vanotech.experiments.data.tvguide.schema.Listing
+import com.vanotech.experiments.data.tvguide.Listing
 import java.time.LocalTime
 
 internal data class HomeUiState(

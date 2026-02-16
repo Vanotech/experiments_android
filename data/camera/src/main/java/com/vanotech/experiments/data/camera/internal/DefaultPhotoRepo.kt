@@ -12,7 +12,7 @@ import javax.inject.Singleton
 
 
 @Singleton
-internal class PhotoRepoImpl @Inject internal constructor(
+internal class DefaultPhotoRepo @Inject internal constructor(
     private val photoFileStoreService: PhotoFileStoreService
 ) : PhotoRepo {
 

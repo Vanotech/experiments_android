@@ -76,16 +76,16 @@ private fun HomeScreen(
                 scrollBehavior = scrollBehavior
             )
         }
-    ) { innerPadding ->
+    ) { contentPadding ->
         if (items.itemCount > 0) {
             HomeContentGrid(
                 items = items,
                 onItemClick = onItemClick,
-                modifier = Modifier.padding(innerPadding),
+                modifier = Modifier.padding(contentPadding),
             )
         } else {
-            EmptyFeed(
-                modifier = Modifier.padding(innerPadding),
+            HomeContentEmptyPlaceholder(
+                modifier = Modifier.padding(contentPadding),
             )
         }
     }
@@ -137,7 +137,7 @@ private fun HomeContentGrid(
 }
 
 @Composable
-private fun EmptyFeed(
+private fun HomeContentEmptyPlaceholder(
     modifier: Modifier = Modifier
 ) {
     Box(

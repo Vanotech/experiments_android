@@ -28,8 +28,8 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.vanotech.experiments.core.ui.AspectRatio
 import com.vanotech.experiments.core.ui.BackButton
-import com.vanotech.experiments.data.tvguide.schema.Listing
-import com.vanotech.experiments.data.tvguide.schema.ListingType
+import com.vanotech.experiments.data.tvguide.Listing
+import com.vanotech.experiments.data.tvguide.ListingType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,11 +52,11 @@ internal fun DetailPane(
                 scrollBehavior = scrollBehavior
             )
         }
-    ) { innerPadding ->
+    ) { contentPadding ->
         listing?.also { listing ->
             DetailContent(
                 listing = listing,
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.padding(contentPadding)
             )
         }
     }

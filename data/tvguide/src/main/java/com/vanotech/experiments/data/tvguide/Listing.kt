@@ -1,14 +1,10 @@
-package com.vanotech.experiments.data.tvguide.schema
+package com.vanotech.experiments.data.tvguide
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import java.time.Duration
 import java.time.Instant
 
-
-@Entity(tableName = Listing.TABLE_NAME)
 data class Listing(
-    @PrimaryKey val id: String,
+    val id: String,
     val title: String,
     val type: ListingType,
     val imageUrl: String?,
@@ -19,12 +15,10 @@ data class Listing(
     val summary: String?
 ) {
     companion object {
-        const val TABLE_NAME = "listings"
-
         fun mockData(index: Int): Listing {
             return Listing(
                 id = "$index",
-                title = "Program $index",
+                title = "Title $index",
                 type = ListingType.UNKNOWN,
                 imageUrl = null,
                 startAt = Instant.now(),

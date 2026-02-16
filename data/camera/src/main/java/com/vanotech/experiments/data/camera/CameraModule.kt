@@ -1,6 +1,6 @@
 package com.vanotech.experiments.data.camera
 
-import com.vanotech.experiments.data.camera.internal.PhotoRepoImpl
+import com.vanotech.experiments.data.camera.internal.DefaultPhotoRepo
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,6 +14,6 @@ object CameraModule {
     @InstallIn(SingletonComponent::class)
     internal interface Bindings {
         @Binds
-        fun bindsPhotoRepo(photoRepo: PhotoRepoImpl): PhotoRepo
+        fun bindsPhotoRepo(photoRepo: DefaultPhotoRepo): PhotoRepo
     }
 }

@@ -1,6 +1,6 @@
 package com.vanotech.experiments.data.media
 
-import com.vanotech.experiments.data.media.internal.MediaRepoImpl
+import com.vanotech.experiments.data.media.internal.DefaultMediaRepo
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,6 +14,6 @@ object MediaModule {
     @InstallIn(SingletonComponent::class)
     internal interface Bindings {
         @Binds
-        fun bindsEventRepo(mediaRepo: MediaRepoImpl): MediaRepo
+        fun bindsEventRepo(mediaRepo: DefaultMediaRepo): MediaRepo
     }
 }

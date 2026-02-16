@@ -6,13 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.vanotech.experiments.core.utils.room.TimeConverters
-import com.vanotech.experiments.data.tvguide.internal.db.schema.RemoteKey
-import com.vanotech.experiments.data.tvguide.schema.Listing
 
 @Database(
     entities = [
-        Listing::class,
-        RemoteKey::class
+        ListingEntity::class,
+        RemoteKeyEntity::class
     ],
     exportSchema = false,
     version = 1
@@ -27,8 +25,7 @@ internal abstract class TvGuideDatabase : RoomDatabase() {
             return Room.inMemoryDatabaseBuilder(
                 context.applicationContext,
                 TvGuideDatabase::class.java
-            )
-                .fallbackToDestructiveMigration(false)
+            ).fallbackToDestructiveMigration(true)
                 .build()
         }
     }

@@ -1,7 +1,7 @@
 package com.vanotech.experiments.data.lunardates
 
 import android.content.Context
-import com.vanotech.experiments.data.lunardates.internal.EventRepoImpl
+import com.vanotech.experiments.data.lunardates.internal.DefaultEventRepo
 import com.vanotech.experiments.data.lunardates.internal.db.EventDao
 import com.vanotech.experiments.data.lunardates.internal.db.LunarDatesDatabase
 import dagger.Binds
@@ -20,7 +20,7 @@ object LunarDatesModule {
     @InstallIn(SingletonComponent::class)
     internal interface Bindings {
         @Binds
-        fun bindsEventRepo(eventRepo: EventRepoImpl): EventRepo
+        fun bindsEventRepo(eventRepo: DefaultEventRepo): EventRepo
     }
 
     @Provides

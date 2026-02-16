@@ -4,19 +4,22 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.map
+import com.vanotech.experiments.data.tvguide.Listing
 import com.vanotech.experiments.data.tvguide.ListingRepo
 import com.vanotech.experiments.data.tvguide.internal.db.ListingDaoService
 import com.vanotech.experiments.data.tvguide.internal.db.TvGuideDatabase
+import com.vanotech.experiments.data.tvguide.internal.db.toListing
 import com.vanotech.experiments.data.tvguide.internal.net.TvGuideApiService
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Platform
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Region
-import com.vanotech.experiments.data.tvguide.schema.Listing
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.time.Instant
 import java.time.LocalTime
 import javax.inject.Inject
 
-internal class ListingRepoImpl @Inject constructor(
+internal class DefaultListingRepo @Inject constructor(
     private val listingDaoService: ListingDaoService,
     private val tvGuideApiService: TvGuideApiService,
     private val tvGuideDatabase: TvGuideDatabase,
@@ -41,9 +44,9 @@ internal class ListingRepoImpl @Inject constructor(
     override fun getAsFlow(id: String) = listingDaoService.getAsFlow(id)
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getAllAsPagingData(): Flow<PagingData<Listing>> {
+    override fun getAllAsPagingData(config: PagingConfig): Flow<PagingData<Listing>> {
         return Pager(
-            config = PagingConfig(pageSize = 50),
+            config = config,
             remoteMediator = GetListingsRemoteMediator(
                 platform = Platform.VIRGIN,
                 region = Region.NORTH_WEST,
@@ -53,7 +56,11 @@ internal class ListingRepoImpl @Inject constructor(
             )
         ) {
             listingDaoService.getAllAsPagingSource()
-        }.flow
+        }.flow.map { pagingData ->
+            pagingData.map {
+                it.toListing()
+            }
+        }
     }
 
     override suspend fun setShowEpisodes(value: Boolean) = tvGuideDataStore.setShowEpisodes(value)

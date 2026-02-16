@@ -6,5 +6,9 @@ import kotlinx.serialization.Serializable
 internal data class EditRoute(
     val eventId: Int
 ) {
-    val createOnly = eventId == 0
+    val createOnly = eventId == ADD_EVENT_ID
+
+    companion object {
+        const val ADD_EVENT_ID = 0
+    }
 }

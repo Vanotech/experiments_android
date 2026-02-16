@@ -1,6 +1,5 @@
 package com.vanotech.experiments.data.tvguide.internal.db
 
-import com.vanotech.experiments.data.tvguide.internal.db.schema.RemoteKey
 import javax.inject.Inject
 
 
@@ -13,7 +12,7 @@ internal class RemoteKeyDaoService @Inject constructor(
 
     suspend fun getCreationTime() = dao.getCreationTime()
 
-    suspend fun insert(item: RemoteKey) = dao.insert(item)
+    suspend fun insert(item: RemoteKeyEntity) = dao.insert(item)
 
-    suspend fun insert(items: Collection<RemoteKey>) = dao.insert(items)
+    suspend fun insert(items: Collection<RemoteKeyEntity>) = dao.insert(items)
 }

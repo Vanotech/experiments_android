@@ -1,7 +1,7 @@
 package com.vanotech.experiments.data.tvguide
 
 import android.content.Context
-import com.vanotech.experiments.data.tvguide.internal.ListingRepoImpl
+import com.vanotech.experiments.data.tvguide.internal.DefaultListingRepo
 import com.vanotech.experiments.data.tvguide.internal.db.ListingDao
 import com.vanotech.experiments.data.tvguide.internal.db.RemoteKeyDao
 import com.vanotech.experiments.data.tvguide.internal.db.TvGuideDatabase
@@ -27,7 +27,7 @@ object TvGuideModule {
     @InstallIn(SingletonComponent::class)
     internal interface Bindings {
         @Binds
-        fun bindsListingRepo(listingRepo: ListingRepoImpl): ListingRepo
+        fun bindsListingRepo(listingRepo: DefaultListingRepo): ListingRepo
     }
 
     @Provides

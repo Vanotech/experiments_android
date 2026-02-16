@@ -6,4 +6,4 @@ import androidx.lifecycle.viewModelScope
 fun <State, Intent> ViewModel.StateReducerFlow(
     initialState: State,
     reduceState: (State, Intent) -> State,
-): StateReducerFlow<State, Intent> = StateReducerFlowImpl(initialState, reduceState, viewModelScope)
+): StateReducerFlow<State, Intent> = DefaultStateReducerFlow(initialState, reduceState, viewModelScope)

@@ -41,6 +41,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":core:utils"))
 
     implementation(libs.androidx.core.ktx)
 

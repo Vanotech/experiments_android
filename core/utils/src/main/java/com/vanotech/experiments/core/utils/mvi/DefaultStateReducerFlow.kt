@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.stateIn
 
-internal class StateReducerFlowImpl<State, Intent>(
+internal class DefaultStateReducerFlow<State, Intent>(
     initialState: State,
     reduceState: (State, Intent) -> State,
     coroutineScope: CoroutineScope
