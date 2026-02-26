@@ -79,7 +79,7 @@ internal fun EditScreen(
     EditScreen(
         camera = remember { SimpleCamera() },
         file = viewModel.captureFile,
-        onBackPress = { navController.popBackStack() },
+        onRequestDismiss = { navController.popBackStack() },
         onSwitchCamera = { camera ->
             coroutineScope.launch {
                 camera.switchCamera(context, lifecycleOwner)
@@ -101,7 +101,7 @@ internal fun EditScreen(
 internal fun EditScreen(
     camera: SimpleCamera,
     file: File,
-    onBackPress: () -> Unit,
+    onRequestDismiss: () -> Unit,
     onSwitchCamera: (SimpleCamera) -> Unit,
     onUpdatePhoto: (SimpleCamera, File) -> Unit,
     modifier: Modifier = Modifier
@@ -117,7 +117,7 @@ internal fun EditScreen(
                     Text(text = stringResource(R.string.route_camera_edit))
                 },
                 navigationIcon = {
-                    BackButton(onBackPress = onBackPress)
+                    BackButton(onClick = onRequestDismiss)
                 },
                 actions = {
                     SwitchCameraIconButton(

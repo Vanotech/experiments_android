@@ -1,22 +1,12 @@
 package com.vanotech.experiments.ui.theme
 
 import android.os.Build
-import android.view.Window
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.view.WindowInsetsControllerCompat
-
-private val DarkColorScheme = darkColorScheme(
-)
-
-private val LightColorScheme = lightColorScheme(
-)
 
 @Composable
 fun Theme(
@@ -24,7 +14,7 @@ fun Theme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
+    val colors = when {
         dynamicColor && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) -> {
             val context = LocalContext.current
             if (darkTheme) {
@@ -34,22 +24,15 @@ fun Theme(
             }
         }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> DarkColors
+        else -> LightColors
     }
+
+    val typography = Typography
 
     MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
+        colorScheme = colors,
+        typography = typography,
         content = content
     )
-}
-
-@Composable
-fun ThemedSystemBars(window: Window) {
-    WindowInsetsControllerCompat(window, window.decorView).apply {
-        val lightTheme: Boolean = !isSystemInDarkTheme()
-        isAppearanceLightStatusBars = lightTheme
-        isAppearanceLightNavigationBars = lightTheme
-    }
 }

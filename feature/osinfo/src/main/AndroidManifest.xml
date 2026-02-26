@@ -3,7 +3,7 @@
 
     <application>
         <receiver
-            android:name=".OsInfoWidgetReceiver"
+            android:name=".OsInfoAppWidgetReceiver"
             android:exported="false"
             android:label="@string/appwidget_name">
             <intent-filter>

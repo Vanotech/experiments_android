@@ -29,12 +29,10 @@ include(":core:ui")
 include(":core:utils")
 
 include(":data:camera")
-include(":data:lunardates")
 include(":data:media")
 include(":data:tvguide")
 
 include(":feature:camera")
-include(":feature:lunardates")
 include(":feature:media")
 include(":feature:osinfo")
 include(":feature:tvguide")

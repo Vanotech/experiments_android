@@ -247,7 +247,7 @@ private fun ListingCard(
 @Preview
 @Composable
 private fun ListingCardPreview() {
-    val listing = Listing.mockData(0)
+    val listing = Listing.mockData()
     val item = ListingUiModel(listing = listing)
     ListingCard(item) { }
 }

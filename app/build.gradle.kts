@@ -19,7 +19,7 @@ android {
         minSdk = rootProject.extra["minSdk"] as Int
         targetSdk = rootProject.extra["targetSdk"] as Int
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -51,7 +51,6 @@ kotlin {
 dependencies {
     implementation(project(":core:ui"))
     implementation(project(":feature:camera"))
-    implementation(project(":feature:lunardates"))
     implementation(project(":feature:media"))
     implementation(project(":feature:osinfo"))
     implementation(project(":feature:tvguide"))

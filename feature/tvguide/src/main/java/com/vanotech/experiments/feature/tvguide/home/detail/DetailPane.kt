@@ -36,7 +36,7 @@ import com.vanotech.experiments.data.tvguide.ListingType
 internal fun DetailPane(
     isListAndDetailVisible: Boolean,
     listing: Listing?,
-    onBackPress: () -> Unit
+    onRequestDismiss: () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
@@ -46,7 +46,7 @@ internal fun DetailPane(
                 title = { },
                 navigationIcon = {
                     if (!isListAndDetailVisible) {
-                        BackButton(onBackPress = onBackPress)
+                        BackButton(onClick = onRequestDismiss)
                     }
                 },
                 scrollBehavior = scrollBehavior

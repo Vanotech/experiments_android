@@ -9,8 +9,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 
 @Composable
-fun BackButton(onBackPress: () -> Unit) {
-    IconButton(onClick = onBackPress) {
+fun BackButton(onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = stringResource(R.string.action_navigate_back)

@@ -9,8 +9,6 @@ import javax.inject.Inject
 internal class ListingDaoService @Inject constructor(
     private val dao: ListingDao
 ) {
-    suspend fun deleteAll() = dao.deleteAll()
-
     fun getAllAsPagingSource() = dao.getAllAsPagingSource()
 
     fun getAsFlow(id: String): Flow<Listing?> = dao.getAsFlow(id).map {
@@ -18,10 +16,4 @@ internal class ListingDaoService @Inject constructor(
     }
 
     suspend fun upsert(item: Listing) = dao.upsert(item.toListingEntity())
-
-    suspend fun upsert(items: Collection<Listing>) = dao.upsert(
-        items.map {
-            it.toListingEntity()
-        }
-    )
 }

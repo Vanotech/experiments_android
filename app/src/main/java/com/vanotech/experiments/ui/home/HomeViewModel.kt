@@ -3,7 +3,6 @@ package com.vanotech.experiments.ui.home
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.vanotech.experiments.feature.camera.CameraNavGraph
-import com.vanotech.experiments.feature.lunardates.LunarDatesNavGraph
 import com.vanotech.experiments.feature.media.MediaNavGraph
 import com.vanotech.experiments.feature.tvguide.TvGuideNavGraph
 import com.vanotech.experiments.ui.MainNavGraph
@@ -35,7 +34,6 @@ internal class HomeViewModel @Inject constructor(
     companion object {
         val NAV_GRAPHS = listOf(
             CameraNavGraph,
-            LunarDatesNavGraph,
             MediaNavGraph,
             TvGuideNavGraph
         )

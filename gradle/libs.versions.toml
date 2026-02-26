@@ -19,7 +19,7 @@ androidx-room = "2.8.4"
 androidx-work = "2.10.3"
 autonomousapps-dependency-analysis = "3.5.1"
 coil-bom = "3.3.0"
-hilt = "2.59.1"
+hilt = "2.59.2"
 junit = "4.13.2"
 kotlin = "2.3.10"       # 2.2.10 to match AGP 9.0.1 built-in kotlin?
 kotlinx-serialization-json = "1.10.0"
@@ -40,8 +40,8 @@ androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = 
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-material3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive" }
-androidx-compose-material3-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation" }
 androidx-compose-material3-adaptive-layout = { module = "androidx.compose.material3.adaptive:adaptive-layout" }
+androidx-compose-material3-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation" }
 androidx-compose-material3-window-size-clazz = { module = "androidx.compose.material3:material3-window-size-class" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
