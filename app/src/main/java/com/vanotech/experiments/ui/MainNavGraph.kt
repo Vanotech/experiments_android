@@ -9,8 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.vanotech.experiments.R
 import com.vanotech.experiments.core.ui.NavGraph
-import com.vanotech.experiments.ui.home.HomeRoute
-import com.vanotech.experiments.ui.home.HomeScreen
+import com.vanotech.experiments.ui.screens.home.HomeRoute
+import com.vanotech.experiments.ui.screens.home.HomeScreen
 
 object MainNavGraph : NavGraph {
 

@@ -9,11 +9,16 @@ import androidx.glance.GlanceTheme
 import androidx.glance.LocalContext
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.components.Scaffold
-import androidx.glance.appwidget.lazy.GridCells
-import androidx.glance.appwidget.lazy.LazyVerticalGrid
+import androidx.glance.appwidget.lazy.LazyColumn
+import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Row
+import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.height
 import androidx.glance.layout.padding
+import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
@@ -38,35 +43,57 @@ internal class OsInfoAppWidget : GlanceAppWidget() {
     @Composable
     private fun Content() {
         Scaffold {
-            LazyVerticalGrid(
-                gridCells = GridCells.Fixed(2),
-                modifier = GlanceModifier.padding(horizontal = 0.dp, vertical = 12.dp)
-            ) {
-                val labelStyle = TextStyle(
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Start
-                )
-                val valueStyle = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.End
-                )
-                dataSet.forEach {
-                    item {
-                        Text(
-                            text = LocalContext.current.getString(it.first),
-                            modifier = GlanceModifier.fillMaxWidth(),
-                            style = labelStyle
-                        )
-                    }
-                    item {
-                        Text(
-                            text = it.second,
-                            modifier = GlanceModifier.fillMaxWidth(),
-                            style = valueStyle
-                        )
-                    }
+            LazyColumn {
+                item {
+                    Spacer(modifier = GlanceModifier.height(12.dp))
+                }
+                items(dataSet) { item ->
+                    OsInfoCard(
+                        item = item,
+                        modifier = GlanceModifier.fillMaxWidth()
+                    )
+                }
+                item {
+                    Spacer(modifier = GlanceModifier.height(12.dp))
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun OsInfoCard(
+        item: Pair<Int, String>,
+        modifier: GlanceModifier = GlanceModifier
+    ) {
+        val context = LocalContext.current
+
+        val containerColor = GlanceTheme.colors.surface
+        val contentColor = GlanceTheme.colors.onSurface
+        val labelStyle = TextStyle(
+            color = contentColor,
+            textAlign = TextAlign.Start
+        )
+        val valueStyle = TextStyle(
+            color = contentColor,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.End
+        )
+
+        Row(
+            modifier = modifier.padding(horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = context.getString(item.first),
+                modifier = GlanceModifier.defaultWeight(),
+                style = labelStyle
+            )
+            Spacer(modifier = GlanceModifier.width(8.dp))
+            Text(
+                text = item.second,
+                modifier = GlanceModifier.defaultWeight(),
+                style = valueStyle
+            )
         }
     }
 }

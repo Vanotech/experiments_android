@@ -8,10 +8,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.vanotech.experiments.core.ui.NavGraph
-import com.vanotech.experiments.feature.camera.edit.EditRoute
-import com.vanotech.experiments.feature.camera.edit.EditScreen
-import com.vanotech.experiments.feature.camera.home.HomeRoute
-import com.vanotech.experiments.feature.camera.home.HomeScreen
+import com.vanotech.experiments.feature.camera.screens.edit.EditRoute
+import com.vanotech.experiments.feature.camera.screens.edit.EditScreen
+import com.vanotech.experiments.feature.camera.screens.home.HomeRoute
+import com.vanotech.experiments.feature.camera.screens.home.HomeScreen
 
 object CameraNavGraph : NavGraph {
 

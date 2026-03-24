@@ -9,8 +9,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.vanotech.experiments.core.ui.NavGraph
-import com.vanotech.experiments.feature.tvguide.home.HomeRoute
-import com.vanotech.experiments.feature.tvguide.home.HomeScreen
+import com.vanotech.experiments.feature.tvguide.screens.home.HomeRoute
+import com.vanotech.experiments.feature.tvguide.screens.home.HomeScreen
 
 object TvGuideNavGraph : NavGraph {
 

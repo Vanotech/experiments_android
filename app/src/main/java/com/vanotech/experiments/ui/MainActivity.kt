@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.vanotech.experiments.ui.home.HomeViewModel
+import com.vanotech.experiments.ui.screens.home.HomeViewModel
 import com.vanotech.experiments.ui.theme.Theme
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -9,10 +9,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.vanotech.experiments.core.ui.NavGraph
-import com.vanotech.experiments.feature.media.home.HomeRoute
-import com.vanotech.experiments.feature.media.home.HomeScreen
-import com.vanotech.experiments.feature.media.view.ViewRoute
-import com.vanotech.experiments.feature.media.view.ViewScreen
+import com.vanotech.experiments.feature.media.screens.home.HomeRoute
+import com.vanotech.experiments.feature.media.screens.home.HomeScreen
+import com.vanotech.experiments.feature.media.screens.view.ViewRoute
+import com.vanotech.experiments.feature.media.screens.view.ViewScreen
 
 object MediaNavGraph : NavGraph {
 
