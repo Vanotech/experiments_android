@@ -1,57 +1,58 @@
 package com.vanotech.experiments.core.utils
 
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Instant
 
 object TimeUtils {
 
-    fun toLocalDate(
+    fun toLocalDateTime(
         instant: Instant,
-        zoneId: ZoneId = ZoneId.systemDefault()
-    ): LocalDate {
-        val zonedDateTime = toZonedDateTime(instant, zoneId)
-        return zonedDateTime.toLocalDate()
+        timeZone: TimeZone = TimeZone.currentSystemDefault()
+    ): LocalDateTime {
+        return instant.toLocalDateTime(timeZone)
+    }
+
+    fun toLocalDateTime(
+        epochMillis: Long,
+        timeZone: TimeZone = TimeZone.currentSystemDefault()
+    ): LocalDateTime {
+        val instant = Instant.fromEpochMilliseconds(epochMillis)
+        return toLocalDateTime(instant, timeZone)
     }
 
     fun toLocalDate(
-        milliseconds: Long,
-        zoneId: ZoneId = ZoneId.systemDefault()
+        instant: Instant,
+        timeZone: TimeZone = TimeZone.currentSystemDefault()
     ): LocalDate {
-        val instant = Instant.ofEpochMilli(milliseconds)
-        return toLocalDate(instant, zoneId)
+        val localDateTime = toLocalDateTime(instant, timeZone)
+        return localDateTime.date
+    }
+
+    fun toLocalDate(
+        epochMillis: Long,
+        timeZone: TimeZone = TimeZone.currentSystemDefault()
+    ): LocalDate {
+        val instant = Instant.fromEpochMilliseconds(epochMillis)
+        return toLocalDate(instant, timeZone)
     }
 
     fun toLocalTime(
         instant: Instant,
-        zoneId: ZoneId = ZoneId.systemDefault()
+        timeZone: TimeZone = TimeZone.currentSystemDefault()
     ): LocalTime {
-        val zonedDateTime = toZonedDateTime(instant, zoneId)
-        return zonedDateTime.toLocalTime()
+        val localDateTime = toLocalDateTime(instant, timeZone)
+        return localDateTime.time
     }
 
     fun toLocalTime(
-        milliseconds: Long,
-        zoneId: ZoneId = ZoneId.systemDefault()
+        epochMillis: Long,
+        timeZone: TimeZone = TimeZone.currentSystemDefault()
     ): LocalTime {
-        val instant = Instant.ofEpochMilli(milliseconds)
-        return toLocalTime(instant, zoneId)
-    }
-
-    fun toZonedDateTime(
-        instant: Instant,
-        zoneId: ZoneId = ZoneId.systemDefault()
-    ): ZonedDateTime {
-        return ZonedDateTime.ofInstant(instant, zoneId)
-    }
-
-    fun toZonedDateTime(
-        milliseconds: Long,
-        zoneId: ZoneId = ZoneId.systemDefault()
-    ): ZonedDateTime {
-        val instant = Instant.ofEpochMilli(milliseconds)
-        return toZonedDateTime(instant, zoneId)
+        val instant = Instant.fromEpochMilliseconds(epochMillis)
+        return toLocalTime(instant, timeZone)
     }
 }

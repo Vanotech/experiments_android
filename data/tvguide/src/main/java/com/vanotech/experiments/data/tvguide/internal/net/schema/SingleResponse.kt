@@ -4,8 +4,9 @@ import com.vanotech.experiments.core.utils.serialization.DurationInMinutesAsLong
 import com.vanotech.experiments.core.utils.serialization.InstantAsStringSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.time.Duration
-import java.time.Instant
+import kotlin.time.Duration
+import kotlin.time.Instant
+
 
 @Serializable
 data class SingleResponse(

@@ -13,9 +13,8 @@ import com.vanotech.experiments.data.tvguide.internal.net.TvGuideApiService
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import java.io.IOException
-import java.time.Instant
-import java.time.temporal.ChronoUnit
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Instant
 
 @OptIn(ExperimentalPagingApi::class)
 internal class GetListingsRemoteMediator(
@@ -30,7 +29,7 @@ internal class GetListingsRemoteMediator(
 
     override suspend fun initialize(): InitializeAction {
         val createdAt = remoteKeyDao.getCreationTime() ?: 0
-        val timeToLive = TimeUnit.MILLISECONDS.convert(1, TimeUnit.HOURS)
+        val timeToLive = 1.hours.inWholeMilliseconds
         val expiresAt = createdAt + timeToLive
         val now = System.currentTimeMillis()
         return if (expiresAt < now) {
@@ -62,7 +61,7 @@ internal class GetListingsRemoteMediator(
                             endOfPaginationReached = true
                         )
                     }
-                    remoteKey.loadKey.plus(6, ChronoUnit.HOURS)
+                    remoteKey.loadKey + 6.hours
                 }
             }
 

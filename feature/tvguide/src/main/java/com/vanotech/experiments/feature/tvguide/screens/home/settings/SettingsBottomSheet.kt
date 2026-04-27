@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.vanotech.experiments.feature.tvguide.R
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.format.char
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,7 +29,11 @@ internal fun HomeSettingsBottomSheet(
     onEndTimeChanged: (LocalTime) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+    val timeFormatter = LocalTime.Format {
+        hour()
+        char(':')
+        minute()
+    }
     var showStartTimePicker by remember { mutableStateOf(false) }
     val startTimePickerState = rememberTimePickerState(
         initialHour = startTime.hour,
@@ -83,7 +87,7 @@ internal fun HomeSettingsBottomSheet(
                 },
                 onConfirmRequest = {
                     onStartTimeChanged(
-                        LocalTime.of(
+                        LocalTime(
                             startTimePickerState.hour,
                             startTimePickerState.minute
                         )
@@ -101,7 +105,7 @@ internal fun HomeSettingsBottomSheet(
                 },
                 onConfirmRequest = {
                     onEndTimeChanged(
-                        LocalTime.of(
+                        LocalTime(
                             endTimePickerState.hour,
                             endTimePickerState.minute
                         )
@@ -121,9 +125,9 @@ fun HomeSettingsBottomSheetPreview() {
         onShowEpisodesChanged = {},
         showMovies = true,
         onShowMoviesChanged = {},
-        startTime = LocalTime.MIN,
+        startTime = LocalTime(0, 0),
         onStartTimeChanged = {},
-        endTime = LocalTime.MAX,
+        endTime = LocalTime(23,59),
         onEndTimeChanged = {}
     )
 }

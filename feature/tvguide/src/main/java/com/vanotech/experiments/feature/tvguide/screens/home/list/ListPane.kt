@@ -53,7 +53,7 @@ import com.vanotech.experiments.core.ui.AspectRatio
 import com.vanotech.experiments.data.tvguide.Listing
 import com.vanotech.experiments.feature.tvguide.R
 import com.vanotech.experiments.feature.tvguide.screens.home.settings.HomeSettingsBottomSheet
-import java.time.LocalTime
+import kotlinx.datetime.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

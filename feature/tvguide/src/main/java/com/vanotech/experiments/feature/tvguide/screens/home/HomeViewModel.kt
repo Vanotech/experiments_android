@@ -22,8 +22,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalTime
+import kotlinx.datetime.LocalTime
 import javax.inject.Inject
+import kotlin.time.Clock
 
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
@@ -66,9 +67,9 @@ internal class HomeViewModel @Inject constructor(
         ) { pagingData, uiState ->
             pagingData to uiState
         }.map { (pagingData, uiState) ->
-            val now = System.currentTimeMillis()
+            val now = Clock.System.now()
             pagingData.filter { listing ->
-                val endAt = listing.startAt.plus(listing.duration).toEpochMilli()
+                val endAt = listing.startAt + listing.duration
                 when {
                     endAt < now -> false
                     !isValidTime(listing, uiState.startTime, uiState.endTime) -> false

@@ -1,7 +1,9 @@
 package com.vanotech.experiments.data.tvguide
 
-import java.time.Duration
-import java.time.Instant
+import kotlin.time.Clock
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Instant
 
 data class Listing(
     val id: String,
@@ -20,8 +22,8 @@ data class Listing(
                 id = "$index",
                 title = "Title $index",
                 type = ListingType.UNKNOWN,
-                startAt = Instant.now(),
-                duration = Duration.ofHours(1),
+                startAt = Clock.System.now(),
+                duration = 1.hours,
                 channelTitle = "Channel $index"
             )
         }

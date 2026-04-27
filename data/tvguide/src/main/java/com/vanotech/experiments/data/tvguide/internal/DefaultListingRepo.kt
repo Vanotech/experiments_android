@@ -15,9 +15,9 @@ import com.vanotech.experiments.data.tvguide.internal.net.schema.Platform
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Region
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.time.Instant
-import java.time.LocalTime
+import kotlinx.datetime.LocalTime
 import javax.inject.Inject
+import kotlin.time.Clock
 
 internal class DefaultListingRepo @Inject constructor(
     private val listingDaoService: ListingDaoService,
@@ -50,7 +50,7 @@ internal class DefaultListingRepo @Inject constructor(
             remoteMediator = GetListingsRemoteMediator(
                 platform = Platform.VIRGIN,
                 region = Region.NORTH_WEST,
-                instant = Instant.now(),
+                instant = Clock.System.now(),
                 apiService = tvGuideApiService,
                 database = tvGuideDatabase
             )

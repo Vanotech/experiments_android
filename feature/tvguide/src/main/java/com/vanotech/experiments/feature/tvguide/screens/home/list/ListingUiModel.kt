@@ -27,12 +27,12 @@ internal data class ListingUiModel(
     val channelTitle = listing.channelTitle
 
     fun times(context: Context): String {
-        val startAt = listing.startAt.toEpochMilli()
-        val endAt = listing.startAt.plus(listing.duration).toEpochMilli()
+        val startMillis = listing.startAt.toEpochMilliseconds()
+        val endMillis = startMillis + listing.duration.inWholeMilliseconds
         return DateUtils.formatDateRange(
             context,
-            startAt,
-            endAt,
+            startMillis,
+            endMillis,
             DateUtils.FORMAT_SHOW_TIME
         )
     }

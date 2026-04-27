@@ -1,16 +1,17 @@
 package com.vanotech.experiments.data.tvguide.internal
 
 import android.content.Context
+import com.vanotech.experiments.core.utils.datastore.SimpleDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.map
-import java.time.LocalTime
+import kotlinx.datetime.LocalTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 internal class TvGuideDataStore @Inject constructor(
     @ApplicationContext context: Context
-) : com.vanotech.experiments.core.utils.datastore.SimpleDataStore(context, DATA_STORE_NAME) {
+) : SimpleDataStore(context, DATA_STORE_NAME) {
 
     private val showEpisodesPreference = booleanPreference(Keys.SHOW_EPISODES, true)
     val showEpisodesFlow = showEpisodesPreference.flow
@@ -20,28 +21,25 @@ internal class TvGuideDataStore @Inject constructor(
     val showMoviesFlow = showMoviesPreference.flow
     suspend fun setShowMovies(value: Boolean) = showMoviesPreference.set(value)
 
-    private val startTimePreference = longPreference(
+    private val startTimePreference = intPreference(
         Keys.START_TIME,
-        LocalTime.of(19, 0).toSecondOfDay().toLong()
+        LocalTime(19, 0).toSecondOfDay()
     )
     val startTimeFlow = startTimePreference.flow.map {
-        LocalTime.ofSecondOfDay(it)
+        LocalTime.fromSecondOfDay(it)
     }
 
-    suspend fun setStartTime(value: LocalTime) =
-        startTimePreference.set(value.toSecondOfDay().toLong())
+    suspend fun setStartTime(value: LocalTime) = startTimePreference.set(value.toSecondOfDay())
 
-    private val endTimePreference = longPreference(
+    private val endTimePreference = intPreference(
         Keys.END_TIME,
-        LocalTime.of(23, 59).toSecondOfDay().toLong()
+        LocalTime(23, 59).toSecondOfDay()
     )
     val endTimeFlow = endTimePreference.flow.map {
-        LocalTime.ofSecondOfDay(it)
+        LocalTime.fromSecondOfDay(it)
     }
 
-    suspend fun setEndTime(value: LocalTime) =
-        endTimePreference.set(value.toSecondOfDay().toLong())
-
+    suspend fun setEndTime(value: LocalTime) = endTimePreference.set(value.toSecondOfDay())
 
     companion object {
         private const val DATA_STORE_NAME = "tv_guide"

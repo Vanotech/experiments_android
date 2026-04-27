@@ -4,8 +4,12 @@ import android.content.Context
 import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
 import java.io.File
 import java.io.InputStream
+import kotlin.time.Clock
 
 abstract class RecentFileStore(
     private val parentDir: File,
@@ -14,6 +18,14 @@ abstract class RecentFileStore(
     private val fileCount: Int = 1
 ) {
     private val fileNameRegex = Regex("${filePrefix}_\\d+\\Q${fileSuffix}\\E")
+    private val timestampFormat = LocalDateTime.Format {
+        year()
+        monthNumber()
+        day()
+        hour()
+        minute()
+        second()
+    }
 
     private val _files = MutableStateFlow<List<File>>(emptyList())
     val files: Flow<List<File>> = _files
@@ -25,8 +37,11 @@ abstract class RecentFileStore(
     private fun newFile(): File {
         parentDir.mkdirs()
 
-        val timestamp = System.currentTimeMillis()
-        val fileName = "${filePrefix}_$timestamp${fileSuffix}"
+        val now = Clock.System.now()
+        val dateTime = TimeUtils.toLocalDateTime(now, TimeZone.UTC)
+        val timestamp = dateTime.format(timestampFormat)
+
+        val fileName = "${filePrefix}_${timestamp}${fileSuffix}"
         return File(parentDir, fileName)
     }
 

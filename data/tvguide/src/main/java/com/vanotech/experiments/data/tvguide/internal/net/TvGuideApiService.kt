@@ -1,15 +1,15 @@
 package com.vanotech.experiments.data.tvguide.internal.net
 
+import com.vanotech.experiments.core.utils.TimeUtils
 import com.vanotech.experiments.data.tvguide.Listing
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Channel
 import com.vanotech.experiments.data.tvguide.internal.net.schema.SingleResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import kotlinx.datetime.TimeZone
 import javax.inject.Inject
+import kotlin.time.Instant
 
 internal class TvGuideApiService @Inject constructor(
     private val client: HttpClient,
@@ -20,8 +20,8 @@ internal class TvGuideApiService @Inject constructor(
         region: String,
         instant: Instant
     ): List<Listing> {
-        val dateTime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC)
-        val date = dateTime.toLocalDate()
+        val dateTime = TimeUtils.toLocalDateTime(instant, TimeZone.UTC)
+        val date = dateTime.date
         val hour = dateTime.hour
         val details = false
         val response = client.get("$baseUrl/listings") {

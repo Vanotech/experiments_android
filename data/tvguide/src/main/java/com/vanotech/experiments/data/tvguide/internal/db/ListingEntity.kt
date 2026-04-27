@@ -3,8 +3,8 @@ package com.vanotech.experiments.data.tvguide.internal.db
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.vanotech.experiments.data.tvguide.ListingType
-import java.time.Duration
-import java.time.Instant
+import kotlin.time.Duration
+import kotlin.time.Instant
 
 @Entity(tableName = ListingEntity.TABLE_NAME)
 data class ListingEntity(

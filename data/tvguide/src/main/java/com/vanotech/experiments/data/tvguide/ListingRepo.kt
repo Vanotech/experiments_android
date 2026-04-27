@@ -3,7 +3,7 @@ package com.vanotech.experiments.data.tvguide
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalTime
+import kotlinx.datetime.LocalTime
 
 interface ListingRepo {
     val showEpisodes: Flow<Boolean>

@@ -21,8 +21,7 @@ internal fun Schedule.toListing(
     summary = null
 )
 
-internal fun SingleResponse.toListing(
-) = Listing(
+internal fun SingleResponse.toListing() = Listing(
     id = paId,
     title = title,
     type = toListingType(type),
