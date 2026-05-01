@@ -4,11 +4,11 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.intPreferencesKey
 
-class IntPreference(
+internal class IntPreference(
     dataStore: DataStore<Preferences>,
     keyName: String,
     default: Int
-) : Preference<Int>(
+) : SimplePreference<Int>(
     dataStore,
     intPreferencesKey(keyName),
     default

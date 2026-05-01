@@ -4,11 +4,11 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 
-class BooleanPreference(
+internal class BooleanPreference(
     dataStore: DataStore<Preferences>,
     keyName: String,
     default: Boolean
-) : Preference<Boolean>(
+) : SimplePreference<Boolean>(
     dataStore,
     booleanPreferencesKey(keyName),
     default

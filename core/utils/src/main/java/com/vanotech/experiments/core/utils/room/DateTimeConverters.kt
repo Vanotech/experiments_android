@@ -5,12 +5,12 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Instant
 
-class TimeConverters {
+class DateTimeConverters {
     @TypeConverter
     fun fromDuration(duration: Duration?): Long? = duration?.inWholeMilliseconds
 
     @TypeConverter
-    fun toDuration(milliseconds: Long?): Duration? = milliseconds?.milliseconds
+    fun toDuration(millis: Long?): Duration? = millis?.milliseconds
 
     @TypeConverter
     fun fromInstant(instant: Instant?): Long? = instant?.toEpochMilliseconds()

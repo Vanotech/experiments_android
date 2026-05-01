@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-internal class TvGuideDataStore @Inject constructor(
+internal class SettingsDataStore @Inject constructor(
     @ApplicationContext context: Context
 ) : SimpleDataStore(context, DATA_STORE_NAME) {
 
@@ -23,26 +23,26 @@ internal class TvGuideDataStore @Inject constructor(
 
     private val startTimePreference = intPreference(
         Keys.START_TIME,
-        LocalTime(19, 0).toSecondOfDay()
+        fromLocalTime(defaultStartTime())
     )
     val startTimeFlow = startTimePreference.flow.map {
-        LocalTime.fromSecondOfDay(it)
+        toLocalTime(it)
     }
 
-    suspend fun setStartTime(value: LocalTime) = startTimePreference.set(value.toSecondOfDay())
+    suspend fun setStartTime(value: LocalTime) = startTimePreference.set(fromLocalTime(value))
 
     private val endTimePreference = intPreference(
         Keys.END_TIME,
-        LocalTime(23, 59).toSecondOfDay()
+        fromLocalTime(defaultEndTime())
     )
     val endTimeFlow = endTimePreference.flow.map {
-        LocalTime.fromSecondOfDay(it)
+        toLocalTime(it)
     }
 
-    suspend fun setEndTime(value: LocalTime) = endTimePreference.set(value.toSecondOfDay())
+    suspend fun setEndTime(value: LocalTime) = endTimePreference.set(fromLocalTime(value))
 
     companion object {
-        private const val DATA_STORE_NAME = "tv_guide"
+        private const val DATA_STORE_NAME = "tv_guide.settings"
 
         private object Keys {
             const val SHOW_EPISODES = "show_episodes"
@@ -50,5 +50,13 @@ internal class TvGuideDataStore @Inject constructor(
             const val START_TIME = "start_time"
             const val END_TIME = "end_time"
         }
+
+        private fun defaultStartTime(): LocalTime = LocalTime(19, 0)
+
+        private fun defaultEndTime(): LocalTime = LocalTime(23, 59)
+
+        private fun fromLocalTime(value: LocalTime): Int = value.toSecondOfDay()
+
+        private fun toLocalTime(value: Int): LocalTime = LocalTime.fromSecondOfDay(value)
     }
 }

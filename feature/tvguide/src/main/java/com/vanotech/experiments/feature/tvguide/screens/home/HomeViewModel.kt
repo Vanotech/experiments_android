@@ -7,7 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.map
-import com.vanotech.experiments.core.utils.TimeUtils
+import com.vanotech.experiments.core.utils.DateTimeUtils
 import com.vanotech.experiments.data.tvguide.Listing
 import com.vanotech.experiments.data.tvguide.ListingRepo
 import com.vanotech.experiments.data.tvguide.ListingType
@@ -125,7 +125,7 @@ internal class HomeViewModel @Inject constructor(
             startTime: LocalTime,
             endTime: LocalTime
         ): Boolean {
-            val listingStartTime = TimeUtils.toLocalTime(listing.startAt)
+            val listingStartTime = DateTimeUtils.toLocalDateTime(listing.startAt).time
             return (startTime <= listingStartTime) && (listingStartTime <= endTime)
         }
     }

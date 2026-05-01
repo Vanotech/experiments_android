@@ -233,7 +233,7 @@ private fun ListingCard(
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = item.times(LocalContext.current),
+                text = item.timeRange(LocalContext.current),
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

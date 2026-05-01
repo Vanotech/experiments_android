@@ -1,6 +1,6 @@
 package com.vanotech.experiments.data.tvguide.internal.net
 
-import com.vanotech.experiments.core.utils.TimeUtils
+import com.vanotech.experiments.core.utils.DateTimeUtils
 import com.vanotech.experiments.data.tvguide.Listing
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Channel
 import com.vanotech.experiments.data.tvguide.internal.net.schema.SingleResponse
@@ -20,7 +20,7 @@ internal class TvGuideApiService @Inject constructor(
         region: String,
         instant: Instant
     ): List<Listing> {
-        val dateTime = TimeUtils.toLocalDateTime(instant, TimeZone.UTC)
+        val dateTime = DateTimeUtils.toLocalDateTime(instant, TimeZone.UTC)
         val date = dateTime.date
         val hour = dateTime.hour
         val details = false

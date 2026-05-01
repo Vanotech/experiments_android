@@ -1,6 +1,5 @@
 package com.vanotech.experiments.feature.tvguide.screens.home.detail
 
-import android.text.format.DateUtils
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -30,6 +29,7 @@ import com.vanotech.experiments.core.ui.AspectRatio
 import com.vanotech.experiments.core.ui.components.BackButton
 import com.vanotech.experiments.data.tvguide.Listing
 import com.vanotech.experiments.data.tvguide.ListingType
+import com.vanotech.experiments.feature.tvguide.ListingUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -107,26 +107,14 @@ private fun DetailContent(
                 )
             }
             Column {
-                val startMillis = listing.startAt.toEpochMilliseconds()
-                val endMillis = startMillis + listing.duration.inWholeMilliseconds
-                val dates = DateUtils.formatDateRange(
-                    LocalContext.current,
-                    startMillis,
-                    endMillis,
-                    DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_SHOW_WEEKDAY or DateUtils.FORMAT_SHOW_YEAR
-                )
-                val times = DateUtils.formatDateRange(
-                    LocalContext.current,
-                    startMillis,
-                    endMillis,
-                    DateUtils.FORMAT_SHOW_TIME
-                )
+                val dateRange = ListingUtils.formatDates(LocalContext.current, listing)
+                val timeRange = ListingUtils.formatTimes(LocalContext.current, listing)
                 Text(
-                    text = dates,
+                    text = dateRange,
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Text(
-                    text = times,
+                    text = timeRange,
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }

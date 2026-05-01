@@ -10,16 +10,20 @@ abstract class SimpleDataStore(private val context: Context, name: String) {
     protected fun booleanPreference(
         keyName: String,
         default: Boolean
-    ) = BooleanPreference(context.dataStore, keyName, default)
+    ): Preference<Boolean> = BooleanPreference(context.dataStore, keyName, default)
 
     protected fun intPreference(
         keyName: String,
         default: Int
-    ) = IntPreference(context.dataStore, keyName, default)
+    ): Preference<Int> = IntPreference(context.dataStore, keyName, default)
 
     protected fun longPreference(
         keyName: String,
         default: Long
-    ) = LongPreference(context.dataStore, keyName, default)
+    ): Preference<Long> = LongPreference(context.dataStore, keyName, default)
 
+    protected fun stringPreference(
+        keyName: String,
+        default: String
+    ): Preference<String> = StringPreference(context.dataStore, keyName, default)
 }

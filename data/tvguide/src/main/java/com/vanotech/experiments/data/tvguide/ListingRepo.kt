@@ -6,19 +6,21 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalTime
 
 interface ListingRepo {
-    val showEpisodes: Flow<Boolean>
-    val showMovies: Flow<Boolean>
-    val startTime: Flow<LocalTime>
-    val endTime: Flow<LocalTime>
-
     suspend fun get(id: String): Result<Listing>
 
     fun getAsFlow(id: String): Flow<Listing?>
 
     fun getAllAsPagingData(config: PagingConfig): Flow<PagingData<Listing>>
 
+    val showEpisodes: Flow<Boolean>
     suspend fun setShowEpisodes(value: Boolean)
+
+    val showMovies: Flow<Boolean>
     suspend fun setShowMovies(value: Boolean)
+
+    val startTime: Flow<LocalTime>
     suspend fun setStartTime(value: LocalTime)
+
+    val endTime: Flow<LocalTime>
     suspend fun setEndTime(value: LocalTime)
 }

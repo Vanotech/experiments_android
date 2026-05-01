@@ -23,13 +23,8 @@ internal class DefaultListingRepo @Inject constructor(
     private val listingDaoService: ListingDaoService,
     private val tvGuideApiService: TvGuideApiService,
     private val tvGuideDatabase: TvGuideDatabase,
-    private val tvGuideDataStore: TvGuideDataStore
+    private val tvGuideDataStore: SettingsDataStore
 ) : ListingRepo {
-    override val showEpisodes = tvGuideDataStore.showEpisodesFlow
-    override val showMovies = tvGuideDataStore.showMoviesFlow
-    override val startTime = tvGuideDataStore.startTimeFlow
-    override val endTime = tvGuideDataStore.endTimeFlow
-
     override suspend fun get(id: String): Result<Listing> {
         return try {
             val listing = tvGuideApiService.getSingle(id)
@@ -63,8 +58,15 @@ internal class DefaultListingRepo @Inject constructor(
         }
     }
 
+    override val showEpisodes = tvGuideDataStore.showEpisodesFlow
     override suspend fun setShowEpisodes(value: Boolean) = tvGuideDataStore.setShowEpisodes(value)
+
+    override val showMovies = tvGuideDataStore.showMoviesFlow
     override suspend fun setShowMovies(value: Boolean) = tvGuideDataStore.setShowMovies(value)
+
+    override val startTime = tvGuideDataStore.startTimeFlow
     override suspend fun setStartTime(value: LocalTime) = tvGuideDataStore.setStartTime(value)
+
+    override val endTime = tvGuideDataStore.endTimeFlow
     override suspend fun setEndTime(value: LocalTime) = tvGuideDataStore.setEndTime(value)
 }

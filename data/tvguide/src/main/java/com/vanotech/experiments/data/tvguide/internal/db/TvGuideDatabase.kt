@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.vanotech.experiments.core.utils.room.TimeConverters
+import com.vanotech.experiments.core.utils.room.DateTimeConverters
 
 @Database(
     entities = [
@@ -15,7 +15,7 @@ import com.vanotech.experiments.core.utils.room.TimeConverters
     exportSchema = false,
     version = 1
 )
-@TypeConverters(TimeConverters::class)
+@TypeConverters(DateTimeConverters::class)
 internal abstract class TvGuideDatabase : RoomDatabase() {
     abstract fun listingDao(): ListingDao
     abstract fun remoteKeyDao(): RemoteKeyDao

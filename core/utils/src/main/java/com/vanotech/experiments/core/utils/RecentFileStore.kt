@@ -38,7 +38,7 @@ abstract class RecentFileStore(
         parentDir.mkdirs()
 
         val now = Clock.System.now()
-        val dateTime = TimeUtils.toLocalDateTime(now, TimeZone.UTC)
+        val dateTime = DateTimeUtils.toLocalDateTime(now, TimeZone.UTC)
         val timestamp = dateTime.format(timestampFormat)
 
         val fileName = "${filePrefix}_${timestamp}${fileSuffix}"
