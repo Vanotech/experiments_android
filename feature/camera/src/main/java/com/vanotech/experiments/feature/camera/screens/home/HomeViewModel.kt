@@ -7,18 +7,16 @@ import androidx.lifecycle.viewModelScope
 import com.vanotech.experiments.data.camera.CameraFileProvider
 import com.vanotech.experiments.data.camera.PhotoRepo
 import com.vanotech.experiments.data.camera.usecases.SetPhotoUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.core.annotation.KoinViewModel
 
-@HiltViewModel
-internal class HomeViewModel @Inject constructor(
-    @param:ApplicationContext private val context: Context,
+@KoinViewModel
+internal class HomeViewModel(
+    private val context: Context,
     private val photoRepo: PhotoRepo
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())

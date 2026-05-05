@@ -16,10 +16,11 @@ import com.vanotech.experiments.data.tvguide.internal.net.schema.Region
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalTime
-import javax.inject.Inject
+import org.koin.core.annotation.Factory
 import kotlin.time.Clock
 
-internal class DefaultListingRepo @Inject constructor(
+@Factory
+internal class DefaultListingRepo(
     private val listingDaoService: ListingDaoService,
     private val tvGuideApiService: TvGuideApiService,
     private val tvGuideDatabase: TvGuideDatabase,

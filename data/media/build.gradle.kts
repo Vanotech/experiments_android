@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.koin.compiler)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
 }
 
 android {
@@ -45,8 +45,7 @@ dependencies {
 
     implementation(libs.androidx.paging.runtime.ktx)
 
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
+    implementation(libs.bundles.koin.core)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

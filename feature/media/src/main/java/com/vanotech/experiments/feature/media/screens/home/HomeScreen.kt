@@ -29,7 +29,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -40,12 +39,13 @@ import coil3.request.ImageRequest
 import coil3.video.VideoFrameDecoder
 import com.vanotech.experiments.core.ui.AspectRatio
 import com.vanotech.experiments.feature.media.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun HomeScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = koinViewModel()
 ) {
     val items = viewModel.media.collectAsLazyPagingItems()
 

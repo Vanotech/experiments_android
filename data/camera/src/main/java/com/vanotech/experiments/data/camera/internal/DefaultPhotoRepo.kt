@@ -6,13 +6,13 @@ import androidx.core.net.toUri
 import com.vanotech.experiments.data.camera.PhotoRepo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Singleton
 import java.io.File
-import javax.inject.Inject
-import javax.inject.Singleton
 
 
-@Singleton
-internal class DefaultPhotoRepo @Inject internal constructor(
+@Factory
+internal class DefaultPhotoRepo(
     private val photoFileStoreService: PhotoFileStoreService
 ) : PhotoRepo {
 

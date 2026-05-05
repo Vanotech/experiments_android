@@ -12,7 +12,6 @@ import com.vanotech.experiments.data.tvguide.Listing
 import com.vanotech.experiments.data.tvguide.ListingRepo
 import com.vanotech.experiments.data.tvguide.ListingType
 import com.vanotech.experiments.feature.tvguide.screens.home.list.ListingUiModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,11 +22,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalTime
-import javax.inject.Inject
+import org.koin.core.annotation.KoinViewModel
 import kotlin.time.Clock
 
-@HiltViewModel
-internal class HomeViewModel @Inject constructor(
+@KoinViewModel
+internal class HomeViewModel(
     private val listingRepo: ListingRepo
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())

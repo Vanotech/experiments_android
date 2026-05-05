@@ -51,7 +51,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
@@ -62,6 +61,7 @@ import com.vanotech.experiments.core.ui.components.BackButton
 import com.vanotech.experiments.feature.camera.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import java.io.File
 import java.util.UUID
 
@@ -70,7 +70,7 @@ import java.util.UUID
 internal fun EditScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: EditViewModel = hiltViewModel()
+    viewModel: EditViewModel = koinViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current

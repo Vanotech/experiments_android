@@ -9,16 +9,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.vanotech.experiments.ui.screens.home.HomeViewModel
 import com.vanotech.experiments.ui.theme.Theme
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
-
         super.onCreate(savedInstanceState)
-
+        enableEdgeToEdge()
         setContent {
             Theme {
                 Content()

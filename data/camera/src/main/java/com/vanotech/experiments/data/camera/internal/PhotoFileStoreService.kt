@@ -2,16 +2,14 @@ package com.vanotech.experiments.data.camera.internal
 
 import android.content.Context
 import com.vanotech.experiments.core.utils.RecentFileStore
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Singleton
 import java.io.File
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
-internal class PhotoFileStoreService @Inject internal constructor(
-    @ApplicationContext context: Context
+internal class PhotoFileStoreService (
+    context: Context
 ) : RecentFileStore(
     parentDir = File(context.filesDir, DIRECTORY_NAME),
     filePrefix = FILE_NAME,

@@ -3,10 +3,11 @@ package com.vanotech.experiments.data.tvguide.internal.db
 import com.vanotech.experiments.data.tvguide.Listing
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
+import org.koin.core.annotation.Singleton
 
 
-internal class ListingDaoService @Inject constructor(
+@Singleton
+internal class ListingDaoService(
     private val dao: ListingDao
 ) {
     fun getAllAsPagingSource() = dao.getAllAsPagingSource()

@@ -5,15 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.vanotech.experiments.data.media.MediaRepo
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.core.annotation.KoinViewModel
 
-@HiltViewModel
-internal class ViewViewModel @Inject constructor(
+@KoinViewModel
+internal class ViewViewModel(
     savedStateHandle: SavedStateHandle,
     private val mediaRepo: MediaRepo
 ) : ViewModel() {

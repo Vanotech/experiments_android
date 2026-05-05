@@ -4,14 +4,12 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.vanotech.experiments.data.camera.PhotoRepo
 import com.vanotech.experiments.data.camera.usecases.SetPhotoUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import org.koin.core.annotation.KoinViewModel
 import java.io.File
-import javax.inject.Inject
 
-@HiltViewModel
-internal class EditViewModel @Inject constructor(
-    @param:ApplicationContext private val context: Context,
+@KoinViewModel
+internal class EditViewModel(
+    context: Context,
     private val photoRepo: PhotoRepo
 ) : ViewModel() {
 

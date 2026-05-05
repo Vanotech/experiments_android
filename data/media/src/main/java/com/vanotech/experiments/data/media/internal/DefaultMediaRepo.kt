@@ -5,10 +5,11 @@ import com.vanotech.experiments.data.media.Media
 import com.vanotech.experiments.data.media.MediaRepo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import javax.inject.Inject
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Singleton
 
-internal class DefaultMediaRepo @Inject constructor(
-) : MediaRepo {
+@Factory
+internal class DefaultMediaRepo : MediaRepo {
     override suspend fun delete(item: Media) = TODO()
 
     override suspend fun get(id: Int) = MEDIA.find {

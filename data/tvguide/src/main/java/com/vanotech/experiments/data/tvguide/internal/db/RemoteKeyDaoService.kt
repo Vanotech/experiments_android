@@ -1,9 +1,9 @@
 package com.vanotech.experiments.data.tvguide.internal.db
 
-import javax.inject.Inject
+import org.koin.core.annotation.Singleton
 
-
-internal class RemoteKeyDaoService @Inject constructor(
+@Singleton
+internal class RemoteKeyDaoService(
     private val dao: RemoteKeyDao
 ) {
     suspend fun deleteAll() = dao.deleteAll()

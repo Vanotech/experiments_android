@@ -6,13 +6,12 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.vanotech.experiments.data.media.MediaRepo
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
+import org.koin.core.annotation.KoinViewModel
 
-@HiltViewModel
-internal class HomeViewModel @Inject constructor(
+@KoinViewModel
+internal class HomeViewModel(
     mediaRepo: MediaRepo
 ) : ViewModel() {
 

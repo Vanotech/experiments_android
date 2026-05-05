@@ -2,15 +2,13 @@ package com.vanotech.experiments.data.tvguide.internal
 
 import android.content.Context
 import com.vanotech.experiments.core.utils.datastore.SimpleDataStore
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalTime
-import javax.inject.Inject
-import javax.inject.Singleton
+import org.koin.core.annotation.Singleton
 
 @Singleton
-internal class SettingsDataStore @Inject constructor(
-    @ApplicationContext context: Context
+internal class SettingsDataStore(
+    context: Context
 ) : SimpleDataStore(context, DATA_STORE_NAME) {
 
     private val showEpisodesPreference = booleanPreference(Keys.SHOW_EPISODES, true)

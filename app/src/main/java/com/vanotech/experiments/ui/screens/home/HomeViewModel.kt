@@ -6,16 +6,14 @@ import com.vanotech.experiments.feature.camera.CameraNavGraph
 import com.vanotech.experiments.feature.media.MediaNavGraph
 import com.vanotech.experiments.feature.tvguide.TvGuideNavGraph
 import com.vanotech.experiments.ui.MainNavGraph
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import javax.inject.Inject
+import org.koin.core.annotation.KoinViewModel
 
-@HiltViewModel
-internal class HomeViewModel @Inject constructor(
-    @ApplicationContext context: Context
+@KoinViewModel
+internal class HomeViewModel(
+    context: Context
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
