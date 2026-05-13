@@ -1,6 +1,7 @@
 package com.vanotech.experiments.feature.media.screens.home
 
+import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal object HomeRoute
+internal data object HomeRoute: NavKey

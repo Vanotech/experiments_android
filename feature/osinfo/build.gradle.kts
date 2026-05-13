@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.autonomousapps.dependency.analysis)
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose.compiler)
     alias(libs.plugins.ksp)
@@ -44,13 +45,13 @@ kotlin {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.core.ktx)
     implementation(libs.material)
 
-    implementation(libs.androidx.glance.appwidget)
-
     testImplementation(libs.junit)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

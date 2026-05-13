@@ -1,14 +1,14 @@
 package com.vanotech.experiments.ui
 
+import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
+import androidx.navigation3.runtime.EntryProviderScope
+import androidx.navigation3.runtime.NavKey
 import com.vanotech.experiments.R
-import com.vanotech.experiments.core.ui.NavGraph
+import com.vanotech.experiments.core.ui.navigation.NavGraph
+import com.vanotech.experiments.core.ui.navigation.Navigator
 import com.vanotech.experiments.ui.screens.home.HomeRoute
 import com.vanotech.experiments.ui.screens.home.HomeScreen
 
@@ -16,13 +16,17 @@ object MainNavGraph : NavGraph {
 
     override fun icon(): ImageVector = Icons.Default.Home
 
-    override fun label(): Int = R.string.route_home
+    override fun label(context: Context): String = context.getString(R.string.route_home)
 
-    override fun startDestination(): Any = MainRoute
+    override fun startRoute(): NavKey = HomeRoute
 
-    override fun register(navGraphBuilder: NavGraphBuilder, navController: NavController) {
-        navGraphBuilder.navigation<MainRoute>(startDestination = HomeRoute) {
-            composable<HomeRoute> { HomeScreen(navController) }
+    override fun register(scope: EntryProviderScope<NavKey>, navigator: Navigator) {
+        scope.apply {
+            entry<HomeRoute> {
+                HomeScreen(
+                    onItemClick = { navigator.navigate(it.route)}
+                )
+            }
         }
     }
 }

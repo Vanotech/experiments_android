@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.autonomousapps.dependency.analysis)
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
@@ -40,23 +41,20 @@ kotlin {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-
+    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.datastore.preferences)
-
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-
     implementation(libs.androidx.paging.runtime.ktx)
-
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.serialization.core)
+
     ksp(libs.androidx.room.compiler)
 
-    implementation(libs.kotlinx.datetime)
-    implementation(libs.kotlinx.serialization.json)
-
     testImplementation(libs.junit)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

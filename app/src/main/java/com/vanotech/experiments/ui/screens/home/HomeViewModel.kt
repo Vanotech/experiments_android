@@ -1,6 +1,7 @@
 package com.vanotech.experiments.ui.screens.home
 
 import android.content.Context
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import com.vanotech.experiments.feature.camera.CameraNavGraph
 import com.vanotech.experiments.feature.media.MediaNavGraph
@@ -9,6 +10,7 @@ import com.vanotech.experiments.ui.MainNavGraph
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import org.koin.androidx.compose.koinViewModel
 import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
@@ -37,5 +39,10 @@ internal class HomeViewModel(
         )
 
         val START_NAV_GRAPH = MainNavGraph
+
+        @Composable
+        fun viewModel(): HomeViewModel {
+            return koinViewModel()
+        }
     }
 }

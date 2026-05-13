@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.autonomousapps.dependency.analysis)
     alias(libs.plugins.android.library)
     alias(libs.plugins.koin.compiler)
     alias(libs.plugins.kotlin.compose.compiler)
@@ -46,41 +47,36 @@ kotlin {
 }
 
 dependencies {
+    val coilBom = platform(libs.coil.bom)
+    val composeBom = platform(libs.androidx.compose.bom)
+
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
     implementation(project(":data:tvguide"))
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-
-    val composeBom = platform(libs.androidx.compose.bom)
+    implementation(coilBom)
     implementation(composeBom)
-    androidTestImplementation(composeBom)
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.adaptive)
     implementation(libs.androidx.compose.material3.adaptive.layout)
     implementation(libs.androidx.compose.material3.adaptive.navigation)
-    implementation(libs.androidx.compose.material3.window.size.clazz)
     implementation(libs.androidx.compose.ui.tooling)
-
+    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.navigation.compose)
-
+    implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.paging.compose)
-
-    val coilBom = platform(libs.coil.bom)
-    implementation(coilBom)
     implementation(libs.coil.compose)
-
+    implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.material)
     implementation(libs.bundles.koin.android)
 
-    implementation(libs.kotlinx.datetime)
-    implementation(libs.kotlinx.serialization.json)
-
     testImplementation(libs.junit)
+
+    androidTestImplementation(composeBom)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

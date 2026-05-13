@@ -39,21 +39,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
-import com.vanotech.experiments.feature.camera.CameraNavGraph
 import com.vanotech.experiments.feature.camera.R
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 internal fun HomeScreen(
-    navController: NavController,
+    onEditRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = koinViewModel()
+    viewModel: HomeViewModel = HomeViewModel.viewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -61,7 +59,7 @@ internal fun HomeScreen(
     HomeScreen(
         displayUri = uiState.uri,
         captureUri = viewModel.captureUri,
-        onNavigateToCamera = { CameraNavGraph.navigateToEdit(navController) },
+        onEditRequest = onEditRequest,
         onUpdatePhoto = {
             coroutineScope.launch {
                 viewModel.setPhoto(it)
@@ -77,7 +75,7 @@ private fun HomeScreen(
     displayUri: Uri?,
     captureUri: Uri,
     modifier: Modifier = Modifier,
-    onNavigateToCamera: () -> Unit,
+    onEditRequest: () -> Unit,
     onUpdatePhoto: (Uri) -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -100,7 +98,7 @@ private fun HomeScreen(
             )
         },
         floatingActionButton = {
-            TakePictureFloatingActionButton(onClick = onNavigateToCamera)
+            TakePictureFloatingActionButton(onClick = onEditRequest)
         }
     ) { paddingValues ->
         CaptureContent(

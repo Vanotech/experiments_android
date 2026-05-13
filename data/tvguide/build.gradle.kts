@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.autonomousapps.dependency.analysis)
     alias(libs.plugins.android.library)
     alias(libs.plugins.koin.compiler)
     alias(libs.plugins.kotlin.serialization)
@@ -44,21 +45,19 @@ dependencies {
     implementation(project(":core:utils"))
 
     implementation(libs.androidx.core.ktx)
-
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
-    ksp(libs.androidx.room.compiler)
-
-    implementation(libs.bundles.koin.core)
-
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
-
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.bundles.koin.core)
+
+    ksp(libs.androidx.room.compiler)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

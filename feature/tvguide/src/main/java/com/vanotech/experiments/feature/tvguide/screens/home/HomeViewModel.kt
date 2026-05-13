@@ -1,5 +1,6 @@
 package com.vanotech.experiments.feature.tvguide.screens.home
 
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalTime
+import org.koin.androidx.compose.koinViewModel
 import org.koin.core.annotation.KoinViewModel
 import kotlin.time.Clock
 
@@ -126,6 +128,11 @@ internal class HomeViewModel(
         ): Boolean {
             val listingStartTime = DateTimeUtils.toLocalDateTime(listing.startAt).time
             return (startTime <= listingStartTime) && (listingStartTime <= endTime)
+        }
+
+        @Composable
+        fun viewModel(): HomeViewModel {
+            return koinViewModel()
         }
     }
 }

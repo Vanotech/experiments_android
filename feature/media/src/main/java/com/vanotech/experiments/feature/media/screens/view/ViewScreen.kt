@@ -16,14 +16,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.compose.ContentFrame
-import androidx.navigation.NavController
 import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 internal fun ViewScreen(
-    navController: NavController,
-    viewModel: ViewViewModel = koinViewModel()
+    args: ViewRoute,
+    viewModel: ViewViewModel = ViewViewModel.viewModel(args)
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

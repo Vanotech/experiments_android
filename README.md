@@ -6,11 +6,10 @@ Experimental app to explore various Android concepts and technologies.
 * CameraX
 * Coil
 * Compose
-* Hilt
+* Koin (previously Hilt)
 * Kotlin Multiplatform (initial work only)
-* Kotlinx Serialization
-* Ktor
-* ~~Moshi~~
+* Kotlinx Serialization (previously Moshi)
+* Ktor (previously Retrofit)
+* Navigation3
 * Paging3
-* ~~Retrofit~~
 * Room

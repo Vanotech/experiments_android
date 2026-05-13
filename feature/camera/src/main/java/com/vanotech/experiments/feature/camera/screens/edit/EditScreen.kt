@@ -53,7 +53,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -68,9 +67,9 @@ import java.util.UUID
 
 @Composable
 internal fun EditScreen(
-    navController: NavController,
+    onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: EditViewModel = koinViewModel()
+    viewModel: EditViewModel = EditViewModel.viewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -79,7 +78,7 @@ internal fun EditScreen(
     EditScreen(
         camera = remember { SimpleCamera() },
         file = viewModel.captureFile,
-        onDismissRequest = { navController.popBackStack() },
+        onDismissRequest = onDismissRequest,
         onSwitchCamera = { camera ->
             coroutineScope.launch {
                 camera.switchCamera(context, lifecycleOwner)
@@ -89,7 +88,7 @@ internal fun EditScreen(
             coroutineScope.launch {
                 camera.takePhoto(file)
                 viewModel.setPhoto(file)
-                navController.popBackStack()
+                onDismissRequest()
             }
         },
         modifier = modifier

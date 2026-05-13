@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.autonomousapps.dependency.analysis)
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose.compiler)
 }
@@ -43,22 +44,20 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":core:utils"))
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-
     val composeBom = platform(libs.androidx.compose.bom)
-    implementation(composeBom)
-    androidTestImplementation(composeBom)
-    implementation(libs.androidx.compose.material.icons.extended)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.ui.tooling)
 
-    implementation(libs.androidx.navigation.compose)
+    implementation(composeBom)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.androidx.navigation3.runtime)
 
     testImplementation(libs.junit)
+
+    androidTestImplementation(composeBom)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
