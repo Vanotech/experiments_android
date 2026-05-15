@@ -14,7 +14,7 @@ internal class TvGuideApiService(
     private val client: HttpClient,
     private val baseUrl: String = BASE_URL
 ) {
-    suspend fun getListings(
+    suspend fun fetchListings(
         platform: String,
         region: String,
         instant: Instant
@@ -40,7 +40,7 @@ internal class TvGuideApiService(
         }
     }
 
-    suspend fun getSingle(
+    suspend fun fetchSingle(
         paId: String
     ): Listing {
         val response = client.get("$baseUrl/single") {

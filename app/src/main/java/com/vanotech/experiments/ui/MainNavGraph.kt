@@ -24,7 +24,7 @@ object MainNavGraph : NavGraph {
         scope.apply {
             entry<HomeRoute> {
                 HomeScreen(
-                    onItemClick = { navigator.navigate(it.route)}
+                    onViewRequest = { navigator.navigate(it.route)}
                 )
             }
         }

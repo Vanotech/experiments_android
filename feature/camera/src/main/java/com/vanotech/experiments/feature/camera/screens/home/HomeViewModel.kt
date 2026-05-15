@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.vanotech.experiments.data.camera.CameraFileProvider
 import com.vanotech.experiments.data.camera.PhotoRepo
 import com.vanotech.experiments.data.camera.usecases.SetPhotoUseCase
-import com.vanotech.experiments.feature.camera.screens.edit.EditViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest

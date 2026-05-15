@@ -65,7 +65,7 @@ internal class GetListingsRemoteMediator(
                 }
             }
 
-            val listings = apiService.getListings(
+            val listings = apiService.fetchListings(
                 platform = platform,
                 region = region,
                 instant = loadKey

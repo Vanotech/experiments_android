@@ -47,7 +47,6 @@ dependencies {
     val composeBom = platform(libs.androidx.compose.bom)
 
     implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
     implementation(project(":data:camera"))
 
     implementation(coilBom)

@@ -31,11 +31,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vanotech.experiments.R
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun HomeScreen(
-    onItemClick: (NavGraphUiModel) -> Unit,
+    onViewRequest: (NavGraphUiModel) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = HomeViewModel.viewModel()
 ) {
@@ -47,7 +46,7 @@ internal fun HomeScreen(
 
     HomeScreen(
         items = uiState.navGraphs,
-        onItemClick = onItemClick,
+        onViewRequest = onViewRequest,
         gridCells = gridCells,
         modifier = modifier
     )
@@ -57,7 +56,7 @@ internal fun HomeScreen(
 @Composable
 private fun HomeScreen(
     items: List<NavGraphUiModel>,
-    onItemClick: (NavGraphUiModel) -> Unit,
+    onViewRequest: (NavGraphUiModel) -> Unit,
     gridCells: GridCells,
     modifier: Modifier = Modifier
 ) {
@@ -76,7 +75,7 @@ private fun HomeScreen(
     ) { contentPadding ->
         HomeContentGrid(
             items = items,
-            onItemClick = onItemClick,
+            onItemClick = onViewRequest,
             gridCells = gridCells,
             modifier = Modifier.padding(contentPadding),
         )

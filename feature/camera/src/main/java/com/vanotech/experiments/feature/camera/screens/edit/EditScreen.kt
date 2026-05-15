@@ -60,7 +60,6 @@ import com.vanotech.experiments.core.ui.components.BackButton
 import com.vanotech.experiments.feature.camera.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 import java.io.File
 import java.util.UUID
 

@@ -1,10 +1,8 @@
-package com.vanotech.experiments.feature.tvguide.screens.home
+package com.vanotech.experiments.feature.tvguide.screens.home.settings
 
-import com.vanotech.experiments.data.tvguide.Listing
 import kotlinx.datetime.LocalTime
 
-internal data class HomeUiState(
-    val listing: Listing? = null,
+internal data class SettingsUiState(
     val showEpisodes: Boolean = false,
     val showMovies: Boolean = false,
     val startTime: LocalTime = LocalTime(0, 0),
