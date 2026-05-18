@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.autonomousapps.dependency.analysis)
     alias(libs.plugins.android.application)
     alias(libs.plugins.koin.compiler)
     alias(libs.plugins.kotlin.compose.compiler)
@@ -36,6 +37,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     compileOptions {
@@ -50,43 +52,36 @@ kotlin {
 }
 
 dependencies {
+    val coilBom = platform(libs.coil.bom)
+    val composeBom = platform(libs.androidx.compose.bom)
+
     implementation(project(":core:ui"))
     implementation(project(":feature:camera"))
     implementation(project(":feature:media"))
     implementation(project(":feature:osinfo"))
     implementation(project(":feature:tvguide"))
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-
-    val composeBom = platform(libs.androidx.compose.bom)
+    implementation(coilBom)
     implementation(composeBom)
-    androidTestImplementation(composeBom)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.adaptive)
-    implementation(libs.androidx.compose.material3.adaptive.layout)
-    implementation(libs.androidx.compose.material3.adaptive.navigation)
-    implementation(libs.androidx.compose.material3.window.size.clazz)
     implementation(libs.androidx.compose.ui.tooling)
-
-    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.navigation.compose)
-
-    val coilBom = platform(libs.coil.bom)
-    implementation(coilBom)
-    implementation(libs.coil.compose)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
     implementation(libs.coil.network.ktor3)
-
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.material)
+    implementation(libs.timber)
     implementation(libs.bundles.koin.android)
 
-    implementation(libs.kotlinx.serialization.json)
-
-    implementation(libs.timber)
-
     testImplementation(libs.junit)
+
+    androidTestImplementation(composeBom)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

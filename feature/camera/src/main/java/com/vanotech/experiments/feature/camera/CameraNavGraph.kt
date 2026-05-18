@@ -1,13 +1,13 @@
 package com.vanotech.experiments.feature.camera
 
+import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
-import com.vanotech.experiments.core.ui.NavGraph
+import androidx.navigation3.runtime.EntryProviderScope
+import androidx.navigation3.runtime.NavKey
+import com.vanotech.experiments.core.ui.navigation.NavGraph
+import com.vanotech.experiments.core.ui.navigation.Navigator
 import com.vanotech.experiments.feature.camera.screens.edit.EditRoute
 import com.vanotech.experiments.feature.camera.screens.edit.EditScreen
 import com.vanotech.experiments.feature.camera.screens.home.HomeRoute
@@ -17,18 +17,22 @@ object CameraNavGraph : NavGraph {
 
     override fun icon(): ImageVector = Icons.Default.CameraAlt
 
-    override fun label(): Int = R.string.route_camera_home
+    override fun label(context: Context): String = context.getString(R.string.route_camera_home)
 
-    override fun startDestination(): Any = CameraRoute
+    override fun startRoute(): NavKey = HomeRoute
 
-    override fun register(navGraphBuilder: NavGraphBuilder, navController: NavController) {
-        navGraphBuilder.navigation<CameraRoute>(startDestination = HomeRoute) {
-            composable<HomeRoute> { HomeScreen(navController) }
-            composable<EditRoute> { EditScreen(navController) }
+    override fun register(scope: EntryProviderScope<NavKey>, navigator: Navigator) {
+        scope.apply {
+            entry<HomeRoute> {
+                HomeScreen(
+                    onEditRequest = { navigator.navigate(EditRoute) }
+                )
+            }
+            entry<EditRoute> {
+                EditScreen(
+                    onDismissRequest = { navigator.goBack() }
+                )
+            }
         }
-    }
-
-    internal fun navigateToEdit(navController: NavController) {
-        navController.navigate(EditRoute)
     }
 }

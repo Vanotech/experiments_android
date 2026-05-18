@@ -30,15 +30,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.vanotech.experiments.R
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun HomeScreen(
-    navController: NavController,
+    onViewRequest: (NavGraphUiModel) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = koinViewModel()
+    viewModel: HomeViewModel = HomeViewModel.viewModel()
 ) {
     val adaptiveInfo = currentWindowAdaptiveInfo()
     val gridCells = remember(adaptiveInfo) {
@@ -48,7 +46,7 @@ internal fun HomeScreen(
 
     HomeScreen(
         items = uiState.navGraphs,
-        onItemClick = { it.navigate(navController) },
+        onViewRequest = onViewRequest,
         gridCells = gridCells,
         modifier = modifier
     )
@@ -58,7 +56,7 @@ internal fun HomeScreen(
 @Composable
 private fun HomeScreen(
     items: List<NavGraphUiModel>,
-    onItemClick: (NavGraphUiModel) -> Unit,
+    onViewRequest: (NavGraphUiModel) -> Unit,
     gridCells: GridCells,
     modifier: Modifier = Modifier
 ) {
@@ -77,7 +75,7 @@ private fun HomeScreen(
     ) { contentPadding ->
         HomeContentGrid(
             items = items,
-            onItemClick = onItemClick,
+            onItemClick = onViewRequest,
             gridCells = gridCells,
             modifier = Modifier.padding(contentPadding),
         )
@@ -149,7 +147,7 @@ private fun NavGraphCardPreview() {
         id = 1,
         icon = Icons.Default.Home,
         label = "Lorem ipsum",
-        route = Unit
+        route = HomeRoute
     )
     NavGraphCard(item, onClick = {})
 }

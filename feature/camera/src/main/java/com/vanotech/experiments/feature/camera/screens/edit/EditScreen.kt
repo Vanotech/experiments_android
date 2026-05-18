@@ -53,7 +53,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -61,16 +60,15 @@ import com.vanotech.experiments.core.ui.components.BackButton
 import com.vanotech.experiments.feature.camera.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 import java.io.File
 import java.util.UUID
 
 
 @Composable
 internal fun EditScreen(
-    navController: NavController,
+    onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: EditViewModel = koinViewModel()
+    viewModel: EditViewModel = EditViewModel.viewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -79,7 +77,7 @@ internal fun EditScreen(
     EditScreen(
         camera = remember { SimpleCamera() },
         file = viewModel.captureFile,
-        onDismissRequest = { navController.popBackStack() },
+        onDismissRequest = onDismissRequest,
         onSwitchCamera = { camera ->
             coroutineScope.launch {
                 camera.switchCamera(context, lifecycleOwner)
@@ -89,7 +87,7 @@ internal fun EditScreen(
             coroutineScope.launch {
                 camera.takePhoto(file)
                 viewModel.setPhoto(file)
-                navController.popBackStack()
+                onDismissRequest()
             }
         },
         modifier = modifier
@@ -135,18 +133,22 @@ internal fun EditScreen(
             }
         }
     ) { paddingValues ->
-        if (cameraPermissionState.status.isGranted) {
-            PermissionGrantedContent(
-                camera = camera,
-                modifier = Modifier.padding(paddingValues)
-            )
-        } else {
-            PermissionDeniedContent(
-                onRequestPermission = {
-                    cameraPermissionState.launchPermissionRequest()
-                },
-                modifier = Modifier.padding(paddingValues)
-            )
+        Box(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
+            if (cameraPermissionState.status.isGranted) {
+                PermissionGrantedContent(
+                    camera = camera
+                )
+            } else {
+                PermissionDeniedContent(
+                    onRequestPermission = {
+                        cameraPermissionState.launchPermissionRequest()
+                    },
+                )
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.autonomousapps.dependency.analysis)
     alias(libs.plugins.android.library)
     alias(libs.plugins.koin.compiler)
     alias(libs.plugins.ksp)
@@ -43,10 +44,10 @@ dependencies {
     implementation(project(":core:utils"))
     
     implementation(libs.androidx.core.ktx)
-
     implementation(libs.bundles.koin.core)
 
     testImplementation(libs.junit)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

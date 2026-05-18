@@ -1,4 +1,4 @@
-package com.vanotech.experiments.feature.tvguide.screens.home.detail
+package com.vanotech.experiments.feature.tvguide.screens.home.detail.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,60 +10,23 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Tv
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.vanotech.experiments.core.ui.AspectRatio
-import com.vanotech.experiments.core.ui.components.BackButton
 import com.vanotech.experiments.data.tvguide.Listing
 import com.vanotech.experiments.data.tvguide.ListingType
 import com.vanotech.experiments.feature.tvguide.ListingUtils
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun DetailPane(
-    isListAndDetailVisible: Boolean,
-    listing: Listing?,
-    onDismissRequest: () -> Unit
-) {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            TopAppBar(
-                title = { },
-                navigationIcon = {
-                    if (!isListAndDetailVisible) {
-                        BackButton(onClick = onDismissRequest)
-                    }
-                },
-                scrollBehavior = scrollBehavior
-            )
-        }
-    ) { contentPadding ->
-        listing?.also { listing ->
-            DetailContent(
-                listing = listing,
-                modifier = Modifier.padding(contentPadding)
-            )
-        }
-    }
-}
-
-@Composable
-private fun DetailContent(
+internal fun DetailContent(
     listing: Listing,
     modifier: Modifier = Modifier
 ) {

@@ -1,14 +1,13 @@
 package com.vanotech.experiments.feature.media
 
-import androidx.annotation.StringRes
+import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
-import com.vanotech.experiments.core.ui.NavGraph
+import androidx.navigation3.runtime.EntryProviderScope
+import androidx.navigation3.runtime.NavKey
+import com.vanotech.experiments.core.ui.navigation.NavGraph
+import com.vanotech.experiments.core.ui.navigation.Navigator
 import com.vanotech.experiments.feature.media.screens.home.HomeRoute
 import com.vanotech.experiments.feature.media.screens.home.HomeScreen
 import com.vanotech.experiments.feature.media.screens.view.ViewRoute
@@ -18,19 +17,20 @@ object MediaNavGraph : NavGraph {
 
     override fun icon(): ImageVector = Icons.Default.Movie
 
-    @StringRes
-    override fun label(): Int = R.string.route_media_home
+    override fun label(context: Context): String = context.getString(R.string.route_media_home)
 
-    override fun startDestination(): Any = MediaRoute
+    override fun startRoute(): NavKey = HomeRoute
 
-    override fun register(navGraphBuilder: NavGraphBuilder, navController: NavController) {
-        navGraphBuilder.navigation<MediaRoute>(startDestination = HomeRoute) {
-            composable<HomeRoute> { HomeScreen(navController) }
-            composable<ViewRoute> { ViewScreen(navController) }
+    override fun register(scope: EntryProviderScope<NavKey>, navigator: Navigator) {
+        scope.apply {
+            entry<HomeRoute> {
+                HomeScreen(
+                    onViewRequest = { navigator.navigate(ViewRoute(it.id)) }
+                )
+            }
+            entry<ViewRoute> { key ->
+                ViewScreen(key)
+            }
         }
-    }
-
-    internal fun navigateToView(navController: NavController, mediaId: Int) {
-        navController.navigate(ViewRoute(mediaId))
     }
 }

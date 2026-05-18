@@ -26,11 +26,11 @@ internal class DefaultListingRepo(
     private val tvGuideDatabase: TvGuideDatabase,
     private val tvGuideDataStore: SettingsDataStore
 ) : ListingRepo {
-    override suspend fun get(id: String): Result<Listing> {
+    override suspend fun fetch(id: String): Result<Unit> {
         return try {
-            val listing = tvGuideApiService.getSingle(id)
+            val listing = tvGuideApiService.fetchSingle(id)
             listingDaoService.upsert(listing)
-            Result.success(listing)
+            Result.success(Unit)
         } catch (e: Exception) {
             e.printStackTrace()
             Result.failure(e)

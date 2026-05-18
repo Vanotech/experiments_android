@@ -1,16 +1,20 @@
 package com.vanotech.experiments.ui
 
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.runtime.remember
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
+import com.vanotech.experiments.core.ui.navigation.Navigator
+import com.vanotech.experiments.core.ui.navigation.rememberNavigationState
+import com.vanotech.experiments.core.ui.navigation.toEntries
 import com.vanotech.experiments.ui.screens.home.HomeViewModel
 import com.vanotech.experiments.ui.theme.Theme
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,19 +28,26 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     private fun Content() {
-        val navController = rememberNavController()
-        NavHost(
-            navController = navController,
-            startDestination = HomeViewModel.START_NAV_GRAPH.startDestination()
-        ) {
-            HomeViewModel.START_NAV_GRAPH.also { navGraph ->
-                navGraph.register(this, navController)
+        val startNavGraph = HomeViewModel.START_NAV_GRAPH
+        val startRoute = startNavGraph.startRoute()
 
-            }
-            HomeViewModel.NAV_GRAPHS.forEach { navGraph ->
-                navGraph.register(this, navController)
+        val navigationState = rememberNavigationState(
+            startRoute = startRoute,
+            topLevelRoutes = setOf(startRoute)
+        )
+
+        val navigator = remember { Navigator(navigationState) }
+
+        val entryProvider = entryProvider {
+            val navGraphs = HomeViewModel.NAV_GRAPHS + startNavGraph
+            navGraphs.forEach { navGraph ->
+                navGraph.register(this, navigator)
             }
         }
 
+        NavDisplay(
+            entries = navigationState.toEntries(entryProvider),
+            onBack = { navigator.goBack() }
+        )
     }
 }

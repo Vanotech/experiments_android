@@ -2,6 +2,7 @@ package com.vanotech.experiments.feature.camera.screens.home
 
 import android.content.Context
 import android.net.Uri
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vanotech.experiments.data.camera.CameraFileProvider
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
@@ -43,5 +45,10 @@ internal class HomeViewModel(
 
     companion object {
         private const val FILE_PREFIX = "photo"
+
+        @Composable
+        fun viewModel(): HomeViewModel {
+            return koinViewModel()
+        }
     }
 }

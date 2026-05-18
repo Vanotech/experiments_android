@@ -3,5 +3,5 @@
     <string name="route_media_home">Media</string>
     <string name="route_media_view">View</string>
 
-    <string name="hint_home_empty_feed">No media</string>
+    <string name="label_no_media">No media</string>
 </resources>

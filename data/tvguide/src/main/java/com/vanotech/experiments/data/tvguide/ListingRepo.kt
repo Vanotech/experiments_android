@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalTime
 
 interface ListingRepo {
-    suspend fun get(id: String): Result<Listing>
+    suspend fun fetch(id: String): Result<Unit>
 
     fun getAsFlow(id: String): Flow<Listing?>
 
