@@ -1,5 +1,6 @@
 package com.vanotech.experiments.feature.tvguide.screens.home.list
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterAlt
@@ -10,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -70,22 +72,33 @@ private fun ListScreen(
                 scrollBehavior = scrollBehavior
             )
         }
-    ) { paddingValues ->
+    ) { contentPadding ->
         val isRefreshing = items.loadState.refresh == LoadState.Loading
-        val isNotEmpty = items.itemCount > 0
 
-        if (isRefreshing || isNotEmpty) {
-            ListingFeed(
-                items = items,
-                onItemClick = onViewRequest,
-                isRefreshing = isRefreshing,
-                onRefresh = { items.refresh() },
-                modifier = Modifier.padding(paddingValues),
-            )
-        } else {
-            InfoContent(
-                title = stringResource(R.string.label_no_listings)
-            )
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = { items.refresh() },
+            modifier = Modifier
+                .padding(contentPadding)
+                .fillMaxSize()
+        ) {
+            val isEmpty = items.itemCount == 0
+
+            when {
+                isEmpty -> {
+                    InfoContent(
+                        title = stringResource(R.string.label_no_listings),
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                else -> {
+                    ListingFeed(
+                        items = items,
+                        onItemClick = onViewRequest
+                    )
+                }
+            }
         }
     }
 }

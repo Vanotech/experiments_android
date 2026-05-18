@@ -133,18 +133,22 @@ internal fun EditScreen(
             }
         }
     ) { paddingValues ->
-        if (cameraPermissionState.status.isGranted) {
-            PermissionGrantedContent(
-                camera = camera,
-                modifier = Modifier.padding(paddingValues)
-            )
-        } else {
-            PermissionDeniedContent(
-                onRequestPermission = {
-                    cameraPermissionState.launchPermissionRequest()
-                },
-                modifier = Modifier.padding(paddingValues)
-            )
+        Box(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
+            if (cameraPermissionState.status.isGranted) {
+                PermissionGrantedContent(
+                    camera = camera
+                )
+            } else {
+                PermissionDeniedContent(
+                    onRequestPermission = {
+                        cameraPermissionState.launchPermissionRequest()
+                    },
+                )
+            }
         }
     }
 }

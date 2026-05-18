@@ -1,6 +1,8 @@
 package com.vanotech.experiments.feature.media.screens.home
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -15,6 +17,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.vanotech.experiments.core.ui.components.InfoContent
+import com.vanotech.experiments.core.ui.components.LoadingIndicator
 import com.vanotech.experiments.feature.media.R
 import com.vanotech.experiments.feature.media.screens.home.components.MediaFeed
 import org.koin.compose.viewmodel.koinViewModel
@@ -55,19 +58,33 @@ private fun HomeScreen(
         }
     ) { contentPadding ->
         val isRefreshing = items.loadState.refresh == LoadState.Loading
-        val isNotEmpty = items.itemCount > 0
 
-        if (isRefreshing || isNotEmpty) {
-            MediaFeed(
-                items = items,
-                onItemClick = onViewRequest,
-                modifier = Modifier.padding(contentPadding),
-            )
-        } else {
-            InfoContent(
-                text = stringResource(R.string.label_no_media),
-                modifier = Modifier.padding(contentPadding),
-            )
+        Box(
+            modifier = Modifier
+                .padding(contentPadding)
+                .fillMaxSize()
+        ) {
+            val isEmpty = items.itemCount == 0
+
+            when {
+                isRefreshing -> {
+                    LoadingIndicator(
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                isEmpty -> {
+                    InfoContent(
+                        text = stringResource(R.string.label_no_media),
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                else -> MediaFeed(
+                    items = items,
+                    onItemClick = onViewRequest,
+                )
+            }
         }
     }
 }

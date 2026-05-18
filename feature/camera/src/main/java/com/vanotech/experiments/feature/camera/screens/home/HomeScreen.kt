@@ -7,6 +7,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -100,10 +101,15 @@ private fun HomeScreen(
             TakePictureFloatingActionButton(onClick = onEditRequest)
         }
     ) { paddingValues ->
-        CaptureContent(
-            uri = displayUri,
-            modifier = Modifier.padding(paddingValues)
-        )
+        Box(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
+            CaptureContent(
+                uri = displayUri
+            )
+        }
     }
 }
 

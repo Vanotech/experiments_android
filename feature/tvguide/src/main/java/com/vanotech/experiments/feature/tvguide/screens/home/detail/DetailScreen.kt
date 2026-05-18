@@ -1,5 +1,6 @@
 package com.vanotech.experiments.feature.tvguide.screens.home.detail
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vanotech.experiments.core.ui.components.BackButton
-import com.vanotech.experiments.core.ui.components.InfoContent
 import com.vanotech.experiments.data.tvguide.Listing
 import com.vanotech.experiments.feature.tvguide.screens.home.detail.components.DetailContent
 
@@ -57,20 +57,14 @@ private fun DetailScreen(
             )
         }
     ) { contentPadding ->
-        when (listing) {
-            null -> {
-                InfoContent(
-                    title = null,
-                    modifier = Modifier
-                        .padding(contentPadding)
-                        .fillMaxSize()
-                )
-            }
-
-            else -> {
+        Box(
+            modifier = Modifier
+                .padding(contentPadding)
+                .fillMaxSize()
+        ) {
+            if (listing != null) {
                 DetailContent(
-                    listing = listing,
-                    modifier = Modifier.padding(contentPadding)
+                    listing = listing
                 )
             }
         }
