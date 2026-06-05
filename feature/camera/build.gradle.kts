@@ -9,6 +9,7 @@ plugins {
 
 android {
     namespace = "com.vanotech.experiments.feature.camera"
+
     compileSdk = rootProject.extra["compileSdk"] as Int
 
     defaultConfig {

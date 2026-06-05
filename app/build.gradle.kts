@@ -10,10 +10,7 @@ plugins {
 android {
     namespace = "com.vanotech.experiments"
 
-    compileSdk {
-        val compileSdk = rootProject.extra["compileSdk"] as Int
-        version = release(compileSdk)
-    }
+    compileSdk = rootProject.extra["compileSdk"] as Int
 
     defaultConfig {
         applicationId = "com.vanotech.experiments"

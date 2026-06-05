@@ -10,10 +10,7 @@ plugins {
 android {
     namespace = "com.vanotech.experiments.feature.tvguide"
 
-    compileSdk {
-        val compileSdk = rootProject.extra["compileSdk"] as Int
-        version = release(compileSdk)
-    }
+    compileSdk = rootProject.extra["compileSdk"] as Int
 
     defaultConfig {
         minSdk = rootProject.extra["minSdk"] as Int
