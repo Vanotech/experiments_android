@@ -1,7 +1,6 @@
 package com.vanotech.experiments.data.tvguide.internal.net
 
 import com.vanotech.experiments.core.utils.DateTimeUtils
-import com.vanotech.experiments.data.tvguide.Listing
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Channel
 import com.vanotech.experiments.data.tvguide.internal.net.schema.SingleResponse
 import io.ktor.client.HttpClient
@@ -18,7 +17,7 @@ internal class TvGuideApiService(
         platform: String,
         region: String,
         instant: Instant
-    ): List<Listing> {
+    ): List<Channel> {
         val dateTime = DateTimeUtils.toLocalDateTime(instant, TimeZone.UTC)
         val date = dateTime.date
         val hour = dateTime.hour
@@ -32,24 +31,18 @@ internal class TvGuideApiService(
                 parameters.append("details", details.toString())
             }
         }
-        val body: List<Channel> = response.body()
-        return body.flatMap { channel ->
-            channel.schedules.map { schedule ->
-                schedule.toListing(channel)
-            }
-        }
+        return response.body()
     }
 
     suspend fun fetchSingle(
         paId: String
-    ): Listing {
+    ): SingleResponse {
         val response = client.get("$baseUrl/single") {
             url {
                 parameters.append("pa_id", paId)
             }
         }
-        val body: SingleResponse = response.body()
-        return body.toListing()
+        return response.body()
     }
 
     companion object {

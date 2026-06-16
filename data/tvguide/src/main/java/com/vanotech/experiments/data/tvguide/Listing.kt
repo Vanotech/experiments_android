@@ -12,9 +12,9 @@ data class Listing(
     val imageUrl: String? = null,
     val startAt: Instant,
     val duration: Duration,
+    val summary: String? = null,
     val channelTitle: String,
-    val channelLogoUrl: String? = null,
-    val summary: String? = null
+    val channelLogoUrl: String? = null
 ) {
     companion object {
         fun mockData(index: Int = 0): Listing {

@@ -4,29 +4,29 @@ android-gradle-plugin = "9.2.1"
 androidx-activity-compose = "1.13.0"
 androidx-appcompat = "1.7.1"
 androidx-camera = "1.6.1"
-androidx-compose-bom = "2026.05.00"
-androidx-compose-material3-adaptive-navigation3 = "1.3.0-alpha09"   # android-36 compat
-androidx-core = "1.18.0"
+androidx-compose-bom = "2026.05.01"
+androidx-compose-material3-adaptive = "1.3.0-beta02"
+androidx-core = "1.19.0"
 androidx-datastore = "1.2.1"
 androidx-espresso = "3.7.0"
 androidx-glance = "1.1.1"
 androidx-junit = "1.3.0"
 androidx-lifecycle = "2.10.0"
 androidx-media3 = "1.10.1"
-androidx-navigation3 = "1.1.1"
+androidx-navigation3 = "1.1.2"
 androidx-paging = "3.5.0"
 androidx-room = "2.8.4"
-autonomousapps-dependency-analysis = "3.11.0"
+autonomousapps-dependency-analysis = "3.14.1"
 coil-bom = "3.4.0"
 junit = "4.13.2"
 koin = "4.2.1"
-koin-compiler = "0.6.2"
-kotlin = "2.3.21"
+koin-compiler = "0.6.2"         # upgrade breaks koin viewmodel with non-injected parameters
+kotlin = "2.3.21"               # upgrade breaks koin compiler
 kotlinx-datetime = "0.8.0"
 kotlinx-serialization = "1.11.0"
 ksp = "2.3.7"
-ktor = "3.4.3"
-material = "1.13.0"
+ktor = "3.5.0"
+material = "1.14.0"
 timber = "5.0.1"
 
 [libraries]
@@ -43,8 +43,9 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 androidx-compose-material3-adaptive = { group = "androidx.compose.material3.adaptive", name = "adaptive" }
 androidx-compose-material3-adaptive-layout = { group = "androidx.compose.material3.adaptive", name = "adaptive-layout" }
 androidx-compose-material3-adaptive-navigation = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation" }
-androidx-compose-material3-adaptive-navigation3 = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation3", version.ref = "androidx-compose-material3-adaptive-navigation3" }
+androidx-compose-material3-adaptive-navigation3 = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation3", version.ref = "androidx-compose-material3-adaptive" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidx-datastore" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso" }

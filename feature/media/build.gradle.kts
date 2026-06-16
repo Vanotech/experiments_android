@@ -10,10 +10,7 @@ plugins {
 android {
     namespace = "com.vanotech.experiments.feature.media"
 
-    compileSdk {
-        val compileSdk = rootProject.extra["compileSdk"] as Int
-        version = release(compileSdk)
-    }
+    compileSdk = rootProject.extra["compileSdk"] as Int
 
     defaultConfig {
         minSdk = rootProject.extra["minSdk"] as Int
@@ -59,7 +56,7 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.adaptive)
-    implementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.media3.exoplayer)
@@ -72,6 +69,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.material)
     implementation(libs.bundles.koin.android)
+
+    debugImplementation(libs.androidx.compose.ui.tooling)
 
     testImplementation(libs.junit)
 

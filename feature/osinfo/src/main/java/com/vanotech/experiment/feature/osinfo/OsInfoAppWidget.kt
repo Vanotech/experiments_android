@@ -6,9 +6,11 @@ import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.components.Scaffold
+import androidx.glance.appwidget.components.TitleBar
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
@@ -42,11 +44,18 @@ internal class OsInfoAppWidget : GlanceAppWidget() {
 
     @Composable
     private fun Content() {
-        Scaffold {
+        val context = LocalContext.current
+
+        Scaffold(
+            titleBar = {
+                TitleBar(
+                    startIcon = ImageProvider(R.drawable.ic_appwidget_icon),
+                    title = context.getString(R.string.appwidget_name)
+                )
+            }
+        )
+        {
             LazyColumn {
-                item {
-                    Spacer(modifier = GlanceModifier.height(12.dp))
-                }
                 items(dataSet) { item ->
                     OsInfoCard(
                         item = item,
