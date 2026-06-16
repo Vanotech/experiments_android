@@ -6,11 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.vanotech.experiments.core.ui.navigation.Navigator
 import com.vanotech.experiments.core.ui.navigation.rememberNavigationState
-import com.vanotech.experiments.core.ui.navigation.toEntries
 import com.vanotech.experiments.ui.screens.home.HomeViewModel
 import com.vanotech.experiments.ui.theme.Theme
 
@@ -32,11 +34,15 @@ class MainActivity : ComponentActivity() {
         val startRoute = startNavGraph.startRoute()
 
         val navigationState = rememberNavigationState(
-            startRoute = startRoute,
-            topLevelRoutes = setOf(startRoute)
+            startRoute = startRoute
         )
 
         val navigator = remember { Navigator(navigationState) }
+
+        val entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator<NavKey>(),
+            rememberViewModelStoreNavEntryDecorator()
+        )
 
         val entryProvider = entryProvider {
             val navGraphs = HomeViewModel.NAV_GRAPHS + startNavGraph
@@ -46,8 +52,10 @@ class MainActivity : ComponentActivity() {
         }
 
         NavDisplay(
-            entries = navigationState.toEntries(entryProvider),
-            onBack = { navigator.goBack() }
+            backStack = navigator.backStack,
+            onBack = { navigator.goBack() },
+            entryDecorators = entryDecorators,
+            entryProvider = entryProvider
         )
     }
 }

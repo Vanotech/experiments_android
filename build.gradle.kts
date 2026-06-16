@@ -1,7 +1,7 @@
 buildscript {
-    val compileSdk by extra(36)
+    val compileSdk by extra(37)
     val minSdk by extra(26)
-    val targetSdk by extra(36)
+    val targetSdk by extra(37)
     val sourceCompatibility by extra(JavaVersion.VERSION_11)
     val targetCompatibility by extra(JavaVersion.VERSION_11)
     val jdkVersion by extra(11)
