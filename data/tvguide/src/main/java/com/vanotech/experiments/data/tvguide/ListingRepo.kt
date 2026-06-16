@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalTime
 
 interface ListingRepo {
-    suspend fun fetch(id: String): Result<Unit>
-
+    suspend fun fetch(id: String)
+    
     fun getAsFlow(id: String): Flow<Listing?>
 
     fun getAllAsPagingData(config: PagingConfig): Flow<PagingData<Listing>>

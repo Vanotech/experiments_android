@@ -9,15 +9,21 @@ import com.vanotech.experiments.core.utils.room.DateTimeConverters
 
 @Database(
     entities = [
-        ListingEntity::class,
+        ChannelEntity::class,
+        ScheduleEntity::class,
         RemoteKeyEntity::class
+    ],
+    views = [
+        ListingView::class
     ],
     exportSchema = false,
     version = 1
 )
 @TypeConverters(DateTimeConverters::class)
 internal abstract class TvGuideDatabase : RoomDatabase() {
+    abstract fun channelDao(): ChannelDao
     abstract fun listingDao(): ListingDao
+    abstract fun scheduleDao(): ScheduleDao
     abstract fun remoteKeyDao(): RemoteKeyDao
 
     companion object {

@@ -65,7 +65,7 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.adaptive)
-    implementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.bundles.koin.android)
 
+    debugImplementation(libs.androidx.compose.ui.tooling)
     testImplementation(libs.junit)
 
     androidTestImplementation(composeBom)

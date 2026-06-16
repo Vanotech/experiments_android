@@ -1,35 +1,40 @@
 package com.vanotech.experiments.data.tvguide.internal.net
 
-import com.vanotech.experiments.data.tvguide.Listing
 import com.vanotech.experiments.data.tvguide.ListingType
+import com.vanotech.experiments.data.tvguide.internal.db.ChannelEntity
+import com.vanotech.experiments.data.tvguide.internal.db.ScheduleEntity
+import com.vanotech.experiments.data.tvguide.internal.db.SchedulePartial
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Channel
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Schedule
 import com.vanotech.experiments.data.tvguide.internal.net.schema.SingleResponse
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Type
 
-internal fun Schedule.toListing(
-    channel: Channel
-) = Listing(
+internal fun Channel.toChannelEntity() = ChannelEntity(
     id = paId,
     title = title,
-    type = toListingType(type),
-    imageUrl = imageUrl,
-    startAt = startAt,
-    duration = duration,
-    channelTitle = channel.title,
-    channelLogoUrl = channel.logoUrl,
-    summary = null
+    logoUrl = logoUrl
 )
 
-internal fun SingleResponse.toListing() = Listing(
+internal fun Schedule.toScheduleEntity(
+    channel: Channel
+) = ScheduleEntity(
     id = paId,
     title = title,
     type = toListingType(type),
     imageUrl = imageUrl,
     startAt = startAt,
     duration = duration,
-    channelTitle = channelTitle,
-    channelLogoUrl = channelLogoUrl,
+    summary = null,
+    channelId = channel.paId
+)
+
+internal fun SingleResponse.toSchedulePartial() = SchedulePartial(
+    id = paId,
+    title = title,
+    type = toListingType(type),
+    imageUrl = imageUrl,
+    startAt = startAt,
+    duration = duration,
     summary = summaryLong
 )
 

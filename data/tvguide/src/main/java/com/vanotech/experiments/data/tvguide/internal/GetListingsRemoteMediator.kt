@@ -5,11 +5,12 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import com.vanotech.experiments.data.tvguide.internal.db.ListingEntity
+import com.vanotech.experiments.data.tvguide.internal.db.ListingView
 import com.vanotech.experiments.data.tvguide.internal.db.RemoteKeyEntity
 import com.vanotech.experiments.data.tvguide.internal.db.TvGuideDatabase
-import com.vanotech.experiments.data.tvguide.internal.db.toListingEntity
 import com.vanotech.experiments.data.tvguide.internal.net.TvGuideApiService
+import com.vanotech.experiments.data.tvguide.internal.net.toChannelEntity
+import com.vanotech.experiments.data.tvguide.internal.net.toScheduleEntity
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import java.io.IOException
@@ -23,8 +24,9 @@ internal class GetListingsRemoteMediator(
     private val instant: Instant,
     private val apiService: TvGuideApiService,
     private val database: TvGuideDatabase
-) : RemoteMediator<Int, ListingEntity>() {
-    private val listingDao = database.listingDao()
+) : RemoteMediator<Int, ListingView>() {
+    private val channelDao = database.channelDao()
+    private val scheduleDao = database.scheduleDao()
     private val remoteKeyDao = database.remoteKeyDao()
 
     override suspend fun initialize(): InitializeAction {
@@ -41,7 +43,7 @@ internal class GetListingsRemoteMediator(
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, ListingEntity>
+        state: PagingState<Int, ListingView>
     ): MediatorResult {
         return try {
             val loadKey = when (loadType) {
@@ -69,24 +71,33 @@ internal class GetListingsRemoteMediator(
                 platform = platform,
                 region = region,
                 instant = loadKey
-            ).map {
-                it.toListingEntity()
-            }
+            )
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    listingDao.deleteAll()
+                    channelDao.deleteAll()
+                    scheduleDao.deleteAll()
                     remoteKeyDao.deleteAll()
                 }
 
-                val remoteKeys = listings.map {
+                val channels = listings.map {
+                    it.toChannelEntity()
+                }
+                channelDao.upsert(channels)
+
+                val schedules = listings.flatMap { channel ->
+                    channel.schedules.map {
+                        it.toScheduleEntity(channel)
+                    }
+                }
+                scheduleDao.upsert(schedules)
+
+                val remoteKeys = schedules.map {
                     RemoteKeyEntity(
                         id = it.id,
                         loadKey = loadKey
                     )
                 }
-
-                listingDao.upsert(listings)
                 remoteKeyDao.insert(remoteKeys)
             }
 
@@ -102,7 +113,7 @@ internal class GetListingsRemoteMediator(
         }
     }
 
-    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, ListingEntity>): RemoteKeyEntity? {
+    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, ListingView>): RemoteKeyEntity? {
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.id?.let { id ->
                 remoteKeyDao.get(id)
@@ -110,13 +121,13 @@ internal class GetListingsRemoteMediator(
         }
     }
 
-    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, ListingEntity>): RemoteKeyEntity? {
+    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, ListingView>): RemoteKeyEntity? {
         return state.firstItemOrNull()?.let { item ->
             remoteKeyDao.get(item.id)
         }
     }
 
-    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, ListingEntity>): RemoteKeyEntity? {
+    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, ListingView>): RemoteKeyEntity? {
         return state.lastItemOrNull()?.let { item ->
             remoteKeyDao.get(item.id)
         }

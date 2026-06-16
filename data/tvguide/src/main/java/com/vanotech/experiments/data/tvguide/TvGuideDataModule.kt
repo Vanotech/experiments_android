@@ -1,8 +1,10 @@
 package com.vanotech.experiments.data.tvguide
 
 import android.content.Context
+import com.vanotech.experiments.data.tvguide.internal.db.ChannelDao
 import com.vanotech.experiments.data.tvguide.internal.db.ListingDao
 import com.vanotech.experiments.data.tvguide.internal.db.RemoteKeyDao
+import com.vanotech.experiments.data.tvguide.internal.db.ScheduleDao
 import com.vanotech.experiments.data.tvguide.internal.db.TvGuideDatabase
 import com.vanotech.experiments.data.tvguide.internal.net.TvGuideApiService
 import io.ktor.client.HttpClient
@@ -24,8 +26,18 @@ class TvGuideDataModule {
     }
 
     @Singleton
+    internal fun providesChannelDao(database: TvGuideDatabase): ChannelDao {
+        return database.channelDao()
+    }
+
+    @Singleton
     internal fun providesListingDao(database: TvGuideDatabase): ListingDao {
         return database.listingDao()
+    }
+
+    @Singleton
+    internal fun providesScheduleDao(database: TvGuideDatabase): ScheduleDao {
+        return database.scheduleDao()
     }
 
     @Singleton
