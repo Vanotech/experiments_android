@@ -10,12 +10,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.KoinViewModel
 import org.koin.core.parameter.parametersOf
 
 @KoinViewModel
 internal class DetailViewModel(
-    args: DetailRoute,
+    @InjectedParam args: DetailRoute,
     private val listingRepo: ListingRepo
 ) : ViewModel() {
     private val listingId = args.listingId

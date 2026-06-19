@@ -49,16 +49,13 @@ dependencies {
 
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
-    implementation(project(":data:tvguide"))
+    api(project(":data:tvguide"))
 
     implementation(coilBom)
     implementation(composeBom)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.material3.adaptive)
-    implementation(libs.androidx.compose.material3.adaptive.layout)
-    implementation(libs.androidx.compose.material3.adaptive.navigation)
     implementation(libs.androidx.compose.material3.adaptive.navigation3)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)

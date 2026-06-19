@@ -19,10 +19,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -38,16 +36,11 @@ internal fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = HomeViewModel.viewModel()
 ) {
-    val adaptiveInfo = currentWindowAdaptiveInfo()
-    val gridCells = remember(adaptiveInfo) {
-        HomeUiState.calculateGridCells(adaptiveInfo)
-    }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     HomeScreen(
         items = uiState.navGraphs,
         onViewRequest = onViewRequest,
-        gridCells = gridCells,
         modifier = modifier
     )
 }
@@ -57,7 +50,6 @@ internal fun HomeScreen(
 private fun HomeScreen(
     items: List<NavGraphUiModel>,
     onViewRequest: (NavGraphUiModel) -> Unit,
-    gridCells: GridCells,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -76,7 +68,6 @@ private fun HomeScreen(
         HomeContentGrid(
             items = items,
             onItemClick = onViewRequest,
-            gridCells = gridCells,
             modifier = Modifier.padding(contentPadding),
         )
     }
@@ -86,14 +77,13 @@ private fun HomeScreen(
 private fun HomeContentGrid(
     items: List<NavGraphUiModel>,
     onItemClick: (NavGraphUiModel) -> Unit,
-    gridCells: GridCells,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(16.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(16.dp),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(16.dp)
 ) {
     LazyVerticalGrid(
-        columns = gridCells,
+        columns = GridCells.Adaptive(240.dp),
         modifier = modifier.fillMaxSize(),
         contentPadding = contentPadding,
         verticalArrangement = verticalArrangement,
