@@ -14,7 +14,6 @@ import com.vanotech.experiments.data.tvguide.internal.db.TvGuideDatabase
 import com.vanotech.experiments.data.tvguide.internal.net.TvGuideApiService
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Platform
 import com.vanotech.experiments.data.tvguide.internal.net.schema.Region
-import com.vanotech.experiments.data.tvguide.internal.net.toScheduleEntity
 import com.vanotech.experiments.data.tvguide.internal.net.toSchedulePartial
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
