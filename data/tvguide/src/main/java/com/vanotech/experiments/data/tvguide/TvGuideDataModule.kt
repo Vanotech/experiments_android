@@ -1,12 +1,12 @@
 package com.vanotech.experiments.data.tvguide
 
 import android.content.Context
-import com.vanotech.experiments.data.tvguide.internal.db.ChannelDao
-import com.vanotech.experiments.data.tvguide.internal.db.ListingDao
-import com.vanotech.experiments.data.tvguide.internal.db.RemoteKeyDao
-import com.vanotech.experiments.data.tvguide.internal.db.ScheduleDao
-import com.vanotech.experiments.data.tvguide.internal.db.TvGuideDatabase
-import com.vanotech.experiments.data.tvguide.internal.net.TvGuideApiService
+import com.vanotech.experiments.data.tvguide.local.db.ChannelDao
+import com.vanotech.experiments.data.tvguide.local.db.ListingDao
+import com.vanotech.experiments.data.tvguide.local.db.RemoteKeyDao
+import com.vanotech.experiments.data.tvguide.local.db.ScheduleDao
+import com.vanotech.experiments.data.tvguide.local.db.TvGuideDatabase
+import com.vanotech.experiments.data.tvguide.remote.api.TvGuideApiService
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

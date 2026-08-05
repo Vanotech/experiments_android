@@ -5,8 +5,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Tv
 import androidx.compose.runtime.Immutable
-import com.vanotech.experiments.data.tvguide.Listing
-import com.vanotech.experiments.data.tvguide.ListingType
+import com.vanotech.experiments.data.tvguide.model.Listing
+import com.vanotech.experiments.data.tvguide.model.ListingType
 import com.vanotech.experiments.feature.tvguide.ListingUtils
 
 @Immutable

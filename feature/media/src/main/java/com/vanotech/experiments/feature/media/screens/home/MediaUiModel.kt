@@ -1,7 +1,7 @@
 package com.vanotech.experiments.feature.media.screens.home
 
 import androidx.compose.runtime.Immutable
-import com.vanotech.experiments.data.media.Media
+import com.vanotech.experiments.data.media.model.Media
 
 @Immutable
 internal data class MediaUiModel(

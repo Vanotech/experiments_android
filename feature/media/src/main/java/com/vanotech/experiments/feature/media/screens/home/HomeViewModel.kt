@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.vanotech.experiments.data.media.MediaRepo
+import com.vanotech.experiments.data.media.usecase.GetPagedMediaUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.koin.androidx.compose.koinViewModel
@@ -14,11 +14,11 @@ import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
 internal class HomeViewModel(
-    mediaRepo: MediaRepo
+    getPagedMediaUseCase: GetPagedMediaUseCase
 ) : ViewModel() {
 
     val media: Flow<PagingData<MediaUiModel>> = run {
-        val pagedData = mediaRepo.getAllAsPagingData().cachedIn(viewModelScope)
+        val pagedData = getPagedMediaUseCase.flow.cachedIn(viewModelScope)
 
         pagedData.map { pagingData ->
             pagingData.map {

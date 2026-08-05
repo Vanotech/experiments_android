@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.vanotech.experiments.core.ui.AspectRatio
-import com.vanotech.experiments.data.tvguide.Listing
-import com.vanotech.experiments.data.tvguide.ListingType
+import com.vanotech.experiments.data.tvguide.model.Listing
+import com.vanotech.experiments.data.tvguide.model.ListingType
 import com.vanotech.experiments.feature.tvguide.ListingUtils
 
 @Composable

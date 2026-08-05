@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vanotech.experiments.core.ui.components.BackButton
-import com.vanotech.experiments.data.tvguide.Listing
+import com.vanotech.experiments.data.tvguide.model.Listing
 import com.vanotech.experiments.feature.tvguide.screens.home.detail.components.DetailContent
 
 @Composable

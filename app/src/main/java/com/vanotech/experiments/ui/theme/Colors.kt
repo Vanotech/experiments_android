@@ -3,8 +3,8 @@ package com.vanotech.experiments.ui.theme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 
-val DarkColors = darkColorScheme(
+val DarkColorScheme = darkColorScheme(
 )
 
-val LightColors = lightColorScheme(
+val LightColorScheme = lightColorScheme(
 )

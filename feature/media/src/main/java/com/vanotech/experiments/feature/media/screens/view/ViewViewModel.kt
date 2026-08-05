@@ -3,7 +3,7 @@ package com.vanotech.experiments.feature.media.screens.view
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vanotech.experiments.data.media.MediaRepo
+import com.vanotech.experiments.data.media.usecase.GetMediumUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -16,7 +16,7 @@ import org.koin.core.parameter.parametersOf
 @KoinViewModel
 internal class ViewViewModel(
     @InjectedParam args: ViewRoute,
-    private val mediaRepo: MediaRepo
+    private val getMediumUseCase: GetMediumUseCase
 ) : ViewModel() {
     private val mediaId = args.mediaId
 
@@ -25,7 +25,7 @@ internal class ViewViewModel(
 
     init {
         viewModelScope.launch {
-            mediaRepo.get(mediaId)?.also { media ->
+            getMediumUseCase(mediaId)?.also { media ->
                 _uiState.update {
                     it.copy(media = media)
                 }

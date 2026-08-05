@@ -20,13 +20,12 @@ import com.vanotech.experiments.core.ui.components.InfoContent
 import com.vanotech.experiments.core.ui.components.LoadingIndicator
 import com.vanotech.experiments.feature.media.R
 import com.vanotech.experiments.feature.media.screens.home.components.MediaFeed
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun HomeScreen(
     onViewRequest: (MediaUiModel) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = koinViewModel()
+    viewModel: HomeViewModel = HomeViewModel.viewModel()
 ) {
     val items = viewModel.media.collectAsLazyPagingItems()
 

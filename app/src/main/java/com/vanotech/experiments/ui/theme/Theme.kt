@@ -24,8 +24,8 @@ fun Theme(
             }
         }
 
-        darkTheme -> DarkColors
-        else -> LightColors
+        darkTheme -> DarkColorScheme
+        else -> LightColorScheme
     }
 
     val typography = Typography

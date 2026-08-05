@@ -9,9 +9,13 @@ import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.map
 import com.vanotech.experiments.core.utils.DateTimeUtils
-import com.vanotech.experiments.data.tvguide.Listing
-import com.vanotech.experiments.data.tvguide.ListingRepo
-import com.vanotech.experiments.data.tvguide.ListingType
+import com.vanotech.experiments.data.tvguide.model.Listing
+import com.vanotech.experiments.data.tvguide.model.ListingType
+import com.vanotech.experiments.data.tvguide.usecase.GetEndTimeSettingUseCase
+import com.vanotech.experiments.data.tvguide.usecase.GetPagedListingsUseCase
+import com.vanotech.experiments.data.tvguide.usecase.GetShowEpisodesSettingUseCase
+import com.vanotech.experiments.data.tvguide.usecase.GetShowMoviesSettingUseCase
+import com.vanotech.experiments.data.tvguide.usecase.GetStartTimeSettingUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,37 +31,41 @@ import kotlin.time.Clock
 
 @KoinViewModel
 internal class ListViewModel(
-    private val listingRepo: ListingRepo
+    getPagedListingsUseCase: GetPagedListingsUseCase,
+    getShowEpisodesSettingUseCase: GetShowEpisodesSettingUseCase,
+    getShowMoviesSettingUseCase: GetShowMoviesSettingUseCase,
+    getStartTimeSettingUseCase: GetStartTimeSettingUseCase,
+    getEndTimeSettingUseCase: GetEndTimeSettingUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ListUiState())
     val uiState: StateFlow<ListUiState> = _uiState
 
     init {
         viewModelScope.launch {
-            listingRepo.showEpisodes.collectLatest { showEpisodes ->
+            getShowEpisodesSettingUseCase.flow.collectLatest { showEpisodes ->
                 _uiState.update { it.copy(showEpisodes = showEpisodes) }
             }
         }
         viewModelScope.launch {
-            listingRepo.showMovies.collectLatest { showMovies ->
+            getShowMoviesSettingUseCase.flow.collectLatest { showMovies ->
                 _uiState.update { it.copy(showMovies = showMovies) }
             }
         }
         viewModelScope.launch {
-            listingRepo.startTime.collectLatest { startTime ->
+            getStartTimeSettingUseCase.flow.collectLatest { startTime ->
                 _uiState.update { it.copy(startTime = startTime) }
             }
         }
         viewModelScope.launch {
-            listingRepo.endTime.collectLatest { endTime ->
+            getEndTimeSettingUseCase.flow.collectLatest { endTime ->
                 _uiState.update { it.copy(endTime = endTime) }
             }
         }
     }
 
     val listings: Flow<PagingData<ListingUiModel>> = run {
-        val pagingData = listingRepo.getAllAsPagingData(
-            config = PagingConfig(pageSize = 50)
+        val pagingData = getPagedListingsUseCase(
+            config = PagingConfig(pageSize = 20)
         ).cachedIn(viewModelScope)
 
         combine(

@@ -3,7 +3,9 @@ package com.vanotech.experiments.feature.tvguide.screens.home.detail
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vanotech.experiments.data.tvguide.ListingRepo
+import com.vanotech.experiments.data.tvguide.local.db.model.ListingView
+import com.vanotech.experiments.data.tvguide.repository.ListingRepository
+import com.vanotech.experiments.data.tvguide.usecase.GetListingUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -17,7 +19,7 @@ import org.koin.core.parameter.parametersOf
 @KoinViewModel
 internal class DetailViewModel(
     @InjectedParam args: DetailRoute,
-    private val listingRepo: ListingRepo
+    getListingUseCase: GetListingUseCase
 ) : ViewModel() {
     private val listingId = args.listingId
 
@@ -26,11 +28,7 @@ internal class DetailViewModel(
 
     init {
         viewModelScope.launch {
-            listingRepo.fetch(listingId)
-        }
-        viewModelScope.launch {
-            val listing = listingRepo.getAsFlow(listingId)
-            listing.collectLatest { listing ->
+            getListingUseCase(listingId).collectLatest { listing ->
                 _uiState.update {
                     it.copy(listing = listing)
                 }

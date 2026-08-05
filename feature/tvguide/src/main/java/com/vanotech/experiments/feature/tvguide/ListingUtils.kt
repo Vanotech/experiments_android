@@ -2,7 +2,7 @@ package com.vanotech.experiments.feature.tvguide
 
 import android.content.Context
 import android.text.format.DateUtils
-import com.vanotech.experiments.data.tvguide.Listing
+import com.vanotech.experiments.data.tvguide.model.Listing
 
 object ListingUtils {
 

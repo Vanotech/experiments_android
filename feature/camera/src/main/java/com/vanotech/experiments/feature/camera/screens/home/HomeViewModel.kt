@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vanotech.experiments.data.camera.CameraFileProvider
-import com.vanotech.experiments.data.camera.PhotoRepo
-import com.vanotech.experiments.data.camera.usecases.SetPhotoUseCase
+import com.vanotech.experiments.data.camera.usecase.GetPhotoUseCase
+import com.vanotech.experiments.data.camera.usecase.SetPhotoUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -19,7 +19,8 @@ import org.koin.core.annotation.KoinViewModel
 @KoinViewModel
 internal class HomeViewModel(
     private val context: Context,
-    private val photoRepo: PhotoRepo
+    private val getPhotoUseCase: GetPhotoUseCase,
+    private val setPhotoUseCase: SetPhotoUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState
@@ -27,7 +28,7 @@ internal class HomeViewModel(
 
     init {
         viewModelScope.launch {
-            photoRepo.capture.collectLatest { uri ->
+            getPhotoUseCase.flow.collectLatest { uri ->
                 _uiState.update { it.copy(uri = uri) }
             }
         }
@@ -39,8 +40,7 @@ internal class HomeViewModel(
     }
 
     suspend fun setPhoto(uri: Uri) {
-        val setPhotoUseCase = SetPhotoUseCase(photoRepo)
-        setPhotoUseCase.execute(context, uri)
+        setPhotoUseCase(context, uri)
     }
 
     companion object {
